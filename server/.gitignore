@@ -1,0 +1,107 @@
+HELP.md
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.factorypath
+.settings
+.springBeans
+.sts4-cache
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Arquivos de compilação
+target/
+out/
+bin/
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+
+# Logs
+logs/
+*.log
+log/
+*.log.*
+
+# Arquivos de IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos de configuração específicos do ambiente
+application-dev.properties
+application-prod.properties
+application-test.properties
+*.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Arquivos do Maven
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# Gradle
+.gradle/
+
+# Arquivos temporários
+tmp/
+temp/
+
+# Documentação
+apidocs/
+docs/_build/
+
+# Banco de dados H2 (comum em desenvolvimento Spring Boot)
+*.h2.db
+*.mv.db
+
+# Arquivos do usuário específicos
+.mtj.tmp/
+
+# Arquivos do Eclipse
+.metadata/
+
+# Cobertura de código (JaCoCo, etc.)
+jacoco.exec
+*.exec
+
+# Arquivos do Docker
+Dockerfile
+.dockerignore
+
+# Arquivos do Node.js (se tiver frontend integrado)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
