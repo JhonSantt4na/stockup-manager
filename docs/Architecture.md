@@ -1,3 +1,55 @@
+# Convenção de Commits
+✅ Padrão de Mensagem de Commit (Conventional Commits)
+
+<tipo>(escopo opcional): descrição curta e clara no imperativo
+
+[linhas em branco se necessário]
+
+mensagem detalhada ou motivação (opcional)
+
+BREAKING CHANGE: descreva a mudança que quebra compatibilidade (se aplicável)
+
+
+📌 Tipos mais comuns (<tipo>)
+Tipo	Descrição
+feat	Adição de nova funcionalidade ao sistema
+fix	Correção de bugs
+docs	Alterações apenas na documentação
+style	Formatação, indentação, espaços, etc (sem alteração de código funcional)
+refactor	Refatoração de código (sem correção de bug ou nova funcionalidade)
+test	Adição ou modificação de testes
+chore	Mudanças de configuração, build, CI/CD, dependências
+perf	Melhorias de performance
+build	Alterações que afetam o processo de build ou dependências externas
+ci	Configuração de integração contínua (GitHub Actions, Jenkins etc.)
+
+🧪 Exemplos práticos
+feat(user): adicionar endpoint de cadastro de usuário
+fix(product): corrigir cálculo do estoque após venda
+docs: atualizar README com instruções de setup
+style: remover espaços em branco desnecessários
+refactor: extrair lógica de desconto para classe separada
+test(sale): adicionar testes para total da venda
+chore: atualizar versão do Spring Boot para 3.1.2
+perf(stock): otimizar consulta de produtos em baixo estoque
+build: adicionar plugin do Jacoco para cobertura de testes
+ci: configurar pipeline de deploy no GitHub Actions
+
+
+⚠️ Commits com quebra de compatibilidade
+
+Quando a alteração quebra uma API existente, use BREAKING CHANGE no corpo do commit:
+
+feat(auth): migrar autenticação para OAuth2
+
+BREAKING CHANGE: o endpoint de login antigo /auth/login foi removido e substituído por /auth/oauth2/login
+
+🛠️ Dicas para o seu fluxo
+
+Commits pequenos e atômicos: cada commit deve representar uma única mudança.
+
+Escreva no imperativo: como se fosse uma ordem, exemplo: “adicionar funcionalidade”, não “adicionada funcionalidade
+
 # Tratamento de Exceptions Logs
 
 As exceções serão usadas para controlar erros específicos que podem acontecer durante a

@@ -46,3 +46,40 @@ Garantir que a conciliação atualiza estoque corretamente.
 Ajustes Pós-Teste
 Corrigir bugs detectados, adicionar novos casos para cada falha encontrada (evitar regressão).
 Executar novamente todos os testes automatizados antes de subir para produção (CI)
+
+
+
+Cada produto deve ter nome, categoria, preço de venda, custo e quantidade em estoque. Um sistema para registrar quando um produto entra (compra) e saí (venda). e relatório diário de vendas com o total vendido por produto e o valor total de vendas.
+
+# Critérios de Aceitação
+Registro de Venda e Atualização de Estoque
+Dado que existe um produto com estoque suficiente
+ Quando o usuário registra uma venda
+ Então o estoque do produto deve ser reduzido imediatamente no banco de dados
+ E a venda deve ser persistida com status CONFIRMADA
+ E deve ser possível consultar essa venda pelo endpoint /api/sales
+Registro de Entrada de Estoque
+Dado que existe um produto cadastrado
+Quando o usuário lança uma movimentação de entrada
+Então o estoque do produto deve aumentar pela quantidade informada
+E a movimentação deve ser registrada na tabela inventory_movements
+Relatório de Vendas do Dia
+Dado que existem vendas registradas para o dia atual
+ Quando o usuário solicita o relatório diário (GET /api/reports/top-products ou endpoint de vendas diárias)
+ Então o relatório deve exibir:
+Quantidade total de vendas realizadas
+Valor total vendido
+Quebra por forma de pagamento (CASH, CARD, PIX, OTHER)
+ E deve retornar em menos de 1 segundo para até 10k registros.
+Suporte Offline e Sincronização (se PWA ou mobile for usado)
+Dado que o usuário está offline
+Quando ele registra uma venda no app
+ Então a venda deve ser armazenada localmente (IndexedDB / SQLite no dispositivo)
+ E quando a conexão retornar,
+ Então a venda deve ser sincronizada com o servidor, estoque atualizado e movimentação registrada
+ E o usuário deve ser notificado de sucesso ou conflito de sincronização
+Casos de Erro / Borda
+Venda não deve ser confirmada se estoque < quantidade solicitada → retornar 422 Unprocessable Entity
+Se o token JWT for inválido ou expirado → retornar 401 Unauthorized
+Tentativa de vendedor lançar ajuste → retornar 403 Forbidden
+Se relatório for solicitado em dia sem vendas → retornar lista vazia (não erro).
