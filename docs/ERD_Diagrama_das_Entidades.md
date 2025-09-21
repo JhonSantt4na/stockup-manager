@@ -1,10 +1,129 @@
+## 📊 ERD - Diagrama das Entidades
 
-# 📘 Modelo de Dados
+Este documento descreve o modelo de dados para o app StockUp Manager. Inclui entidades, validações, exemplos SQL, JSON, relacionamentos e triggers. O foco é em um design profissional, com soft delete para exclusão lógica e validações no backend.
 
-## 📂 Entidades
+### Diagrama ERD
 
----
+![Diagrama ERD](/docs/diagrams/DiagramaERD.png)
 
+#### Explicação do ERD
+- **Template Usado**: Um modelo padrão de ERD para desenvolvimento de software, Ele mostra entidades como caixas, atributos principais, e relacionamentos com cardinalidade (||--o{ para 1:N).
+- **Relacionamentos**:
+  - `users (1) → sales (N)`: Um usuário pode realizar várias vendas.
+  - `users (1) → inventory_movements (N)`: Um usuário pode ser responsável por várias movimentações.
+  - `products (1) → inventory_movements (N)`: Um produto pode ter múltiplas movimentações.
+  - `products (1) → sale_items (N)`: Um produto pode ser vendido em vários itens.
+  - `sales (1) → sale_items (N)`: Uma venda pode conter múltiplos itens.
+- **Considerações**: Em JPA/Hibernate, use anotações como `@ManyToOne` e `@OneToMany` para mapear esses relacionamentos no código Java.
+
+## Relacionamentos entre Entidades
+
+### Diagrama Conceitual (Resumido)
+
+- **users (1) → sales (N)**  
+  Um usuário pode realizar várias vendas.
+
+- **products (1) → sales_items (N)**  
+  Um produto pode estar presente em diversos itens de venda.
+
+- **products (1) → inventory_movements (N)**  
+  Um produto pode possuir múltiplas movimentações de estoque.
+
+- **sales (1) → sale_items (N)**  
+  Uma venda pode conter múltiplos itens de venda.
+
+### Relacionamentos no Código Java (JPA/Hibernate)
+
+#### `Sales`
+```java
+@ManyToOne
+@JoinColumn(name = "user_id")
+private User user;
+```
+
+#### `InventoryMovements`
+
+```java
+@ManyToOne
+@JoinColumn(name = "product_id")
+private Product product;
+
+@ManyToOne
+@JoinColumn(name = "user_id")
+private User user;
+```
+
+#### `SaleItems`
+
+```java
+@ManyToOne
+@JoinColumn(name = "sale_id")
+private Sale sale;
+
+@ManyToOne
+@JoinColumn(name = "product_id")
+private Product product;
+```
+
+### Considerações
+
+* Todas as relações `@ManyToOne` indicam que várias entidades estão ligadas a uma principal.
+* Recomenda-se **uso de transações** para garantir integridade:
+
+  * Criação de uma venda inclui:
+
+    * Itens de venda
+    * Verificação e atualização do estoque (movimentação `OUT`)
+    * Cálculo correto do `total`
+* Soft delete deve ser tratado via filtros no repositório ou por uso de `@Where` (Hibernate).
+
+## Trigger para Atualização de Estoque (PostgreSQL)
+
+### Objetivo
+
+Atualizar o campo `stock_quantity` da tabela `products` automaticamente após cada movimentação de estoque (`inventory_movements`).
+
+### SQL: Função e Trigger
+
+```sql
+CREATE OR REPLACE FUNCTION update_stock() RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.type = 'IN' THEN
+        UPDATE products
+        SET stock_quantity = stock_quantity + NEW.quantity
+        WHERE id = NEW.product_id;
+
+    ELSIF NEW.type = 'OUT' THEN
+        UPDATE products
+        SET stock_quantity = stock_quantity - NEW.quantity
+        WHERE id = NEW.product_id;
+
+    ELSIF NEW.type = 'ADJUST' THEN
+        UPDATE products
+        SET stock_quantity = stock_quantity + NEW.quantity
+        WHERE id = NEW.product_id;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+```sql
+CREATE TRIGGER trg_update_stock
+AFTER INSERT ON inventory_movements
+FOR EACH ROW
+EXECUTE PROCEDURE update_stock();
+```
+
+### Observações
+
+* A trigger **é executada automaticamente** após cada inserção em `inventory_movements`.
+* Para o tipo `ADJUST`, o valor de `quantity` pode ser **positivo** ou **negativo**.
+* Se necessário, você pode alterar a lógica para impedir que o estoque fique negativo.
+
+
+## 📂 Entidades 
 ### 🧑‍💼 `users`
 
 | Campo         | Tipo e Regras | Descrição |
@@ -52,8 +171,6 @@ CREATE TABLE users (
   "updated_at": "2025-09-18T10:00:00Z"
 }
 ```
-
----
 
 ### 📦 `products`
 
@@ -121,12 +238,10 @@ CREATE TABLE products (
 }
 ```
 
-## Entidade: inventory_movements
+### 📦 `inventory_movements`
 
-### Descrição
+#### Descrição
 Movimentações de estoque, como entrada, saída e ajustes.
-
-### Campos
 
 | Campo        | Tipo / Restrição                                        | Descrição                                                                 |
 |--------------|----------------------------------------------------------|---------------------------------------------------------------------------|
@@ -139,14 +254,12 @@ Movimentações de estoque, como entrada, saída e ajustes.
 | date         | TIMESTAMP DEFAULT now()                                 | Data e hora da movimentação.                                             |
 | deleted_at   | TIMESTAMP (NULL por padrão)                             | Exclusão lógica.                                                         |
 
-### Validações Backend
+#### ✅ Validações Backend
 
 - `quantity`: > 0 (IN/OUT); qualquer valor para ADJUST.
 - `type`: Enum válido.
 - `reason`: Obrigatório se tipo for `ADJUST`.
 - `product_id` e `user_id`: devem existir.
-
-### SQL
 
 ```sql
 CREATE TYPE movement_type_enum AS ENUM ('IN', 'OUT', 'ADJUST');
@@ -161,9 +274,9 @@ CREATE TABLE inventory_movements (
     date TIMESTAMP DEFAULT now(),
     deleted_at TIMESTAMP
 );
-````
+```
 
-### Exemplo JSON
+#### 📦 Exemplo JSON
 
 ```json
 {
@@ -187,33 +300,26 @@ Exemplo com ADJUST:
 }
 ```
 
----
+### 📦 `sales`
 
-## Entidade: sales
-
-### Descrição
-
+#### Descrição
 Representa uma venda realizada no sistema.
-
-### Campos
 
 | Campo           | Tipo / Restrição                              | Descrição                                  |
 | --------------- | --------------------------------------------- | ------------------------------------------ |
-| id              | UUID (PK, DEFAULT gen\_random\_uuid\_v7())    | Identificador único da venda.              |
-| user\_id        | UUID (FK → users)                             | Usuário (vendedor) responsável.            |
+| id              | UUID (PK, DEFAULT gen_random_uuid_v7())    | Identificador único da venda.              |
+| user_id        | UUID (FK → users)                             | Usuário (vendedor) responsável.            |
 | date            | TIMESTAMP DEFAULT now()                       | Data e hora da venda.                      |
-| payment\_method | ENUM('CASH', 'CARD', 'PIX', 'OTHER') NOT NULL | Método de pagamento.                       |
+| payment_method | ENUM('CASH', 'CARD', 'PIX', 'OTHER') NOT NULL | Método de pagamento.                       |
 | total           | NUMERIC(12,2) NOT NULL CHECK (total >= 0)     | Valor total da venda (soma dos subtotais). |
-| deleted\_at     | TIMESTAMP                                     | Exclusão lógica (soft delete).             |
+| deleted_at     | TIMESTAMP                                     | Exclusão lógica (soft delete).             |
 
-### Validações Backend
+#### ✅ Validações Backend
 
-* `payment_method`: Enum válido.
-* `total`: >= 0, calculado a partir dos itens.
-* Pelo menos 1 `sale_item` relacionado.
-* `user_id`: deve existir.
-
-### SQL
+- `payment_method`: Enum válido.
+- `total`: >= 0, calculado a partir dos itens.
+- Pelo menos 1 `sale_item` relacionado.
+- `user_id`: deve existir.
 
 ```sql
 CREATE TYPE payment_method_enum AS ENUM ('CASH', 'CARD', 'PIX', 'OTHER');
@@ -228,7 +334,7 @@ CREATE TABLE sales (
 );
 ```
 
-### Exemplo JSON
+#### 📦 Exemplo JSON
 
 ```json
 {
@@ -240,35 +346,28 @@ CREATE TABLE sales (
 }
 ```
 
----
+### 📦 `sale_items`
 
-## Entidade: sale\_items
-
-### Descrição
-
+#### Descrição
 Itens individuais de uma venda, vinculando produtos à venda.
-
-### Campos
 
 | Campo       | Tipo / Restrição                                | Descrição                           |
 | ----------- | ----------------------------------------------- | ----------------------------------- |
-| id          | UUID (PK, DEFAULT gen\_random\_uuid\_v7())      | Identificador do item de venda.     |
-| sale\_id    | UUID (FK → sales, ON DELETE CASCADE) NOT NULL   | Venda relacionada.                  |
-| product\_id | UUID (FK → products) NOT NULL                   | Produto vendido.                    |
+| id          | UUID (PK, DEFAULT gen_random_uuid_v7())      | Identificador do item de venda.     |
+| sale_id    | UUID (FK → sales, ON DELETE CASCADE) NOT NULL   | Venda relacionada.                  |
+| product_id | UUID (FK → products) NOT NULL                   | Produto vendido.                    |
 | quantity    | INTEGER NOT NULL CHECK (quantity > 0)           | Quantidade vendida.                 |
-| unit\_price | NUMERIC(12,2) NOT NULL CHECK (unit\_price >= 0) | Preço unitário do produto.          |
-| subtotal    | NUMERIC(12,2) NOT NULL CHECK (subtotal >= 0)    | Subtotal = quantity \* unit\_price. |
-| deleted\_at | TIMESTAMP                                       | Exclusão lógica.                    |
+| unit_price | NUMERIC(12,2) NOT NULL CHECK (unit_price >= 0) | Preço unitário do produto.          |
+| subtotal    | NUMERIC(12,2) NOT NULL CHECK (subtotal >= 0)    | Subtotal = quantity * unit_price. |
+| deleted_at | TIMESTAMP                                       | Exclusão lógica.                    |
 
-### Validações Backend
+#### ✅ Validações Backend
 
-* `quantity`: > 0
-* `unit_price`: >= 0
-* `subtotal`: quantity \* unit\_price
-* `sale_id` e `product_id`: devem existir
-* Verificar se há estoque suficiente antes da venda
-
-### SQL
+- `quantity`: > 0
+- `unit_price`: >= 0
+- `subtotal`: quantity * unit_price
+- `sale_id` e `product_id`: devem existir
+- Verificar se há estoque suficiente antes da venda
 
 ```sql
 CREATE TABLE sale_items (
@@ -282,7 +381,7 @@ CREATE TABLE sale_items (
 );
 ```
 
-### Exemplo JSON
+#### 📦 Exemplo JSON
 
 ```json
 {
@@ -294,112 +393,3 @@ CREATE TABLE sale_items (
   "subtotal": 25.00
 }
 ```
-
-## Relacionamentos entre Entidades
-
-### Diagrama Conceitual (Resumido)
-
-- **users (1) → sales (N)**  
-  Um usuário pode realizar várias vendas.
-
-- **products (1) → sales_items (N)**  
-  Um produto pode estar presente em diversos itens de venda.
-
-- **products (1) → inventory_movements (N)**  
-  Um produto pode possuir múltiplas movimentações de estoque.
-
-- **sales (1) → sale_items (N)**  
-  Uma venda pode conter múltiplos itens de venda.
-
-
-### Relacionamentos no Código Java (JPA/Hibernate)
-
-#### `Sales`
-```java
-@ManyToOne
-@JoinColumn(name = "user_id")
-private User user;
-````
-
-#### `InventoryMovements`
-
-```java
-@ManyToOne
-@JoinColumn(name = "product_id")
-private Product product;
-
-@ManyToOne
-@JoinColumn(name = "user_id")
-private User user;
-```
-
-#### `SaleItems`
-
-```java
-@ManyToOne
-@JoinColumn(name = "sale_id")
-private Sale sale;
-
-@ManyToOne
-@JoinColumn(name = "product_id")
-private Product product;
-```
-
-### Considerações
-
-* Todas as relações `@ManyToOne` indicam que várias entidades estão ligadas a uma principal.
-* Recomenda-se **uso de transações** para garantir integridade:
-
-  * Criação de uma venda inclui:
-
-    * Itens de venda
-    * Verificação e atualização do estoque (movimentação `OUT`)
-    * Cálculo correto do `total`
-* Soft delete deve ser tratado via filtros no repositório ou por uso de `@Where` (Hibernate).
-
----
-
-## Trigger para Atualização de Estoque (PostgreSQL)
-
-### Objetivo
-
-Atualizar o campo `stock_quantity` da tabela `products` automaticamente após cada movimentação de estoque (`inventory_movements`).
-
-### SQL: Função e Trigger
-
-```sql
-CREATE OR REPLACE FUNCTION update_stock() RETURNS TRIGGER AS $$
-BEGIN
-    IF NEW.type = 'IN' THEN
-        UPDATE products
-        SET stock_quantity = stock_quantity + NEW.quantity
-        WHERE id = NEW.product_id;
-
-    ELSIF NEW.type = 'OUT' THEN
-        UPDATE products
-        SET stock_quantity = stock_quantity - NEW.quantity
-        WHERE id = NEW.product_id;
-
-    ELSIF NEW.type = 'ADJUST' THEN
-        UPDATE products
-        SET stock_quantity = stock_quantity + NEW.quantity
-        WHERE id = NEW.product_id;
-    END IF;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-```
-
-```sql
-CREATE TRIGGER trg_update_stock
-AFTER INSERT ON inventory_movements
-FOR EACH ROW
-EXECUTE PROCEDURE update_stock();
-```
-
-### Observações
-
-* A trigger **é executada automaticamente** após cada inserção em `inventory_movements`.
-* Para o tipo `ADJUST`, o valor de `quantity` pode ser **positivo** ou **negativo**.
-* Se necessário, você pode alterar a lógica para impedir que o estoque fique negativo.
