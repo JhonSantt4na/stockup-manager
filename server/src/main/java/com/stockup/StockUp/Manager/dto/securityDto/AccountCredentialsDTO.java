@@ -20,7 +20,7 @@ public class AccountCredentialsDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@NotBlank(message = "Username is required")
-	private String userName;
+	private String username;
 	
 	@NotBlank(message = "Full name is required")
 	private String fullName;
@@ -56,7 +56,7 @@ public class AccountCredentialsDTO implements Serializable {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		AccountCredentialsDTO that = (AccountCredentialsDTO) o;
-		return Objects.equals(userName, that.userName) &&
+		return Objects.equals(username, that.username) &&
 			Objects.equals(fullName, that.fullName) &&
 			Objects.equals(email, that.email) &&
 			Objects.equals(password, that.password) &&
@@ -65,6 +65,6 @@ public class AccountCredentialsDTO implements Serializable {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(userName, fullName, email, password, permissions);
+		return Objects.hash(username, fullName, email, password, permissions);
 	}
 }

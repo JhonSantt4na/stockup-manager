@@ -2,12 +2,15 @@ package com.stockup.StockUp.Manager.service;
 
 import com.stockup.StockUp.Manager.StartUp;
 import com.stockup.StockUp.Manager.dto.securityDto.AccountCredentialsDTO;
+import com.stockup.StockUp.Manager.dto.securityDto.AccountRegisterDTO;
 import com.stockup.StockUp.Manager.dto.securityDto.TokenDTO;
+import com.stockup.StockUp.Manager.entity.User;
 import com.stockup.StockUp.Manager.entity.security.Permission;
 import com.stockup.StockUp.Manager.repository.PermissionsRepository;
 import com.stockup.StockUp.Manager.repository.UserRepository;
 import com.stockup.StockUp.Manager.security.jwt.JwtTokenProvider;
 import lombok.AllArgsConstructor;
+import org.mapstruct.control.MappingControl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -35,27 +38,27 @@ public class AuthService {
 	private final PermissionsRepository repositoryPermission;
 	private final PasswordEncoder passwordEncoder;
 	
-	public ResponseEntity<TokenDTO> signIn(AccountCredentialsDTO credentials) {
+	public ResponseEntity<TokenDTO> login(AccountCredentialsDTO credentials) {
 		
-		logger.info("Authentication requested for user [{}]", credentials.getUserName());
+		logger.info("Authentication requested for user [{}]", credentials.getUsername());
 		authenticationManager.authenticate(
 			new UsernamePasswordAuthenticationToken(
-				credentials.getUserName(),
+				credentials.getUsername(),
 				credentials.getPassword()
 			)
 		);
 		
-		var user = userRepository.findByUsername(credentials.getUserName());
+		var user = userRepository.findByUsername(credentials.getUsername());
 		if (user == null) {
-			throw new UsernameNotFoundException("Username " + credentials.getUserName() + " not found!");
+			throw new UsernameNotFoundException("Username " + credentials.getUsername() + " not found!");
 		}
 		
 		var token = tokenProvider.createAccessToken(
-			credentials.getUserName(),
+			credentials.getUsername(),
 			user.getRoles()
 		);
-		logger.info("User [{}] authenticated successfully", credentials.getUserName());
-		auditLogger.info("User [{}] logged in", credentials.getUserName());
+		logger.info("User [{}] authenticated successfully", credentials.getUsername());
+		auditLogger.info("User [{}] logged in", credentials.getUsername());
 		return ResponseEntity.ok(token);
 	}
 	
@@ -71,6 +74,22 @@ public class AuthService {
 		logger.info("New access token generated for user [{}]", username);
 		auditLogger.info("Refresh token granted for user [{}]", username);
 		return ResponseEntity.ok(token);
+	}
+	
+	public User register(AccountRegisterDTO credentials){
+		if (userRepository.existsByUsername(credentials.getUsername())){
+			throw new RuntimeException("Username Já cadastrado!");
+		}
+		String encodedPassword = passwordEncoder.encode(credentials.getPassword());
+		
+		User user = new User();
+		user.setUsername(credentials.getUsername());
+		user.setEmail(credentials.getEmail());
+		user.setPassword(encodedPassword);
+		
+		User savedUser = userRepository.save(user);
+		
+		return savedUser;
 	}
 	
 	private String generateHashedPassword(String password) {

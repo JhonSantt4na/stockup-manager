@@ -1,6 +1,5 @@
 package com.stockup.StockUp.Manager.entity;
 
-
 import com.stockup.StockUp.Manager.entity.security.Permission;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -45,7 +44,8 @@ public class User implements UserDetails,Serializable {
 	@NotNull(message = "Email cannot be null")
 	private String email;
 	
-	private String password_hash;
+	@Column(nullable = false)
+	private String password;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
@@ -75,7 +75,6 @@ public class User implements UserDetails,Serializable {
 	@Column
 	private boolean enabled = true;
 	
-	
 	public boolean isDeleted() {
 		return deletedAt != null;
 	}
@@ -90,7 +89,7 @@ public class User implements UserDetails,Serializable {
 	
 	@Override
 	public String getPassword() {
-		return this.password_hash;
+		return this.password;
 	}
 	
 	@Override
