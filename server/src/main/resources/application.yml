@@ -1,2 +1,31 @@
 server:
   port: 8080
+
+spring:
+  application:
+    name: StockUp Manager
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/stockup?useTimezone=true&serverTimezone=UTC
+    username: stockup_user
+    password: stockup_pass
+    drive: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+security:
+  enabled: true
+  jwt:
+    token:
+      secret-key: my-very-secure-secret-key-with-at-least-32-chars
+      expire-lenght: 3600000
+      issuer: stockUp-manager
+      access-expire-length: 3600000 # 1h
+      refresh-expire-length: 2592000000 # 30d
+
+logging:
+  config:
+    classpath: src/main/resources/log4j2.xml
