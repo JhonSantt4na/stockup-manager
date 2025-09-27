@@ -1,9 +1,8 @@
 package com.stockup.StockUp.Manager.repository;
 
-import com.stockup.StockUp.Manager.entity.security.Permission;
+import com.stockup.StockUp.Manager.model.security.Permission;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
 
 @Repository
