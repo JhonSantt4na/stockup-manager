@@ -29,7 +29,7 @@
             <totalSizeCap>3GB</totalSizeCap>
         </rollingPolicy>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [AUDIT] %msg%n</pattern>
+            <pattern>AUDIT | %d{yyyy-MM-dd HH:mm:ss} | %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -38,8 +38,8 @@
         <appender-ref ref="AUDIT" />
     </logger>
 
-    <!-- Logger for com.santt4na.health_check -->
-    <logger name="com.stockup.StockUp.Manager" level="DEBUG" additivity="false">
+    <!-- Logger for app -->
+    <logger name="com.stockup" level="DEBUG" additivity="false">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
     </logger>

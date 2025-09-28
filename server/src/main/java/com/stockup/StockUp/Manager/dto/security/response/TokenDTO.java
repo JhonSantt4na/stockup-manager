@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.dto.securityDto;
+package com.stockup.StockUp.Manager.dto.security.response;
 
 import lombok.Getter;
 import lombok.Setter;

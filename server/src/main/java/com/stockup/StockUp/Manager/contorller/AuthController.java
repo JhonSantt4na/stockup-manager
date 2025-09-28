@@ -1,57 +1,61 @@
 package com.stockup.StockUp.Manager.contorller;
 
-import com.stockup.StockUp.Manager.dto.securityDto.AccountCredentialsDTO;
+import com.stockup.StockUp.Manager.audit.AuditLogger;
+import com.stockup.StockUp.Manager.dto.security.request.LoginRequestDTO;
+import com.stockup.StockUp.Manager.exception.InvalidCredentialsException;
 import com.stockup.StockUp.Manager.service.AuthService;
-import io.micrometer.common.util.StringUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-
-@Controller
+@RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 	
-	@Autowired
 	private final AuthService service;
 	
-	@GetMapping("/login")
-	public String showLoginPage() {
-		return "login";
-	}
-	
-	@PostMapping("/signin")
-	public ResponseEntity<?> signin(@Valid @RequestBody AccountCredentialsDTO credentials) {
-		
-		if (credentialsIsInvalid(credentials))return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
-		var token = service.signIn(credentials);
-		
-		if (token == null) ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
-		return  ResponseEntity.ok().body(token);
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO credentials) {
+		try {
+			var token = service.login(credentials);
+			AuditLogger.log("LOGIN", credentials.getUsername(), "SUCCESS", "Authenticated successfully");
+			return ResponseEntity.ok(token);
+			
+		} catch (BadCredentialsException e) {
+			AuditLogger.log("LOGIN", credentials.getUsername(), "FAILED", "Invalid credentials");
+			throw e;
+			
+		} catch (UsernameNotFoundException e) {
+			AuditLogger.log("LOGIN", credentials.getUsername(), "FAILED", "User not found");
+			throw e;
+			
+		} catch (Exception e) {
+			AuditLogger.log("LOGIN", credentials.getUsername(), "FAILED", "Internal error: " + e.getMessage());
+			throw new RuntimeException("Server error", e);
+		}
 	}
 	
 	@PutMapping("/refresh/{username}")
-	public ResponseEntity<?> refreshToken(@PathVariable("username") String username, @RequestHeader("Authorization") String refreshToken) {
+	public ResponseEntity<?> refreshToken(
+		@PathVariable("username") String username,
+		@RequestHeader("Authorization") String refreshToken) {
+		try {
+			if (username == null || username.isBlank() || refreshToken == null || refreshToken.isBlank()) {
+				AuditLogger.log("REFRESH_TOKEN", "unknown", "FAILED", "Incomplete data");
+				throw new InvalidCredentialsException();
+			}
+			var token = service.refreshToken(username, refreshToken);
+			
+			AuditLogger.log("REFRESH_TOKEN", username, "SUCCESS", "Token renewed");
+			return ResponseEntity.ok(token);
 		
-		if (parametersAreInvalid(username, refreshToken)) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
-		var token = service.refreshToken(username, refreshToken);
-		if (token == null) ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
-		return  ResponseEntity.ok().body(token);
-	}
-	
-	private boolean parametersAreInvalid(String username, String refreshToken) {
-		return StringUtils.isBlank(username) || StringUtils.isBlank(refreshToken);
-	}
-	
-	private static boolean credentialsIsInvalid(AccountCredentialsDTO credentials) {
-		
-		return credentials == null ||
-			StringUtils.isBlank(credentials.getPassword()) ||
-			StringUtils.isBlank(credentials.getUserName());
+		} catch (Exception e) {
+			AuditLogger.log("REFRESH_TOKEN", username != null ? username : "unknown", "FAILED", "Error: " + e.getMessage());
+			throw new RuntimeException("Server error", e);
+		}
 	}
 }

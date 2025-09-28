@@ -1,10 +1,10 @@
-package com.stockup.StockUp.Manager.entity.security;
+package com.stockup.StockUp.Manager.model.security;
 
+import com.stockup.StockUp.Manager.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
@@ -13,14 +13,10 @@ import java.util.Objects;
 @Getter
 @Entity
 @Table(name = "permission")
-public class Permission implements GrantedAuthority, Serializable {
+public class Permission extends BaseEntity implements GrantedAuthority, Serializable {
 	
 	@Serial
 	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
 	
 	@Column(unique = true)
 	private String description;
@@ -32,15 +28,13 @@ public class Permission implements GrantedAuthority, Serializable {
 	
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Permission that = (Permission) o;
-		return Objects.equals(id, that.id) &&
-			Objects.equals(description, that.description);
+		return Objects.equals(description, that.description);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, description);
+		return Objects.hashCode(description);
 	}
 }

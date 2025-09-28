@@ -1,7 +1,6 @@
-package com.stockup.StockUp.Manager.entity;
+package com.stockup.StockUp.Manager.model;
 
-
-import com.stockup.StockUp.Manager.entity.security.Permission;
+import com.stockup.StockUp.Manager.model.security.Permission;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -9,19 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.io.Serial;
-import java.io.Serializable;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -29,23 +21,22 @@ import java.util.UUID;
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements UserDetails,Serializable {
+public class User extends BaseEntity implements UserDetails {
 	
-	@Serial
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private UUID id;
+	@Column(name = "full_name", nullable = false)
+	private String fullName;
 	
 	@NotNull(message = "username cannot be null")
+	@Column(unique = true, nullable = false)
 	private String username;
 	
 	@Email
 	@NotNull(message = "Email cannot be null")
+	@Column(unique = true, nullable = false)
 	private String email;
 	
-	private String password_hash;
+	@Column(nullable = false)
+	private String password;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
@@ -55,13 +46,8 @@ public class User implements UserDetails,Serializable {
 	)
 	private List<Permission> permissions = new ArrayList<>();
 	
-	@CreationTimestamp
-	private Timestamp created_at;
-	
-	@UpdateTimestamp
-	private Timestamp updated_at;
-	
-	private LocalDateTime deletedAt;
+	@Column(name = "last_activity")
+	private LocalDateTime lastActivity;
 	
 	@Column(name = "account_non_expired")
 	private boolean accountNonExpired = true;
@@ -71,14 +57,6 @@ public class User implements UserDetails,Serializable {
 	
 	@Column(name = "credentials_non_expired")
 	private boolean credentialsNonExpired = true;
-	
-	@Column
-	private boolean enabled = true;
-	
-	
-	public boolean isDeleted() {
-		return deletedAt != null;
-	}
 	
 	public List<String> getRoles() {
 		List<String> roles = new ArrayList<>();
@@ -90,7 +68,7 @@ public class User implements UserDetails,Serializable {
 	
 	@Override
 	public String getPassword() {
-		return this.password_hash;
+		return this.password;
 	}
 	
 	@Override
@@ -116,10 +94,5 @@ public class User implements UserDetails,Serializable {
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return this.credentialsNonExpired;
-	}
-	
-	@Override
-	public boolean isEnabled() {
-		return this.enabled;
 	}
 }
