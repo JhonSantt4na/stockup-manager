@@ -1,5 +1,9 @@
--- Criação da tabela de permissões
+-- Criar tabela permission se não existir
 CREATE TABLE permission (
-    id BIGSERIAL PRIMARY KEY,
-    description VARCHAR(255) NOT NULL UNIQUE
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    description VARCHAR(100) UNIQUE NOT NULL,
+    enabled BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP
 );

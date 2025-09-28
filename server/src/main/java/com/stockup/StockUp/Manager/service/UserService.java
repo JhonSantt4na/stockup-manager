@@ -1,6 +1,5 @@
 package com.stockup.StockUp.Manager.service;
 
-import com.stockup.StockUp.Manager.StartUp;
 import com.stockup.StockUp.Manager.dto.ChangePasswordRequestDTO;
 import com.stockup.StockUp.Manager.dto.security.request.RegisterRequestDTO;
 import com.stockup.StockUp.Manager.dto.security.response.UserResponseDTO;
@@ -21,24 +20,28 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
-	private static final Logger logger = LoggerFactory.getLogger(StartUp.class);
-	private static final Logger auditLogger = LoggerFactory.getLogger("audit");
+	
+	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
 	@Autowired
-	PasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 	
 	@Autowired
-	PermissionRepository permissionRepository;
+	private PermissionRepository permissionRepository;
 	
 	@Autowired
-	UserMapper mapper;
+	private UserMapper mapper;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -55,35 +58,83 @@ public class UserService implements UserDetailsService {
 			});
 	}
 	
-	//Inconsistência leve para Corrigir:
-	// user.getPermissions().addAll(rolesToAssign);
-	// -> pode duplicar roles se chamar várias vezes.
-	// -> usar Set<Permission> no User ou checar se a role já existe antes de adicionar.
 	public UserResponseDTO assignRoles(String username, List<String> roleNames) {
+		logger.info("Assigning roles to user [{}]: {}", username, roleNames);
+		
 		User user = userRepository.findByUsername(username)
-			.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+			.orElseThrow(() -> {
+				logger.warn("User not found: [{}]", username);
+				return new UsernameNotFoundException("User not found: " + username);
+			});
 		
 		List<Permission> rolesToAssign = permissionRepository.findAllByDescriptionIn(roleNames);
 		
 		if (rolesToAssign.isEmpty()) {
+			logger.warn("No valid roles found to assign for user [{}]", username);
 			throw new IllegalArgumentException("No valid roles found to assign");
 		}
 		
-		user.getPermissions().addAll(rolesToAssign);
+		Set<Permission> currentRoles = new HashSet<>(user.getPermissions());
+		currentRoles.addAll(rolesToAssign);
+		user.setPermissions(new ArrayList<>(currentRoles));
+		
 		User updatedUser = userRepository.save(user);
+		logger.info("Assigned {} roles to user [{}]", rolesToAssign.size(), username);
 		
 		return mapper.entityToResponse(updatedUser);
 	}
 	
-	public List<String> getUserRoles(String username) {
+	public UserResponseDTO removeRoles(String username, List<String> roleNames) {
+		logger.info("Removing roles from user [{}]: {}", username, roleNames);
+		
 		User user = userRepository.findByUsername(username)
-			.orElseThrow(() -> new UsernameNotFoundException("User not found"));
-		return user.getRoles();
+			.orElseThrow(() -> {
+				logger.warn("User not found: [{}]", username);
+				return new UsernameNotFoundException("User not found: " + username);
+			});
+		
+		List<String> existingRoles = user.getPermissions().stream()
+			.map(Permission::getDescription)
+			.toList();
+		
+		List<String> rolesToRemove = roleNames.stream()
+			.filter(existingRoles::contains)
+			.toList();
+		
+		if (rolesToRemove.isEmpty()) {
+			logger.warn("No valid roles to remove from user [{}]", username);
+			throw new IllegalArgumentException("No valid roles to remove");
+		}
+		
+		user.getPermissions().removeIf(role -> rolesToRemove.contains(role.getDescription()));
+		User savedUser = userRepository.save(user);
+		
+		logger.info("Removed {} roles from user [{}]", rolesToRemove.size(), username);
+		return mapper.entityToResponse(savedUser);
 	}
 	
-	public UserResponseDTO registerUser(RegisterRequestDTO credentials){
+	public List<String> getUserRoles(String username) {
+		logger.debug("Getting roles for user: [{}]", username);
+		
+		User user = userRepository.findByUsername(username)
+			.orElseThrow(() -> {
+				logger.warn("User not found: [{}]", username);
+				return new UsernameNotFoundException("User not found: " + username);
+			});
+		
+		List<String> roles = user.getPermissions().stream()
+			.map(Permission::getDescription)
+			.collect(Collectors.toList());
+		
+		logger.debug("User [{}] has {} roles", username, roles.size());
+		return roles;
+	}
+	
+	public UserResponseDTO registerUser(RegisterRequestDTO credentials) {
+		logger.info("Registering new user: [{}]", credentials.getUsername());
 		
 		if (userRepository.existsByUsername(credentials.getUsername())) {
+			logger.warn("Attempt to register existing username: [{}]", credentials.getUsername());
 			throw new UsernameAlreadyExistsException("Username already exists: " + credentials.getUsername());
 		}
 		
@@ -92,12 +143,19 @@ public class UserService implements UserDetailsService {
 		newUser.setCreatedAt(LocalDateTime.now());
 		
 		User userSaved = userRepository.save(newUser);
+		logger.info("User registered successfully: [{}]", credentials.getUsername());
+		
 		return mapper.entityToResponse(userSaved);
 	}
 	
 	public UserResponseDTO updatedUser(RegisterRequestDTO credentials) {
+		logger.info("Updating user: [{}]", credentials.getUsername());
+		
 		User user = userRepository.findByUsername(credentials.getUsername())
-			.orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + credentials.getUsername()));
+			.orElseThrow(() -> {
+				logger.warn("User not found for update: [{}]", credentials.getUsername());
+				return new UsernameNotFoundException("User not found with username: " + credentials.getUsername());
+			});
 		
 		user.setFullName(credentials.getFullName());
 		user.setEmail(credentials.getEmail());
@@ -105,32 +163,55 @@ public class UserService implements UserDetailsService {
 		user.setUpdatedAt(LocalDateTime.now());
 		
 		User updatedUser = userRepository.save(user);
+		logger.info("User updated successfully: [{}]", credentials.getUsername());
+		
 		return mapper.entityToResponse(updatedUser);
 	}
 	
-	public UserResponseDTO findUser(String username){
+	public UserResponseDTO findUser(String username) {
+		logger.debug("Finding user: [{}]", username);
+		
 		User user = userRepository.findByUsername(username)
-			.orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+			.orElseThrow(() -> {
+				logger.warn("User not found: [{}]", username);
+				return new UsernameNotFoundException("User not found with username: " + username);
+			});
+		
+		logger.debug("User found: [{}]", username);
 		return mapper.entityToResponse(user);
 	}
 	
 	public void deleteUser(String username) {
+		logger.info("Deleting user: [{}]", username);
+		
 		User user = userRepository.findByUsername(username)
-			.orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+			.orElseThrow(() -> {
+				logger.warn("User not found for deletion: [{}]", username);
+				return new UsernameNotFoundException("User not found with username: " + username);
+			});
 		user.setDeletedAt(LocalDateTime.now());
 		userRepository.save(user);
+		logger.info("User deleted successfully: [{}]", username);
 	}
 	
 	public void changePassword(String username, ChangePasswordRequestDTO dto) {
+		logger.info("Changing password for user: [{}]", username);
+		
 		User user = userRepository.findByUsername(username)
-			.orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+			.orElseThrow(() -> {
+				logger.warn("User not found for password change: [{}]", username);
+				return new UsernameNotFoundException("User not found with username: " + username);
+			});
 		
 		if (!passwordEncoder.matches(dto.getCurrentPassword(), user.getPassword())) {
+			logger.warn("Invalid current password for user: [{}]", username);
 			throw new InvalidCredentialsException("Current password is incorrect");
 		}
 		
 		user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
 		user.setUpdatedAt(LocalDateTime.now());
 		userRepository.save(user);
+		
+		logger.info("Password changed successfully for user: [{}]", username);
 	}
 }

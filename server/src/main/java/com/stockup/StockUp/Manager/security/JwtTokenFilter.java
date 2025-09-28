@@ -10,28 +10,24 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
+@Component
 public class JwtTokenFilter extends GenericFilterBean {
 	
-	@Autowired
 	private final JwtTokenProvider tokenProvider;
+	private final UserRepository userRepository;
 	
-	@Autowired
-	private UserRepository userRepository;
-	
-	public JwtTokenFilter(JwtTokenProvider tokenProvider) {
+	public JwtTokenFilter(JwtTokenProvider tokenProvider, UserRepository userRepository) {
 		this.tokenProvider = tokenProvider;
+		this.userRepository = userRepository;
 	}
 	
 	@Override
@@ -54,7 +50,7 @@ public class JwtTokenFilter extends GenericFilterBean {
 				user.getLastActivity().isBefore(LocalDateTime.now().minusMinutes(30))) {
 				SecurityContextHolder.clearContext();
 				httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Session expired due to inactivity");
-				return; // encerra o filtro
+				return;
 			}
 			
 			if (user.getLastActivity() == null ||

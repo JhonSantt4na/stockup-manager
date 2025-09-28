@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,14 +23,16 @@ import java.util.List;
 @AllArgsConstructor
 public class User extends BaseEntity implements UserDetails {
 	
-	@Column(nullable = false)
+	@Column(name = "full_name", nullable = false)
 	private String fullName;
 	
 	@NotNull(message = "username cannot be null")
+	@Column(unique = true, nullable = false)
 	private String username;
 	
 	@Email
 	@NotNull(message = "Email cannot be null")
+	@Column(unique = true, nullable = false)
 	private String email;
 	
 	@Column(nullable = false)
@@ -56,9 +57,6 @@ public class User extends BaseEntity implements UserDetails {
 	
 	@Column(name = "credentials_non_expired")
 	private boolean credentialsNonExpired = true;
-	
-	@Column
-	private boolean enabled = true;
 	
 	public List<String> getRoles() {
 		List<String> roles = new ArrayList<>();
@@ -96,10 +94,5 @@ public class User extends BaseEntity implements UserDetails {
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return this.credentialsNonExpired;
-	}
-	
-	@Override
-	public boolean isEnabled() {
-		return this.enabled;
 	}
 }

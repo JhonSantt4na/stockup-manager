@@ -1,12 +1,10 @@
 package com.stockup.StockUp.Manager.contorller;
 
+import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.dto.Roles.RoleCreateDTO;
-import com.stockup.StockUp.Manager.dto.security.response.UserResponseDTO;
+import com.stockup.StockUp.Manager.dto.Roles.RoleUpdateDTO;
 import com.stockup.StockUp.Manager.model.security.Permission;
-import com.stockup.StockUp.Manager.repository.PermissionRepository;
-import com.stockup.StockUp.Manager.repository.UserRepository;
 import com.stockup.StockUp.Manager.service.RoleService;
-import com.stockup.StockUp.Manager.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,45 +14,67 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
+
 @RestController
-@RequestMapping("/roles")
+@RequestMapping("/permission")
 @RequiredArgsConstructor
 public class RoleController {
 	
 	private final RoleService roleService;
-	private final UserService userService;
-	
-	private final UserRepository userRepository;
-	private final PermissionRepository permissionRepository;
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping
-	public ResponseEntity<Permission> createRole(@Valid @RequestBody RoleCreateDTO dto) {
-		Permission role = roleService.createRole(dto);
-		return ResponseEntity.status(HttpStatus.CREATED).body(role);
+	@PostMapping("/create")
+	public ResponseEntity<Permission> createPermission(@Valid @RequestBody RoleCreateDTO dto) {
+		try {
+			Permission permission = roleService.createRole(dto);
+			AuditLogger.log("ROLE_CREATE", getCurrentUser(), "SUCCESS", "Role created: " + dto.getDescription());
+			return ResponseEntity.status(HttpStatus.CREATED).body(permission);
+			
+		} catch (Exception e) {
+			AuditLogger.log("ROLE_CREATE", getCurrentUser(), "FAILED", "Error creating role: " + e.getMessage());
+			throw new RuntimeException("Error creating role", e);
+		}
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping
+	@PutMapping("/update")
+	public ResponseEntity<Permission> updatePermission(@Valid @RequestBody RoleUpdateDTO dto) {
+		try {
+			Permission permission = roleService.updateRole(dto);
+			AuditLogger.log("ROLE_UPDATE", getCurrentUser(), "SUCCESS",
+				"Permission updated from [" + dto.getOldDescription() + "] to [" + dto.getNewDescription() + "]");
+			return ResponseEntity.ok(permission);
+		} catch (Exception e) {
+			AuditLogger.log("ROLE_UPDATE", getCurrentUser(), "FAILED", "Error updating permission: " + e.getMessage());
+			throw new RuntimeException("Error update permission", e);
+		}
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/{description}")
+	public ResponseEntity<Permission> getDescriptionRoles(@PathVariable String description) {
+		Permission permission = roleService.getRoleByDescription(description);
+		return ResponseEntity.ok(permission);
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@DeleteMapping("/delete/{description}")
+	public ResponseEntity<Void> deleteRole(@PathVariable String description) {
+		try {
+			roleService.deleteRole(description);
+			AuditLogger.log("ROLE_DELETE", getCurrentUser(), "SUCCESS", "Role deleted: " + description);
+			return ResponseEntity.noContent().build();
+		} catch (Exception e) {
+			AuditLogger.log("ROLE_DELETE", getCurrentUser(), "FAILED", "Error deleting role: " + e.getMessage());
+			throw new RuntimeException("Error deleting role", e);
+		}
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/listAll")
 	public ResponseEntity<List<Permission>> listRoles() {
 		List<Permission> roles = roleService.getAllRoles();
-		return ResponseEntity.ok(roles);
-	}
-	
-	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/assign/{username}")
-	public ResponseEntity<UserResponseDTO> assignRoles(
-		@PathVariable String username,
-		@Valid @RequestBody List<String> roleNames
-	) {
-		UserResponseDTO updatedUser = userService.assignRoles(username, roleNames);
-		return ResponseEntity.ok(updatedUser);
-	}
-	
-	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/user/{username}")
-	public ResponseEntity<List<String>> getUserRoles(@PathVariable String username) {
-		List<String> roles = userService.getUserRoles(username);
 		return ResponseEntity.ok(roles);
 	}
 }

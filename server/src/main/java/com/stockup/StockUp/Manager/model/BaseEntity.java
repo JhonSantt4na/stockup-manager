@@ -31,6 +31,17 @@ public class BaseEntity implements Serializable {
 	
 	private LocalDateTime deletedAt;
 	
+	@Column
+	private boolean enabled = true;
+	
+	public void disable() {
+		this.enabled = false;
+	}
+	
+	public void enable() {
+		this.enabled = true;
+	}
+	
 	public boolean isDeleted() {
 		return deletedAt != null;
 	}
