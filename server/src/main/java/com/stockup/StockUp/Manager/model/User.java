@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -21,6 +23,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity implements UserDetails {
+	
+	@Column(nullable = false)
+	private String fullName;
 	
 	@NotNull(message = "username cannot be null")
 	private String username;
@@ -39,6 +44,9 @@ public class User extends BaseEntity implements UserDetails {
 		inverseJoinColumns = @JoinColumn(name = "id_permission")
 	)
 	private List<Permission> permissions = new ArrayList<>();
+	
+	@Column(name = "last_activity")
+	private LocalDateTime lastActivity;
 	
 	@Column(name = "account_non_expired")
 	private boolean accountNonExpired = true;

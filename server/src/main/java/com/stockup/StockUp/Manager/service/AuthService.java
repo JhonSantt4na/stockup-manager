@@ -3,9 +3,6 @@ package com.stockup.StockUp.Manager.service;
 import com.stockup.StockUp.Manager.StartUp;
 import com.stockup.StockUp.Manager.dto.security.response.TokenDTO;
 import com.stockup.StockUp.Manager.dto.security.request.LoginRequestDTO;
-import com.stockup.StockUp.Manager.dto.security.request.RegisterRequestDTO;
-import com.stockup.StockUp.Manager.dto.security.response.UserResponseDTO;
-import com.stockup.StockUp.Manager.mapper.UserMapper;
 import com.stockup.StockUp.Manager.model.User;
 import com.stockup.StockUp.Manager.repository.UserRepository;
 import com.stockup.StockUp.Manager.security.jwt.JwtTokenProvider;
@@ -25,7 +22,6 @@ public class AuthService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(StartUp.class);
 	private static final Logger auditLogger = LoggerFactory.getLogger("audit");
-	private final UserMapper userMapper;
 	private final AuthenticationManager authenticationManager;
 	private final JwtTokenProvider tokenProvider;
 	private final UserRepository userRepository;
@@ -42,10 +38,8 @@ public class AuthService {
 			)
 		);
 		
-		var user = userRepository.findByUsername(credentials.getUsername());
-		if (user == null) {
-			throw new UsernameNotFoundException("Username " + credentials.getUsername() + " not found!");
-		}
+		User user = userRepository.findByUsername(credentials.getUsername())
+			.orElseThrow(() -> new UsernameNotFoundException("Username " + credentials.getUsername() + " not found!"));
 		
 		var token = tokenProvider.createAccessToken(
 			credentials.getUsername(),
@@ -60,7 +54,7 @@ public class AuthService {
 		logger.info("Refresh token requested for user [{}]", username);
 		var user = userRepository.findByUsername(username);
 		TokenDTO token;
-		if (user != null) {
+		if (user.isPresent()) {
 			token = tokenProvider.refreshToken(refreshToken);
 		} else {
 			throw new UsernameNotFoundException("Username " + username + " not found!");
@@ -68,26 +62,6 @@ public class AuthService {
 		logger.info("New access token generated for user [{}]", username);
 		auditLogger.info("Refresh token granted for user [{}]", username);
 		return ResponseEntity.ok(token);
-	}
-	
-	// Ajustar com o mapper para retornar um requestDTO
-	public ResponseEntity<UserResponseDTO> register(RegisterRequestDTO credentials){
-		
-		if (userRepository.existsByUsername(credentials.getUsername())){
-			throw new UsernameNotFoundException("User Not found");
-		}
-		
-		String encodedPassword = passwordEncoder.encode(credentials.getPassword());
-		
-		
-		User user =
-		
-		
-		user.setUsername(credentials.getUsername());
-		user.setEmail(credentials.getEmail());
-		user.setPassword(encodedPassword);
-		
-		return userRepository.save(user);
 	}
 	
 }

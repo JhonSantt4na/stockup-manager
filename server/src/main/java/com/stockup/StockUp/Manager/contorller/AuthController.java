@@ -1,7 +1,6 @@
 package com.stockup.StockUp.Manager.contorller;
 
 import com.stockup.StockUp.Manager.dto.security.request.LoginRequestDTO;
-import com.stockup.StockUp.Manager.dto.security.request.RegisterRequestDTO;
 import com.stockup.StockUp.Manager.exception.InvalidCredentialsException;
 import com.stockup.StockUp.Manager.service.AuthService;
 import jakarta.validation.Valid;
@@ -35,11 +34,5 @@ public class AuthController {
 		var token = service.refreshToken(username, refreshToken);
 		if (token == null) throw new InvalidCredentialsException();
 		return ResponseEntity.ok(token);
-	}
-	
-	@PostMapping("/register")
-	public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDTO credentials) {
-		var user = service.register(credentials);
-		return ResponseEntity.status(201).body(user);
 	}
 }

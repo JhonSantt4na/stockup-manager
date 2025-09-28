@@ -7,6 +7,7 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP,
+    last_activity TIMESTAMP,  -- Novo campo adicionado aqui
     account_non_expired BOOLEAN DEFAULT TRUE,
     account_non_locked BOOLEAN DEFAULT TRUE,
     credentials_non_expired BOOLEAN DEFAULT TRUE,
