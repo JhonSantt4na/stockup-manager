@@ -38,6 +38,12 @@ public class JwtTokenFilter extends GenericFilterBean {
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 		
 		String token = tokenProvider.resolveToken(httpRequest);
+		String path = httpRequest.getRequestURI();
+		
+		if (path.startsWith("/auth/login") || path.startsWith("/auth/refresh")) {
+			filter.doFilter(request, response);
+			return;
+		}
 		
 		if (StringUtils.isNotBlank(token) && tokenProvider.validateToken(token)) {
 			Authentication auth = tokenProvider.getAuthentication(token);

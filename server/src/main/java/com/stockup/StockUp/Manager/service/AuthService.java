@@ -8,6 +8,7 @@ import com.stockup.StockUp.Manager.security.jwt.JwtTokenProvider;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -60,6 +61,12 @@ public class AuthService {
 				logger.warn("Refresh token requested for non-existent user [{}]", username);
 				return new UsernameNotFoundException("Username " + username + " not found!");
 			});
+		
+		String tokenUsername = tokenProvider.getUsernameFromToken(refreshToken);
+		if (!tokenUsername.equals(username)) {
+			logger.warn("Token username [{}] does not match requested username [{}]", tokenUsername, username);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
 		
 		logger.debug("Refreshing token for user [{}]", username);
 		TokenDTO token = tokenProvider.refreshToken(refreshToken);

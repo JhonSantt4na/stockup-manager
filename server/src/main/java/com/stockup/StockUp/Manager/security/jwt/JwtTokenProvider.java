@@ -90,6 +90,15 @@ public class JwtTokenProvider {
 		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 	}
 	
+	public String getUsernameFromToken(String token) {
+		if (StringUtils.isBlank(token)) {
+			throw new InvalidJwtAuthenticationException("Token is missing");
+		}
+		String extractedToken = extractToken(token);
+		DecodedJWT decodedJWT = decodedToken(extractedToken);
+		return decodedJWT.getSubject();
+	}
+	
 	private DecodedJWT decodedToken(String token) {
 		try {
 			return JWT.require(algorithm).build().verify(token);
