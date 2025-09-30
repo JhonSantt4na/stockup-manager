@@ -1,6 +1,7 @@
-package com.stockup.StockUp.Manager.contorller;
+package com.stockup.StockUp.Manager.controller;
 
 import com.stockup.StockUp.Manager.audit.AuditLogger;
+import com.stockup.StockUp.Manager.controller.Docs.AuthControllerDocs;
 import com.stockup.StockUp.Manager.dto.security.request.LoginRequestDTO;
 import com.stockup.StockUp.Manager.exception.InvalidCredentialsException;
 import com.stockup.StockUp.Manager.service.AuthService;
@@ -14,10 +15,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController implements AuthControllerDocs {
 	
 	private final AuthService service;
 	
+	@Override
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO credentials) {
 		try {
@@ -39,6 +41,7 @@ public class AuthController {
 		}
 	}
 	
+	@Override
 	@PutMapping("/refresh/{username}")
 	public ResponseEntity<?> refreshToken(
 		@PathVariable("username") String username,

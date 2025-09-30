@@ -30,7 +30,7 @@ public class StartUp {
 		DelegatingPasswordEncoder passwordEncoder = new DelegatingPasswordEncoder("pbkdf2", encoders);
 		passwordEncoder.setDefaultPasswordEncoderForMatches(pbkdf2Encoder);
 		
-		String hashedPassword = passwordEncoder.encode("admin123");
+		String hashedPassword = passwordEncoder.encode("user123");
 		
 		System.out.println("Senha hash gerada: " + hashedPassword);
 	}

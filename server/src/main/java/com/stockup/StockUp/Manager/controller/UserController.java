@@ -1,6 +1,7 @@
-package com.stockup.StockUp.Manager.contorller;
+package com.stockup.StockUp.Manager.controller;
 
 import com.stockup.StockUp.Manager.audit.AuditLogger;
+import com.stockup.StockUp.Manager.controller.Docs.UserControllerDocs;
 import com.stockup.StockUp.Manager.dto.ChangePasswordRequestDTO;
 import com.stockup.StockUp.Manager.dto.security.request.RegisterRequestDTO;
 import com.stockup.StockUp.Manager.dto.security.response.UserResponseDTO;
@@ -21,10 +22,11 @@ import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-public class UserController {
+public class UserController implements UserControllerDocs {
 	
 	private final UserService service;
 	
+	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/register")
 	public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody RegisterRequestDTO credentials) {
@@ -39,6 +41,7 @@ public class UserController {
 		}
 	}
 	
+	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/update")
 	public ResponseEntity<UserResponseDTO> updated(@Valid @RequestBody RegisterRequestDTO credentials) {
@@ -53,6 +56,7 @@ public class UserController {
 		}
 	}
 	
+	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/find/{username}")
 	public ResponseEntity<UserResponseDTO> findByUsername(@PathVariable String username) {
@@ -60,6 +64,7 @@ public class UserController {
 		return ResponseEntity.ok(user);
 	}
 	
+	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/delete/{username}")
 	public ResponseEntity<Void> delete(@PathVariable String username) {
@@ -74,6 +79,7 @@ public class UserController {
 		}
 	}
 	
+	@Override
 	@PutMapping("/change-password")
 	public ResponseEntity<Void> changePassword(
 		@AuthenticationPrincipal User authenticatedUser,
@@ -90,6 +96,7 @@ public class UserController {
 		}
 	}
 	
+	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/{username}/roles")
 	public ResponseEntity<List<String>> getUserRoles(@PathVariable String username) {
@@ -97,6 +104,7 @@ public class UserController {
 		return ResponseEntity.ok(roles);
 	}
 	
+	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/{username}/roles/assign")
 	public ResponseEntity<UserResponseDTO> assignRoles(
@@ -114,6 +122,7 @@ public class UserController {
 		}
 	}
 	
+	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/{username}/roles/remove")
 	public ResponseEntity<UserResponseDTO> removeRoles(

@@ -15,10 +15,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-public class securityConfig {
+public class SecurityConfig {
 	private final JwtTokenFilter jwtTokenFilter;
 	
-	public securityConfig(JwtTokenFilter jwtTokenFilter) {
+	public SecurityConfig(JwtTokenFilter jwtTokenFilter) {
 		this.jwtTokenFilter = jwtTokenFilter;
 	}
 	
@@ -28,9 +28,10 @@ public class securityConfig {
 	}
 	
 	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http
 			.csrf(AbstractHttpConfigurer::disable)
+			.cors(Customizer.withDefaults())
 			.httpBasic(AbstractHttpConfigurer::disable)
 			.formLogin(AbstractHttpConfigurer::disable)
 			.logout(AbstractHttpConfigurer::disable)
@@ -48,7 +49,6 @@ public class securityConfig {
 				.anyRequest().authenticated()
 			)
 			.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
-			.cors(Customizer.withDefaults())
 			.build();
 	}
 }

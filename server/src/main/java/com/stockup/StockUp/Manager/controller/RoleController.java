@@ -1,6 +1,7 @@
-package com.stockup.StockUp.Manager.contorller;
+package com.stockup.StockUp.Manager.controller;
 
 import com.stockup.StockUp.Manager.audit.AuditLogger;
+import com.stockup.StockUp.Manager.controller.Docs.RoleControllerDocs;
 import com.stockup.StockUp.Manager.dto.Roles.RoleCreateDTO;
 import com.stockup.StockUp.Manager.dto.Roles.RoleUpdateDTO;
 import com.stockup.StockUp.Manager.model.security.Permission;
@@ -19,10 +20,11 @@ import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 @RestController
 @RequestMapping("/permission")
 @RequiredArgsConstructor
-public class RoleController {
+public class RoleController implements RoleControllerDocs {
 	
 	private final RoleService roleService;
 	
+	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/create")
 	public ResponseEntity<Permission> createPermission(@Valid @RequestBody RoleCreateDTO dto) {
@@ -37,6 +39,7 @@ public class RoleController {
 		}
 	}
 	
+	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/update")
 	public ResponseEntity<Permission> updatePermission(@Valid @RequestBody RoleUpdateDTO dto) {
@@ -51,6 +54,7 @@ public class RoleController {
 		}
 	}
 	
+	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/{description}")
 	public ResponseEntity<Permission> getDescriptionRoles(@PathVariable String description) {
@@ -58,6 +62,7 @@ public class RoleController {
 		return ResponseEntity.ok(permission);
 	}
 	
+	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/delete/{description}")
 	public ResponseEntity<Void> deleteRole(@PathVariable String description) {
@@ -71,6 +76,7 @@ public class RoleController {
 		}
 	}
 	
+	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/listAll")
 	public ResponseEntity<List<Permission>> listRoles() {
