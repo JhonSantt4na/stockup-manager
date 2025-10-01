@@ -1,6 +1,6 @@
 package com.stockup.StockUp.Manager.model;
 
-import com.stockup.StockUp.Manager.model.security.Permission;
+import com.stockup.StockUp.Manager.model.security.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -26,25 +26,26 @@ public class User extends BaseEntity implements UserDetails {
 	@Column(name = "full_name", nullable = false)
 	private String fullName;
 	
-	@NotNull(message = "username cannot be null")
+	@NotNull(message = "Username cannot be null")
 	@Column(unique = true, nullable = false)
 	private String username;
 	
-	@Email
 	@NotNull(message = "Email cannot be null")
+	@Email
 	@Column(unique = true, nullable = false)
 	private String email;
 	
+	@NotNull
 	@Column(nullable = false)
 	private String password;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
-		name = "user_permission",
+		name = "user_role",
 		joinColumns = @JoinColumn(name = "id_user"),
-		inverseJoinColumns = @JoinColumn(name = "id_permission")
+		inverseJoinColumns = @JoinColumn(name = "id_role")
 	)
-	private List<Permission> permissions = new ArrayList<>();
+	private List<Role> roles = new ArrayList<>();
 	
 	@Column(name = "last_activity")
 	private LocalDateTime lastActivity;
@@ -58,41 +59,31 @@ public class User extends BaseEntity implements UserDetails {
 	@Column(name = "credentials_non_expired")
 	private boolean credentialsNonExpired = true;
 	
-	public List<String> getRoles() {
-		List<String> roles = new ArrayList<>();
-		if (permissions != null) {
-			permissions.forEach(p -> roles.add(p.getDescription()));
-		}
+	@Column(name = "enabled")
+	private boolean enabled = true;
+	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return roles;
 	}
 	
 	@Override
-	public String getPassword() {
-		return this.password;
-	}
-	
-	@Override
-	public String getUsername() {
-		return this.username;
-	}
-	
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return permissions;
-	}
-	
-	@Override
 	public boolean isAccountNonExpired() {
-		return this.accountNonExpired;
+		return accountNonExpired;
 	}
 	
 	@Override
 	public boolean isAccountNonLocked() {
-		return this.accountNonLocked;
+		return accountNonLocked;
 	}
 	
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return this.credentialsNonExpired;
+		return credentialsNonExpired;
+	}
+	
+	@Override
+	public boolean isEnabled() {
+		return enabled;
 	}
 }

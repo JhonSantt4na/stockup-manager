@@ -10,8 +10,9 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface UserMapper {
 	
+	// RegisterRequestDTO -> User
 	@Mapping(target = "id", ignore = true)
-	@Mapping(target = "permissions", ignore = true) // será atribuído depois
+	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "lastActivity", ignore = true)
 	@Mapping(target = "accountNonExpired", ignore = true)
 	@Mapping(target = "accountNonLocked", ignore = true)
@@ -23,15 +24,11 @@ public interface UserMapper {
 	User registerToUser(RegisterRequestDTO dto);
 	
 	// User -> UserResponseDTO
-	@Mapping(target = "roles", expression = "java(entity.getRoles())")
-	// Remova os ignores abaixo se quiser mapear fullName e email automaticamente
-	// @Mapping(target = "fullName", ignore = true) // Remova se quiser mapear
-	// @Mapping(target = "email", ignore = true)    // Remova se quiser mapear
-	UserResponseDTO entityToResponse(User entity);
+	@Mapping(target = "roles", expression = "java(user.getRoles())")
+	UserResponseDTO entityToResponse(User user);
 	
-	// UserResponseDTO -> User (se realmente precisar)
-	@Mapping(target = "roles", ignore = true) // Ignora roles do DTO, pois não existe no User
-	@Mapping(target = "permissions", ignore = true)
+	// UserResponseDTO -> User
+	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "lastActivity", ignore = true)
 	@Mapping(target = "accountNonExpired", ignore = true)
 	@Mapping(target = "accountNonLocked", ignore = true)
@@ -48,5 +45,5 @@ public interface UserMapper {
 	@Mapping(target = "fullName", source = "fullName")
 	@Mapping(target = "email", source = "email")
 	@Mapping(target = "password", ignore = true)
-	RegisterRequestDTO entityToRegister(User entity);
+	RegisterRequestDTO entityToRegister(User user);
 }

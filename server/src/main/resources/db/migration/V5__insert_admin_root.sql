@@ -1,8 +1,3 @@
--- Inserir permissão ADMIN
-INSERT INTO permission (description)
-VALUES ('ADMIN')
-ON CONFLICT (description) DO NOTHING;
-
 -- Inserir usuário admin
 INSERT INTO users (
     id, full_name, username, email, password, created_at
@@ -16,13 +11,10 @@ INSERT INTO users (
 )
 ON CONFLICT (username) DO NOTHING;
 
--- Vincular usuário à permissão
-INSERT INTO user_permission (id_user, id_permission)
-SELECT
-    u.id,
-    p.id
+-- Vincular usuário à role ADMIN
+INSERT INTO user_role (id_user, id_roles)
+SELECT u.id, r.id
 FROM users u
-CROSS JOIN permission p
+JOIN role r ON r.name = 'ADMIN'
 WHERE u.username = 'admin'
-AND p.description = 'ADMIN'
-ON CONFLICT (id_user, id_permission) DO NOTHING;
+ON CONFLICT (id_user, id_roles) DO NOTHING;

@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.service;
 
-import com.stockup.StockUp.Manager.dto.Roles.RoleCreateDTO;
-import com.stockup.StockUp.Manager.dto.Roles.RoleUpdateDTO;
+import com.stockup.StockUp.Manager.dto.security.permission.PermissionCreateDTO;
+import com.stockup.StockUp.Manager.dto.security.permission.PermissionUpdateDTO;
 import com.stockup.StockUp.Manager.model.security.Permission;
 import com.stockup.StockUp.Manager.repository.PermissionRepository;
 import lombok.AllArgsConstructor;
@@ -14,18 +14,18 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class RoleService {
+public class PermissionService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(RoleService.class);
+	private static final Logger logger = LoggerFactory.getLogger(PermissionService.class);
 	
 	private final PermissionRepository permissionRepository;
 	
-	public Permission createRole(RoleCreateDTO dto) {
+	public Permission createPermission(PermissionCreateDTO dto) {
 		logger.info("Creating New Permission [{}]", dto.getDescription());
 		permissionRepository.findByDescription(dto.getDescription())
 			.ifPresent(r -> {
-				logger.warn("Attempt to create duplicate roller [{}]", dto.getDescription());
-				throw new IllegalArgumentException("Role already exists: " + dto.getDescription());
+				logger.warn("Attempt to create duplicate permission [{}]", dto.getDescription());
+				throw new IllegalArgumentException("Permission already exists: " + dto.getDescription());
 			});
 		
 		Permission permission = new Permission();
@@ -35,10 +35,10 @@ public class RoleService {
 		return permissionRepository.save(permission);
 	}
 	
-	public Permission updateRole(RoleUpdateDTO dto) {
+	public Permission updatePermission(PermissionUpdateDTO dto) {
 		logger.info("Updating permission from [{}] to [{}]", dto.getOldDescription(), dto.getNewDescription());
 		
-		Permission permission = getRoleByDescription(dto.getOldDescription());
+		Permission permission = getPermissionByDescription(dto.getOldDescription());
 		
 		if (!dto.getOldDescription().equals(dto.getNewDescription())) {
 			permissionRepository.findByDescription(dto.getNewDescription())
@@ -58,28 +58,28 @@ public class RoleService {
 		return updated;
 	}
 	
-	public void deleteRole(String description) {
+	public void deletePermission(String description) {
 		logger.info("Deleting Permission [{}]", description);
-		Permission permission = getRoleByDescription(description);
+		Permission permission = getPermissionByDescription(description);
 		permission.setDeletedAt(LocalDateTime.now());
 		permission.disable();
 		permissionRepository.save(permission);
 		logger.info("Permission successfully disabled [{}]", description);
 	}
 	
-	public List<Permission> getAllRoles() {
+	public List<Permission> getAllPermission() {
 		logger.debug("Listing all permissions");
 		List<Permission> permission = permissionRepository.findAll();
 		logger.info("Total permissions found [{}]", permission.size());
 		return permission;
 	}
 	
-	public Permission getRoleByDescription(String description) {
+	public Permission getPermissionByDescription(String description) {
 		logger.debug("Seeking permissions for description [{}]", description);
 		return permissionRepository.findByDescription(description)
 			.orElseThrow(() -> {
 				logger.warn("Permission not found [{}]", description);
-				return new IllegalArgumentException("Role not found: " + description);
+				return new IllegalArgumentException("Permission not found: " + description);
 			});
 	}
 }

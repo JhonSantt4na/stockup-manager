@@ -113,7 +113,7 @@ public class UserController implements UserControllerDocs {
 	) {
 		try {
 			UserResponseDTO updatedUser = service.assignRoles(username, roleNames);
-			AuditLogger.log("ROLE_ASSIGN", getCurrentUser(), "SUCCESS", "Roles " + roleNames + " assigned to user: " + username);
+			AuditLogger.log("ROLE_ASSIGN", getCurrentUser(), "SUCCESS", "Role " + roleNames + " assigned to user: " + username);
 			return ResponseEntity.ok(updatedUser);
 			
 		} catch (Exception e) {
@@ -131,7 +131,7 @@ public class UserController implements UserControllerDocs {
 	) {
 		try {
 			UserResponseDTO updatedUser = service.removeRoles(username, roleNames);
-			AuditLogger.log("ROLE_REMOVE", getCurrentUser(), "SUCCESS", "Roles " + roleNames + " removed from user: " + username);
+			AuditLogger.log("ROLE_REMOVE", getCurrentUser(), "SUCCESS", "Role " + roleNames + " removed from user: " + username);
 			return ResponseEntity.ok(updatedUser);
 			
 		} catch (Exception e) {

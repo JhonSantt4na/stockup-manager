@@ -1,10 +1,10 @@
-package com.stockup.StockUp.Manager.dto.Roles;
+package com.stockup.StockUp.Manager.dto.security.permission;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class RoleUpdateDTO {
+public class PermissionUpdateDTO {
 	@NotBlank(message = "Old description is required")
 	private String oldDescription;
 	
