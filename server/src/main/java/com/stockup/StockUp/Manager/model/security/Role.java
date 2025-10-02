@@ -3,7 +3,9 @@ package com.stockup.StockUp.Manager.model.security;
 import com.stockup.StockUp.Manager.model.BaseEntity;
 import com.stockup.StockUp.Manager.model.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "roles")
+@AllArgsConstructor
 public class Role extends BaseEntity implements GrantedAuthority {
 	
 	@Column(unique = true, nullable = false)
@@ -28,6 +31,12 @@ public class Role extends BaseEntity implements GrantedAuthority {
 		inverseJoinColumns = @JoinColumn(name = "id_permission")
 	)
 	private List<Permission> permissions = new ArrayList<>();
+	
+	public Role() {}
+	
+	public Role(String name) {
+		this.name = name;
+	}
 	
 	@Override
 	public String getAuthority() {

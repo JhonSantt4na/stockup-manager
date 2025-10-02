@@ -17,7 +17,7 @@ import java.util.List;
 import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 
 @RestController
-@RequestMapping("/permission")
+@RequestMapping("/permissions")
 @RequiredArgsConstructor
 public class PermissionController implements PermissionControllerDocs {
 	
@@ -28,12 +28,12 @@ public class PermissionController implements PermissionControllerDocs {
 	public ResponseEntity<Permission> createPermission(@Valid @RequestBody PermissionCreateDTO dto) {
 		try {
 			Permission permission = permissionService.createPermission(dto);
-			AuditLogger.log("PERMISSION_CREATE", getCurrentUser(), "SUCCESS", "Role created: " + dto.getDescription());
+			AuditLogger.log("PERMISSION_CREATE", getCurrentUser(), "SUCCESS", "Permission created: " + dto.getDescription());
 			return ResponseEntity.status(HttpStatus.CREATED).body(permission);
 			
 		} catch (Exception e) {
-			AuditLogger.log("PERMISSION_CREATE", getCurrentUser(), "FAILED", "Error creating role: " + e.getMessage());
-			throw new RuntimeException("Error creating role", e);
+			AuditLogger.log("PERMISSION_CREATE", getCurrentUser(), "FAILED", "Error creating permission: " + e.getMessage());
+			throw new RuntimeException("Error creating permission", e);
 		}
 	}
 	
@@ -47,20 +47,20 @@ public class PermissionController implements PermissionControllerDocs {
 			return ResponseEntity.ok(permission);
 		} catch (Exception e) {
 			AuditLogger.log("PERMISSION_UPDATE", getCurrentUser(), "FAILED", "Error updating permission: " + e.getMessage());
-			throw new RuntimeException("Error update permission", e);
+			throw new RuntimeException("Error updating permission", e);
 		}
 	}
 	
 	@Override
 	@GetMapping("/{description}")
-	public ResponseEntity<Permission> getDescriptionRoles(@PathVariable String description) {
+	public ResponseEntity<Permission> getPermissionByDescription(@PathVariable String description) {
 		Permission permission = permissionService.getPermissionByDescription(description);
 		return ResponseEntity.ok(permission);
 	}
 	
 	@Override
 	@DeleteMapping("/delete/{description}")
-	public ResponseEntity<Void> deleteRole(@PathVariable String description) {
+	public ResponseEntity<Void> deletePermission(@PathVariable String description) {
 		try {
 			permissionService.deletePermission(description);
 			AuditLogger.log("PERMISSION_DELETE", getCurrentUser(), "SUCCESS", "Permission deleted: " + description);
@@ -72,9 +72,9 @@ public class PermissionController implements PermissionControllerDocs {
 	}
 	
 	@Override
-	@GetMapping("/listAll")
-	public ResponseEntity<List<Permission>> listRoles() {
-		List<Permission> roles = permissionService.getAllPermission();
-		return ResponseEntity.ok(roles);
+	@GetMapping("/list")
+	public ResponseEntity<List<Permission>> listPermissions() {
+		List<Permission> permissions = permissionService.getAllPermission();
+		return ResponseEntity.ok(permissions);
 	}
 }

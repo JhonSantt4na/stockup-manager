@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 public interface PermissionControllerDocs {
+	
 	@Operation(
 		summary = "Criar uma nova permissão",
 		description = "Cria uma nova permissão com a descrição informada. Acesso restrito a administradores.",
@@ -53,11 +54,11 @@ public interface PermissionControllerDocs {
 			@ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
 		}
 	)
-	ResponseEntity<Permission> getDescriptionRoles(@Parameter(description = "Descrição da permissão") String description);
+	ResponseEntity<Permission> getPermissionByDescription(@Parameter(description = "Descrição da permissão") String description);
 	
 	@Operation(
 		summary = "Excluir permissão por descrição",
-		description = "Remove uma permissão com base na descrição informada. Acesso restrito a administradores.",
+		description = "Remove logicamente uma permissão com base na descrição informada. Acesso restrito a administradores.",
 		tags = {"Admin - Permissão"},
 		responses = {
 			@ApiResponse(responseCode = "204", description = "Permissão excluída com sucesso", content = @Content),
@@ -66,17 +67,17 @@ public interface PermissionControllerDocs {
 			@ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
 		}
 	)
-	ResponseEntity<Void> deleteRole(@Parameter(description = "Descrição da role") String description);
+	ResponseEntity<Void> deletePermission(@Parameter(description = "Descrição da permissão") String description);
 	
 	@Operation(
 		summary = "Listar todas as permissões",
 		description = "Retorna uma lista de todas as permissões cadastradas. Acesso restrito a administradores.",
-		tags = {"Admin - Permissões"},
+		tags = {"Admin - Permissão"},
 		responses = {
 			@ApiResponse(responseCode = "200", description = "Lista retornada com sucesso", content = @Content(schema = @Schema(implementation = Permission.class))),
 			@ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
 		}
 	)
-	ResponseEntity<List<Permission>> listRoles();
+	ResponseEntity<List<Permission>> listPermissions();
 }

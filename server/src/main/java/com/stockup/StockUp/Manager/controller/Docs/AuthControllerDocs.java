@@ -26,7 +26,7 @@ public interface AuthControllerDocs {
 			@ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
 		}
 	)
-	ResponseEntity<?> login(@Valid @RequestBody() LoginRequestDTO credentials);
+	ResponseEntity<TokenDTO> login(@Valid @RequestBody() LoginRequestDTO credentials);
 	
 	@Operation(
 		summary = "Revalidar token (Refresh Token)",
@@ -39,7 +39,7 @@ public interface AuthControllerDocs {
 			@ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
 		}
 	)
-	ResponseEntity<?> refreshToken(
+	ResponseEntity<TokenDTO> refreshToken(
 		@Parameter(description = "Username do usuário") @PathVariable("username") String username,
 		@Parameter(description = "Refresh token válido") @RequestHeader("Authorization") String refreshToken
 	);

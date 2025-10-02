@@ -17,7 +17,6 @@ import java.util.List;
 public class PermissionService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(PermissionService.class);
-	
 	private final PermissionRepository permissionRepository;
 	
 	public Permission createPermission(PermissionCreateDTO dto) {
@@ -69,9 +68,9 @@ public class PermissionService {
 	
 	public List<Permission> getAllPermission() {
 		logger.debug("Listing all permissions");
-		List<Permission> permission = permissionRepository.findAll();
-		logger.info("Total permissions found [{}]", permission.size());
-		return permission;
+		List<Permission> permissionList = permissionRepository.findAll();
+		logger.info("Total permissions found [{}]", permissionList.size());
+		return permissionList;
 	}
 	
 	public Permission getPermissionByDescription(String description) {
