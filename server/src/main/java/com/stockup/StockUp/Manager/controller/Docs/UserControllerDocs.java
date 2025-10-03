@@ -104,7 +104,7 @@ public interface UserControllerDocs {
 		description = "Atribui uma ou mais roles a um usuário específico. Acesso restrito a administradores.",
 		tags = {"Admin - Usuários"},
 		responses = {
-			@ApiResponse(responseCode = "200", description = "Roles atribuídas com sucesso", content = @Content(schema = @Schema(implementation = UserResponseDTO.class))),
+			@ApiResponse(responseCode = "200", description = "Role atribuídas com sucesso", content = @Content(schema = @Schema(implementation = UserResponseDTO.class))),
 			@ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content),
 			@ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content),
@@ -121,7 +121,7 @@ public interface UserControllerDocs {
 		description = "Remove uma ou mais roles de um usuário. Acesso restrito a administradores.",
 		tags = {"Admin - Usuários"},
 		responses = {
-			@ApiResponse(responseCode = "200", description = "Roles removidas com sucesso", content = @Content(schema = @Schema(implementation = UserResponseDTO.class))),
+			@ApiResponse(responseCode = "200", description = "Role removidas com sucesso", content = @Content(schema = @Schema(implementation = UserResponseDTO.class))),
 			@ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content),
 			@ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content),

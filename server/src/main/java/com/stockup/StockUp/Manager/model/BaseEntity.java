@@ -13,10 +13,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @MappedSuperclass
-public class BaseEntity implements Serializable {
-	
-	@Serial
-	private static final long serialVersionUID = 1L;
+public class BaseEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,6 +26,7 @@ public class BaseEntity implements Serializable {
 	@UpdateTimestamp
 	private LocalDateTime updatedAt;
 	
+	@Column
 	private LocalDateTime deletedAt;
 	
 	@Column

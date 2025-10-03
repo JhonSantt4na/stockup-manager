@@ -7,8 +7,9 @@ import com.stockup.StockUp.Manager.exception.InvalidCredentialsException;
 import com.stockup.StockUp.Manager.exception.UsernameAlreadyExistsException;
 import com.stockup.StockUp.Manager.mapper.UserMapper;
 import com.stockup.StockUp.Manager.model.User;
-import com.stockup.StockUp.Manager.model.security.Permission;
+import com.stockup.StockUp.Manager.model.security.Role;
 import com.stockup.StockUp.Manager.repository.PermissionRepository;
+import com.stockup.StockUp.Manager.repository.RoleRepository;
 import com.stockup.StockUp.Manager.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,9 @@ public class UserService implements UserDetailsService {
 	private PermissionRepository permissionRepository;
 	
 	@Autowired
+	private RoleRepository roleRepository;
+	
+	@Autowired
 	private UserMapper mapper;
 	
 	@Override
@@ -62,21 +66,17 @@ public class UserService implements UserDetailsService {
 		logger.info("Assigning roles to user [{}]: {}", username, roleNames);
 		
 		User user = userRepository.findByUsername(username)
-			.orElseThrow(() -> {
-				logger.warn("User not found: [{}]", username);
-				return new UsernameNotFoundException("User not found: " + username);
-			});
+			.orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 		
-		List<Permission> rolesToAssign = permissionRepository.findAllByDescriptionIn(roleNames);
-		
+		List<Role> rolesToAssign = roleRepository.findAllByNameIn(roleNames);
 		if (rolesToAssign.isEmpty()) {
 			logger.warn("No valid roles found to assign for user [{}]", username);
 			throw new IllegalArgumentException("No valid roles found to assign");
 		}
 		
-		Set<Permission> currentRoles = new HashSet<>(user.getPermissions());
+		Set<Role> currentRoles = new HashSet<>(user.getRoles());
 		currentRoles.addAll(rolesToAssign);
-		user.setPermissions(new ArrayList<>(currentRoles));
+		user.setRoles(new ArrayList<>(currentRoles));
 		
 		User updatedUser = userRepository.save(user);
 		logger.info("Assigned {} roles to user [{}]", rolesToAssign.size(), username);
@@ -88,28 +88,12 @@ public class UserService implements UserDetailsService {
 		logger.info("Removing roles from user [{}]: {}", username, roleNames);
 		
 		User user = userRepository.findByUsername(username)
-			.orElseThrow(() -> {
-				logger.warn("User not found: [{}]", username);
-				return new UsernameNotFoundException("User not found: " + username);
-			});
+			.orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 		
-		List<String> existingRoles = user.getPermissions().stream()
-			.map(Permission::getDescription)
-			.toList();
-		
-		List<String> rolesToRemove = roleNames.stream()
-			.filter(existingRoles::contains)
-			.toList();
-		
-		if (rolesToRemove.isEmpty()) {
-			logger.warn("No valid roles to remove from user [{}]", username);
-			throw new IllegalArgumentException("No valid roles to remove");
-		}
-		
-		user.getPermissions().removeIf(role -> rolesToRemove.contains(role.getDescription()));
+		user.getRoles().removeIf(role -> roleNames.contains(role.getName()));
 		User savedUser = userRepository.save(user);
 		
-		logger.info("Removed {} roles from user [{}]", rolesToRemove.size(), username);
+		logger.info("Removed {} roles from user [{}]", roleNames.size(), username);
 		return mapper.entityToResponse(savedUser);
 	}
 	
@@ -122,8 +106,8 @@ public class UserService implements UserDetailsService {
 				return new UsernameNotFoundException("User not found: " + username);
 			});
 		
-		List<String> roles = user.getPermissions().stream()
-			.map(Permission::getDescription)
+		List<String> roles = user.getRoles().stream()
+			.map(Role::getAuthority)
 			.collect(Collectors.toList());
 		
 		logger.debug("User [{}] has {} roles", username, roles.size());

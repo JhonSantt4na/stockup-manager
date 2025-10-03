@@ -1,9 +1,8 @@
--- Criar tabela permission se não existir
-CREATE TABLE permission (
+CREATE TABLE IF NOT EXISTS permissions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     description VARCHAR(100) UNIQUE NOT NULL,
-    enabled BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP
+    updated_at TIMESTAMP,
+    deleted_at TIMESTAMP,
+    enabled BOOLEAN DEFAULT TRUE
 );

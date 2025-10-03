@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.dto.Roles;
+package com.stockup.StockUp.Manager.dto.security.permission;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class AssignRolesDTO {
+public class AssignPermissionDTO {
 	@NotBlank(message = "Username is required")
 	private String username;
 	

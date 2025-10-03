@@ -1,8 +1,10 @@
 package com.stockup.StockUp.Manager.controller.Docs;
 
-import com.stockup.StockUp.Manager.dto.Roles.RoleCreateDTO;
-import com.stockup.StockUp.Manager.dto.Roles.RoleUpdateDTO;
+import com.stockup.StockUp.Manager.dto.security.response.UserResponseDTO;
+import com.stockup.StockUp.Manager.dto.security.roles.RoleDTO;
+import com.stockup.StockUp.Manager.dto.security.roles.RoleUpdateDTO;
 import com.stockup.StockUp.Manager.model.security.Permission;
+import com.stockup.StockUp.Manager.model.security.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,68 +17,99 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 public interface RoleControllerDocs {
-	@Operation(
-		summary = "Criar uma nova permissão (role)",
-		description = "Cria uma nova role com a descrição informada. Acesso restrito a administradores.",
-		tags = {"Admin - Roles"},
-		responses = {
-			@ApiResponse(responseCode = "201", description = "Permissão criada com sucesso", content = @Content(schema = @Schema(implementation = Permission.class))),
-			@ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content),
-			@ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content),
-			@ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
-		}
-	)
-	ResponseEntity<Permission> createPermission(@Valid @RequestBody RoleCreateDTO dto);
 	
 	@Operation(
-		summary = "Atualizar uma permissão (role)",
+		summary = "Criar uma nova role",
+		description = "Cria uma nova role com o nome informado. Acesso restrito a administradores.",
+		tags = {"Admin - Role"},
+		responses = {
+			@ApiResponse(responseCode = "201", description = "Role criada com sucesso", content = @Content(schema = @Schema(implementation = Role.class))),
+			@ApiResponse(responseCode = "400", description = "Dados inválidos"),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
+			@ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+		}
+	)
+	ResponseEntity<Role> createRole(@Valid @RequestBody RoleDTO createDto);
+	
+	@Operation(
+		summary = "Atualizar uma role",
 		description = "Atualiza uma role existente. Acesso restrito a administradores.",
-		tags = {"Admin - Roles"},
+		tags = {"Admin - Role"},
 		responses = {
-			@ApiResponse(responseCode = "200", description = "Permissão atualizada com sucesso", content = @Content(schema = @Schema(implementation = Permission.class))),
+			@ApiResponse(responseCode = "200", description = "Role atualizada com sucesso"),
+			@ApiResponse(responseCode = "400", description = "Dados inválidos"),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
+			@ApiResponse(responseCode = "404", description = "Role não encontrada"),
+			@ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+		}
+	)
+	ResponseEntity<Role> updateRole(@Valid @RequestBody RoleUpdateDTO updateDto);
+	
+	@Operation(
+		summary = "Buscar role por nome",
+		description = "Retorna os dados de uma role com base no nome informado. Acesso restrito a administradores.",
+		tags = {"Admin - Role"}
+	)
+	ResponseEntity<Role> getRoleByName(@Parameter(description = "Nome da role") String name);
+	
+	@Operation(
+		summary = "Excluir role por nome",
+		description = "Desativa logicamente uma role pelo nome. Acesso restrito a administradores.",
+		tags = {"Admin - Role"}
+	)
+	ResponseEntity<Void> deleteRole(@Parameter(description = "Nome da role") String name);
+	
+	@Operation(
+		summary = "Listar todas as roles",
+		description = "Retorna uma lista de todas as roles cadastradas. Acesso restrito a administradores.",
+		tags = {"Admin - Role"}
+	)
+	ResponseEntity<List<Role>> listRoles();
+	
+	@Operation(
+		summary = "Atribuir permissions a uma role",
+		description = "Atribui uma ou mais permissions a uma role existente. Acesso restrito a administradores.",
+		tags = {"Admin - Role"},
+		responses = {
+			@ApiResponse(responseCode = "200", description = "Permissions atribuídas com sucesso", content = @Content(schema = @Schema(implementation = Role.class))),
 			@ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content),
 			@ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content),
-			@ApiResponse(responseCode = "404", description = "Permissão não encontrada", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Role não encontrada", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
 		}
 	)
-	ResponseEntity<Permission> updatePermission(@Valid @RequestBody RoleUpdateDTO dto);
+	ResponseEntity<Role> assignPermissions(
+		@Parameter(description = "Nome da role") String roleName,
+		@Valid @RequestBody List<String> permissionDescriptions
+	);
 	
 	@Operation(
-		summary = "Buscar permissão por descrição",
-		description = "Retorna os dados de uma role com base na descrição informada. Acesso restrito a administradores.",
-		tags = {"Admin - Roles"},
+		summary = "Remover permissions de uma role",
+		description = "Remove uma ou mais permissions de uma role existente. Acesso restrito a administradores.",
+		tags = {"Admin - Role"},
 		responses = {
-			@ApiResponse(responseCode = "200", description = "Permissão encontrada", content = @Content(schema = @Schema(implementation = Permission.class))),
+			@ApiResponse(responseCode = "200", description = "Permissions removidas com sucesso", content = @Content(schema = @Schema(implementation = Role.class))),
+			@ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content),
 			@ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content),
-			@ApiResponse(responseCode = "404", description = "Permissão não encontrada", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Role não encontrada", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
 		}
 	)
-	ResponseEntity<Permission> getDescriptionRoles(@Parameter(description = "Descrição da role") String description);
+	ResponseEntity<Role> removePermissions(
+		@Parameter(description = "Nome da role") String roleName,
+		@Valid @RequestBody List<String> permissionDescriptions
+	);
 	
 	@Operation(
-		summary = "Excluir permissão por descrição",
-		description = "Remove uma role com base na descrição informada. Acesso restrito a administradores.",
-		tags = {"Admin - Roles"},
+		summary = "Listar permissions de uma role",
+		description = "Retorna uma lista de todas as permissions atribuídas a uma role. Acesso restrito a administradores.",
+		tags = {"Admin - Role"},
 		responses = {
-			@ApiResponse(responseCode = "204", description = "Permissão excluída com sucesso", content = @Content),
+			@ApiResponse(responseCode = "200", description = "Lista de permissions retornada com sucesso", content = @Content(schema = @Schema(implementation = String.class))),
 			@ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content),
-			@ApiResponse(responseCode = "404", description = "Permissão não encontrada", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Role não encontrada", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
 		}
 	)
-	ResponseEntity<Void> deleteRole(@Parameter(description = "Descrição da role") String description);
-	
-	@Operation(
-		summary = "Listar todas as permissões (roles)",
-		description = "Retorna uma lista de todas as roles cadastradas. Acesso restrito a administradores.",
-		tags = {"Admin - Roles"},
-		responses = {
-			@ApiResponse(responseCode = "200", description = "Lista retornada com sucesso", content = @Content(schema = @Schema(implementation = Permission.class))),
-			@ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content),
-			@ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
-		}
-	)
-	ResponseEntity<List<Permission>> listRoles();
+	ResponseEntity<List<String>> getRolePermissions(@Parameter(description = "Nome da role") String roleName);
 }

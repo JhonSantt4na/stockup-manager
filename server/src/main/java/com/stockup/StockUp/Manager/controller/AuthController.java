@@ -3,6 +3,7 @@ package com.stockup.StockUp.Manager.controller;
 import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.controller.Docs.AuthControllerDocs;
 import com.stockup.StockUp.Manager.dto.security.request.LoginRequestDTO;
+import com.stockup.StockUp.Manager.dto.security.response.TokenDTO;
 import com.stockup.StockUp.Manager.exception.InvalidCredentialsException;
 import com.stockup.StockUp.Manager.service.AuthService;
 import jakarta.validation.Valid;
@@ -21,7 +22,7 @@ public class AuthController implements AuthControllerDocs {
 	
 	@Override
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO credentials) {
+	public ResponseEntity<TokenDTO> login(@Valid @RequestBody LoginRequestDTO credentials) {
 		try {
 			var token = service.login(credentials);
 			AuditLogger.log("LOGIN", credentials.getUsername(), "SUCCESS", "Authenticated successfully");
@@ -43,7 +44,7 @@ public class AuthController implements AuthControllerDocs {
 	
 	@Override
 	@PutMapping("/refresh/{username}")
-	public ResponseEntity<?> refreshToken(
+	public ResponseEntity<TokenDTO> refreshToken(
 		@PathVariable("username") String username,
 		@RequestHeader("Authorization") String refreshToken) {
 		try {
