@@ -1,6 +1,5 @@
--- Criação da tabela de usuários
-CREATE TABLE users (
-    id UUID PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     full_name VARCHAR(255) NOT NULL,
     username VARCHAR(100) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -15,11 +14,10 @@ CREATE TABLE users (
     deleted_at TIMESTAMP
 );
 
--- Tabela de relacionamento Many-to-Many entre users e roles
-CREATE TABLE user_permission (
+CREATE TABLE IF NOT EXISTS user_role (
     id_user UUID NOT NULL,
-    id_permission UUID NOT NULL,
-    PRIMARY KEY (id_user, id_permission),
-    CONSTRAINT fk_user FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE,
-    CONSTRAINT fk_permission FOREIGN KEY (id_permission) REFERENCES permission(id) ON DELETE CASCADE
+    id_role UUID NOT NULL,
+    PRIMARY KEY (id_user, id_role),
+    CONSTRAINT fk_user_role_user FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_user_role_role FOREIGN KEY (id_role) REFERENCES roles(id) ON DELETE CASCADE
 );

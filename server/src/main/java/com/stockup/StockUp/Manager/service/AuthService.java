@@ -3,6 +3,7 @@ package com.stockup.StockUp.Manager.service;
 import com.stockup.StockUp.Manager.dto.security.response.TokenDTO;
 import com.stockup.StockUp.Manager.dto.security.request.LoginRequestDTO;
 import com.stockup.StockUp.Manager.model.User;
+import com.stockup.StockUp.Manager.model.security.Role;
 import com.stockup.StockUp.Manager.repository.UserRepository;
 import com.stockup.StockUp.Manager.security.jwt.JwtTokenProvider;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -39,8 +43,12 @@ public class AuthService {
 				return new UsernameNotFoundException("Username " + credentials.getUsername() + " not found!");
 			});
 		
+		List<String> roleNames = user.getRoles().stream()
+			.map(Role::getName)
+			.collect(Collectors.toList());
+		
 		logger.debug("Generating token for user [{}]", credentials.getUsername());
-		return tokenProvider.createAccessToken(user.getUsername(), user.getRoles());
+		return tokenProvider.createAccessToken(user.getUsername(), roleNames);
 	}
 	
 	public TokenDTO refreshToken(String username, String refreshToken) {

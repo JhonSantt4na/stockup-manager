@@ -1,7 +1,5 @@
--- Inserir usuário comum (user:user123)
-INSERT INTO users (
-    id, full_name, username, email, password, created_at
-) VALUES (
+INSERT INTO users (id, full_name, username, email, password, created_at)
+VALUES (
     gen_random_uuid(),
     'Usuário Comum',
     'user',
@@ -11,10 +9,9 @@ INSERT INTO users (
 )
 ON CONFLICT (username) DO NOTHING;
 
--- Vincular usuário à role USER
-INSERT INTO user_role (id_user, id_roles)
+INSERT INTO user_role (id_user, id_role)
 SELECT u.id, r.id
 FROM users u
-JOIN role r ON r.name = 'USER'
+JOIN roles r ON r.name = 'USER'
 WHERE u.username = 'user'
-ON CONFLICT (id_user, id_roles) DO NOTHING;
+ON CONFLICT (id_user, id_role) DO NOTHING;

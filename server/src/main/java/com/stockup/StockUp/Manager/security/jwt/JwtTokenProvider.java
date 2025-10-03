@@ -10,7 +10,9 @@ import com.stockup.StockUp.Manager.model.security.Role;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +23,6 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class JwtTokenProvider {
 	
 	private final UserDetailsService userDetailsService;
@@ -30,6 +31,7 @@ public class JwtTokenProvider {
 	private final long refreshTokenValidity;
 	private final Algorithm algorithm;
 	
+	@Autowired
 	public JwtTokenProvider(
 		UserDetailsService userDetailsService,
 		@Value("${security.jwt.token.secret-key}") String secretKey,
