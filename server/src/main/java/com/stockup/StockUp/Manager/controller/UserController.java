@@ -5,10 +5,13 @@ import com.stockup.StockUp.Manager.controller.Docs.UserControllerDocs;
 import com.stockup.StockUp.Manager.dto.ChangePasswordRequestDTO;
 import com.stockup.StockUp.Manager.dto.security.request.RegisterRequestDTO;
 import com.stockup.StockUp.Manager.dto.security.response.UserResponseDTO;
+import com.stockup.StockUp.Manager.mapper.UserMapper;
 import com.stockup.StockUp.Manager.model.User;
 import com.stockup.StockUp.Manager.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +28,7 @@ import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 public class UserController implements UserControllerDocs {
 	
 	private final UserService service;
+	private UserMapper mapper;
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
@@ -76,6 +80,31 @@ public class UserController implements UserControllerDocs {
 		} catch (Exception e) {
 			AuditLogger.log("USER_DELETE", getCurrentUser(), "FAILED", "Error deleting user: " + e.getMessage());
 			throw new RuntimeException("Error deleting user", e);
+		}
+	}
+	
+	@Override
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping
+	public ResponseEntity<Page<UserResponseDTO>> listUsers(
+		@RequestParam(required = false) String role,
+		Pageable pageable) {
+		Page<UserResponseDTO> usersPage = service.listUsers(role, pageable);
+		return ResponseEntity.ok(usersPage);
+	}
+	
+	@Override
+	@GetMapping("/me")
+	public ResponseEntity<UserResponseDTO> getProfile(@AuthenticationPrincipal User authenticatedUser){
+		try {
+			UserResponseDTO profile = mapper.entityToResponse(authenticatedUser);
+			AuditLogger.log("USER_PROFILE", authenticatedUser.getUsername(), "SUCCESS", "Profile retrieved successfully");
+			return ResponseEntity.ok(profile);
+			
+		} catch (Exception e) {
+			AuditLogger.log("USER_PROFILE", authenticatedUser != null ? authenticatedUser.getUsername() : "unknown",
+				"FAILED", "Error retrieving profile: " + e.getMessage());
+			throw new RuntimeException("Error retrieving profile", e);
 		}
 	}
 	

@@ -1,5 +1,6 @@
 package com.stockup.StockUp.Manager.model.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.stockup.StockUp.Manager.model.BaseEntity;
 import com.stockup.StockUp.Manager.model.User;
 import jakarta.persistence.*;
@@ -25,6 +26,7 @@ public class Role extends BaseEntity implements GrantedAuthority {
 	private List<User> users = new ArrayList<>();
 	
 	@ManyToMany(fetch = FetchType.EAGER)
+	@JsonIgnore
 	@JoinTable(
 		name = "role_permission",
 		joinColumns = @JoinColumn(name = "id_role"),

@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.dto.security.roles;
+package com.stockup.StockUp.Manager.dto.roles;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

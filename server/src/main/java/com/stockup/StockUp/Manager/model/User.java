@@ -1,5 +1,6 @@
 package com.stockup.StockUp.Manager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.stockup.StockUp.Manager.model.security.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -40,6 +41,7 @@ public class User extends BaseEntity implements UserDetails {
 	private String password;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
+	@JsonIgnore
 	@JoinTable(
 		name = "user_role",
 		joinColumns = @JoinColumn(name = "id_user"),

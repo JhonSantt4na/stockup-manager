@@ -5,9 +5,12 @@ import com.stockup.StockUp.Manager.controller.Docs.AuthControllerDocs;
 import com.stockup.StockUp.Manager.dto.security.request.LoginRequestDTO;
 import com.stockup.StockUp.Manager.dto.security.response.TokenDTO;
 import com.stockup.StockUp.Manager.exception.InvalidCredentialsException;
+import com.stockup.StockUp.Manager.security.jwt.JwtTokenProvider;
 import com.stockup.StockUp.Manager.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController implements AuthControllerDocs {
 	
 	private final AuthService service;
+	private final JwtTokenProvider tokenProvider;
 	
 	@Override
 	@PostMapping("/login")
@@ -43,10 +47,30 @@ public class AuthController implements AuthControllerDocs {
 	}
 	
 	@Override
+	@PostMapping("/logout")
+	public ResponseEntity<String> logout(HttpServletRequest request) {
+		String token = tokenProvider.resolveToken(request);
+		
+		if (token == null || token.isBlank()) {
+			AuditLogger.log("LOGOUT", "unknown", "FAILED", "No token provided");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token is required");
+		}
+		
+		try {
+			String username = tokenProvider.getUsernameFromToken(token);
+			AuditLogger.log("LOGOUT", username, "SUCCESS", "Logout successful");
+			return ResponseEntity.ok("Logout successful");
+		} catch (Exception e) {
+			AuditLogger.log("LOGOUT", "unknown", "FAILED", "Invalid token: " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+		}
+	}
+	
+	@Override
 	@PutMapping("/refresh/{username}")
 	public ResponseEntity<TokenDTO> refreshToken(
 		@PathVariable("username") String username,
-		@RequestHeader("Authorization") String refreshToken) {
+		@RequestHeader("X-Refresh-Token") String refreshToken) {
 		try {
 			if (username == null || username.isBlank() || refreshToken == null || refreshToken.isBlank()) {
 				AuditLogger.log("REFRESH_TOKEN", "unknown", "FAILED", "Incomplete data");

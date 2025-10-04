@@ -14,6 +14,8 @@ import com.stockup.StockUp.Manager.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -141,15 +143,32 @@ public class UserService implements UserDetailsService {
 				return new UsernameNotFoundException("User not found with username: " + credentials.getUsername());
 			});
 		
-		user.setFullName(credentials.getFullName());
-		user.setEmail(credentials.getEmail());
-		user.setPassword(passwordEncoder.encode(credentials.getPassword()));
-		user.setUpdatedAt(LocalDateTime.now());
+		boolean changed = false;
 		
-		User updatedUser = userRepository.save(user);
-		logger.info("User updated successfully: [{}]", credentials.getUsername());
+		if (credentials.getFullName() != null && !credentials.getFullName().isBlank()) {
+			user.setFullName(credentials.getFullName());
+			changed = true;
+		}
 		
-		return mapper.entityToResponse(updatedUser);
+		if (credentials.getEmail() != null && !credentials.getEmail().isBlank()) {
+			user.setEmail(credentials.getEmail());
+			changed = true;
+		}
+		
+		if (credentials.getPassword() != null && !credentials.getPassword().isBlank()) {
+			user.setPassword(passwordEncoder.encode(credentials.getPassword()));
+			changed = true;
+		}
+		
+		if (changed) {
+			user.setUpdatedAt(LocalDateTime.now());
+			User updatedUser = userRepository.save(user);
+			logger.info("User updated successfully: [{}]", credentials.getUsername());
+			return mapper.entityToResponse(updatedUser);
+		} else {
+			logger.info("No fields provided for update for user [{}]", credentials.getUsername());
+			return mapper.entityToResponse(user);
+		}
 	}
 	
 	public UserResponseDTO findUser(String username) {
@@ -176,6 +195,32 @@ public class UserService implements UserDetailsService {
 		user.setDeletedAt(LocalDateTime.now());
 		userRepository.save(user);
 		logger.info("User deleted successfully: [{}]", username);
+	}
+	
+	public Page<UserResponseDTO> listUsers(String role, Pageable pageable) {
+		logger.info("Listing users with pagination: page={}, size={}, sort={}",
+			pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+		
+		if (role != null && !role.isBlank()) {
+			logger.info("Filtering users by role: [{}]", role);
+		}
+		
+		Page<User> users;
+		if (role != null && !role.isBlank()) {
+			users = userRepository.findAllByRoles_Name(role, pageable);
+		} else {
+			users = userRepository.findAll(pageable);
+		}
+		
+		logger.info("Found {} users{}",
+			users.getNumberOfElements(),
+			(role != null && !role.isBlank()) ? " with role " + role : "");
+		
+		return users.map(user -> {
+			UserResponseDTO dto = mapper.entityToResponse(user);
+			logger.debug("User mapped to DTO: {}", dto.username());
+			return dto;
+		});
 	}
 	
 	public void changePassword(String username, ChangePasswordRequestDTO dto) {

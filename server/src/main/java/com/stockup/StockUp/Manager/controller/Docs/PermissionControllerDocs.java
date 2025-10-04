@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.controller.Docs;
 
-import com.stockup.StockUp.Manager.dto.security.permission.PermissionCreateDTO;
-import com.stockup.StockUp.Manager.dto.security.permission.PermissionUpdateDTO;
+import com.stockup.StockUp.Manager.dto.permission.PermissionCreateDTO;
+import com.stockup.StockUp.Manager.dto.permission.PermissionUpdateDTO;
 import com.stockup.StockUp.Manager.model.security.Permission;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -79,5 +81,5 @@ public interface PermissionControllerDocs {
 			@ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
 		}
 	)
-	ResponseEntity<List<Permission>> listPermissions();
+	ResponseEntity<Page<Permission>> getAllPermissions(Pageable pageable);
 }

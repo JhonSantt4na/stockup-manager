@@ -10,8 +10,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -85,6 +90,21 @@ public interface UserControllerDocs {
 		@Parameter(hidden = true) User authenticatedUser,
 		@Valid @RequestBody ChangePasswordRequestDTO dto
 	);
+	
+	@Operation(
+		summary = "Listar usuários",
+		description = "Retorna uma página de usuários cadastrados. Permite filtro por role. Acesso restrito a administradores.",
+		tags = {"Admin - User"}
+	)
+	ResponseEntity<Page<UserResponseDTO>> listUsers( @RequestParam(required = false) String role, Pageable pageable);
+	
+	@Operation(
+		summary = "Obter perfil do usuário autenticado",
+		description = "Retorna os dados do usuário atualmente autenticado. Não expõe a senha.",
+		tags = {"User - Profile"}
+	)
+	@GetMapping("/me")
+	ResponseEntity<UserResponseDTO> getProfile(@AuthenticationPrincipal User authenticatedUser);
 	
 	@Operation(
 		summary = "Listar roles do usuário",

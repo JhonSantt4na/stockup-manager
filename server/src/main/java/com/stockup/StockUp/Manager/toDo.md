@@ -1,6 +1,10 @@
 
-// Verificar isso :
-- quando atualizar o usuario, nao precisar de todos os campos atualizar apenas o passado ou diff do original
+- Auth - 
+  - Rate limiting: Login sem limite de tentativas pode levar a brute-force. Integre com Spring Boot Actuator ou Bucket4j pra limitar por IP/usuário.
+  - CORS/CSRF: Se for API consumida por frontend, configure globalmente, mas teste se o login aceita OPTIONS preflight.
+
+- UserController
+  - Email verification: No register, se tiver email, adicione token de confirmação (fora da sprint 1?).
 
 
 - [ ] NextTask 3: Adicionar Teste de Integration com o Banco

@@ -1,6 +1,6 @@
 package com.stockup.StockUp.Manager.mapper;
 
-import com.stockup.StockUp.Manager.dto.security.roles.RoleDTO;
+import com.stockup.StockUp.Manager.dto.roles.RoleDTO;
 import com.stockup.StockUp.Manager.model.security.Permission;
 import com.stockup.StockUp.Manager.model.security.Role;
 import org.mapstruct.Mapper;

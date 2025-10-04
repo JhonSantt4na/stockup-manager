@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.mapper;
 
-import com.stockup.StockUp.Manager.dto.security.permission.PermissionCreateDTO;
-import com.stockup.StockUp.Manager.dto.security.permission.PermissionUpdateDTO;
+import com.stockup.StockUp.Manager.dto.permission.PermissionCreateDTO;
+import com.stockup.StockUp.Manager.dto.permission.PermissionUpdateDTO;
 import com.stockup.StockUp.Manager.model.security.Permission;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
