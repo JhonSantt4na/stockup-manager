@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 public class AuthService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
-	
 	private final AuthenticationManager authenticationManager;
 	private final JwtTokenProvider tokenProvider;
 	private final UserRepository userRepository;

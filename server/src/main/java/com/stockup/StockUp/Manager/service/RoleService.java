@@ -1,21 +1,21 @@
 package com.stockup.StockUp.Manager.service;
 
-import com.stockup.StockUp.Manager.dto.security.roles.RoleDTO;
-import com.stockup.StockUp.Manager.dto.security.roles.RoleUpdateDTO;
+import com.stockup.StockUp.Manager.dto.roles.RoleDTO;
+import com.stockup.StockUp.Manager.dto.roles.RoleUpdateDTO;
 import com.stockup.StockUp.Manager.model.security.Permission;
 import com.stockup.StockUp.Manager.model.security.Role;
 import com.stockup.StockUp.Manager.repository.PermissionRepository;
 import com.stockup.StockUp.Manager.repository.RoleRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +25,21 @@ public class RoleService {
 	private static final Logger logger = LoggerFactory.getLogger(RoleService.class);
 	private final RoleRepository roleRepository;
 	private final PermissionRepository permissionRepository;
+	
+	@PostConstruct
+	public void ensureBuiltInRoles() {
+		List<String> builtInRoles = List.of("ADMIN", "USER");
+		
+		for (String roleName : builtInRoles) {
+			if (roleRepository.findByName(roleName).isEmpty()) {
+				Role role = new Role();
+				role.setName(roleName);
+				role.setCreatedAt(LocalDateTime.now());
+				roleRepository.save(role);
+				logger.info("Created built-in role: {}", roleName);
+			}
+		}
+	}
 	
 	public Role createRole(RoleDTO createDto) {
 		logger.info("Creating New Role [{}]", createDto.getName());
@@ -66,6 +81,15 @@ public class RoleService {
 		return updated;
 	}
 	
+	public Role getRoleById(UUID id) {
+		logger.debug("Seeking role by ID [{}]", id);
+		return roleRepository.findById(id)
+			.orElseThrow(() -> {
+				logger.warn("Role not found with ID [{}]", id);
+				return new IllegalArgumentException("Role not found with ID: " + id);
+			});
+	}
+	
 	public Role getRoleByName(String name) {
 		logger.debug("Seeking role for name [{}]", name);
 		return roleRepository.findByName(name)
@@ -84,10 +108,10 @@ public class RoleService {
 		logger.info("Role successfully disabled [{}]", name);
 	}
 	
-	public List<Role> getAllRoles() {
-		logger.debug("Listing all roles");
-		List<Role> roles = roleRepository.findAll();
-		logger.info("Total roles found [{}]", roles.size());
+	public Page<Role> getAllRoles(Pageable pageable) {
+		logger.debug("Listing all roles (paginated)");
+		Page<Role> roles = roleRepository.findAll(pageable);
+		logger.info("Total roles found [{}]", roles.getTotalElements());
 		return roles;
 	}
 	

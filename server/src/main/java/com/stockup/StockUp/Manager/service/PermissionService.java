@@ -1,12 +1,15 @@
 package com.stockup.StockUp.Manager.service;
 
-import com.stockup.StockUp.Manager.dto.security.permission.PermissionCreateDTO;
-import com.stockup.StockUp.Manager.dto.security.permission.PermissionUpdateDTO;
+import com.stockup.StockUp.Manager.dto.permission.PermissionCreateDTO;
+import com.stockup.StockUp.Manager.dto.permission.PermissionUpdateDTO;
+import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.model.security.Permission;
 import com.stockup.StockUp.Manager.repository.PermissionRepository;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,7 +27,7 @@ public class PermissionService {
 		permissionRepository.findByDescription(dto.getDescription())
 			.ifPresent(r -> {
 				logger.warn("Attempt to create duplicate permission [{}]", dto.getDescription());
-				throw new IllegalArgumentException("Permission already exists: " + dto.getDescription());
+				throw new DuplicateResourceException("Permission already exists: " + dto.getDescription());
 			});
 		
 		Permission permission = new Permission();
@@ -44,7 +47,7 @@ public class PermissionService {
 				.ifPresent(existingPermission -> {
 					logger.warn("Cannot update permission [{}] to [{}] - new description already exists",
 						dto.getOldDescription(), dto.getNewDescription());
-					throw new IllegalArgumentException("Permission '" + dto.getNewDescription() + "' already exists");
+					throw new DuplicateResourceException("Permission '" + dto.getNewDescription() + "' already exists");
 				});
 		}
 		
@@ -66,10 +69,10 @@ public class PermissionService {
 		logger.info("Permission successfully disabled [{}]", description);
 	}
 	
-	public List<Permission> getAllPermission() {
+	public Page<Permission> getAllPermission(Pageable pageable) {
 		logger.debug("Listing all permissions");
-		List<Permission> permissionList = permissionRepository.findAll();
-		logger.info("Total permissions found [{}]", permissionList.size());
+		Page<Permission> permissionList = permissionRepository.findAll(pageable);
+		logger.info("Total permissions found [{}]", permissionList.getTotalElements());
 		return permissionList;
 	}
 	

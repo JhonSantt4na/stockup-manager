@@ -2,19 +2,21 @@ package com.stockup.StockUp.Manager.controller;
 
 import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.controller.Docs.RoleControllerDocs;
-import com.stockup.StockUp.Manager.dto.security.response.UserResponseDTO;
-import com.stockup.StockUp.Manager.dto.security.roles.RoleDTO;
-import com.stockup.StockUp.Manager.dto.security.roles.RoleUpdateDTO;
+import com.stockup.StockUp.Manager.dto.roles.RoleDTO;
+import com.stockup.StockUp.Manager.dto.roles.RoleUpdateDTO;
 import com.stockup.StockUp.Manager.model.security.Role;
 import com.stockup.StockUp.Manager.service.RoleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 
@@ -54,6 +56,13 @@ public class RoleController implements RoleControllerDocs {
 		}
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/id/{id}")
+	public ResponseEntity<Role> getRoleById(@PathVariable UUID id) {
+		Role role = roleService.getRoleById(id);
+		return ResponseEntity.ok(role);
+	}
+	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/{name}")
@@ -79,9 +88,9 @@ public class RoleController implements RoleControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/list")
-	public ResponseEntity<List<Role>> listRoles() {
-		List<Role> roles = roleService.getAllRoles();
-		return ResponseEntity.ok(roles);
+	public ResponseEntity<Page<Role>> listRoles(Pageable pageable) {
+		Page<Role> rolesPage = roleService.getAllRoles(pageable);
+		return ResponseEntity.ok(rolesPage);
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.dto.security.permission;
+package com.stockup.StockUp.Manager.dto.permission;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

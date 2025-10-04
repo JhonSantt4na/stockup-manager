@@ -1,9 +1,7 @@
 package com.stockup.StockUp.Manager.controller.Docs;
 
-import com.stockup.StockUp.Manager.dto.security.response.UserResponseDTO;
-import com.stockup.StockUp.Manager.dto.security.roles.RoleDTO;
-import com.stockup.StockUp.Manager.dto.security.roles.RoleUpdateDTO;
-import com.stockup.StockUp.Manager.model.security.Permission;
+import com.stockup.StockUp.Manager.dto.roles.RoleDTO;
+import com.stockup.StockUp.Manager.dto.roles.RoleUpdateDTO;
 import com.stockup.StockUp.Manager.model.security.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,10 +9,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface RoleControllerDocs {
 	
@@ -46,6 +47,13 @@ public interface RoleControllerDocs {
 	ResponseEntity<Role> updateRole(@Valid @RequestBody RoleUpdateDTO updateDto);
 	
 	@Operation(
+		summary = "Buscar role por id",
+		description = "Retorna os dados de uma role com base no id informado. Acesso restrito a administradores.",
+		tags = {"Admin - Role"}
+	)
+	ResponseEntity<Role> getRoleById(UUID id);
+	
+	@Operation(
 		summary = "Buscar role por nome",
 		description = "Retorna os dados de uma role com base no nome informado. Acesso restrito a administradores.",
 		tags = {"Admin - Role"}
@@ -64,7 +72,7 @@ public interface RoleControllerDocs {
 		description = "Retorna uma lista de todas as roles cadastradas. Acesso restrito a administradores.",
 		tags = {"Admin - Role"}
 	)
-	ResponseEntity<List<Role>> listRoles();
+	ResponseEntity<Page<Role>> listRoles(Pageable pageable);
 	
 	@Operation(
 		summary = "Atribuir permissions a uma role",
