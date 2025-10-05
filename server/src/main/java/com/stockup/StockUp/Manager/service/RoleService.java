@@ -112,7 +112,7 @@ public class RoleService {
 		logger.debug("Listing all roles (paginated)");
 		Page<Role> roles = roleRepository.findAll(pageable);
 		logger.info("Total roles found [{}]", roles.getTotalElements());
-		return roles;
+		return roles != null ? roles : Page.empty();
 	}
 	
 	public Role assignPermissions(String roleName, List<String> permissionDescriptions) {

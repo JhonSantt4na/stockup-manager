@@ -2,6 +2,7 @@ package com.stockup.StockUp.Manager.controller.Docs;
 
 import com.stockup.StockUp.Manager.dto.roles.RoleDTO;
 import com.stockup.StockUp.Manager.dto.roles.RoleUpdateDTO;
+import com.stockup.StockUp.Manager.dto.roles.RoleWithUsersDTO;
 import com.stockup.StockUp.Manager.model.security.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -69,10 +70,15 @@ public interface RoleControllerDocs {
 	
 	@Operation(
 		summary = "Listar todas as roles",
-		description = "Retorna uma lista de todas as roles cadastradas. Acesso restrito a administradores.",
-		tags = {"Admin - Role"}
+		description = "Retorna uma lista paginada de todas as roles cadastradas. Acesso restrito a administradores."
 	)
-	ResponseEntity<Page<Role>> listRoles(Pageable pageable);
+	ResponseEntity<Page<RoleDTO>> listRoles(Pageable pageable);
+	
+	@Operation(
+		summary = "Listar roles com usuários",
+		description = "Retorna uma lista paginada de todas as roles junto com os usuários associados. Acesso restrito a administradores."
+	)
+	ResponseEntity<Page<RoleWithUsersDTO>> listRolesWithUsers(Pageable pageable);
 	
 	@Operation(
 		summary = "Atribuir permissions a uma role",

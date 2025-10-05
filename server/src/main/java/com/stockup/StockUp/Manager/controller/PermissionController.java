@@ -4,13 +4,16 @@ import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.controller.Docs.PermissionControllerDocs;
 import com.stockup.StockUp.Manager.dto.permission.PermissionCreateDTO;
 import com.stockup.StockUp.Manager.dto.permission.PermissionUpdateDTO;
+import com.stockup.StockUp.Manager.dto.permission.PermissionWithRolesDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.model.security.Permission;
 import com.stockup.StockUp.Manager.service.PermissionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -63,7 +66,7 @@ public class PermissionController implements PermissionControllerDocs {
 	}
 	
 	@Override
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or #username == authentication.name")
 	@GetMapping("/{description}")
 	public ResponseEntity<Permission> getPermissionByDescription(@PathVariable String description) {
 		Permission permission = permissionService.getPermissionByDescription(description);
@@ -87,8 +90,13 @@ public class PermissionController implements PermissionControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/list")
-	public ResponseEntity<Page<Permission>> getAllPermissions(Pageable pageable) {
-		Page<Permission> permissionsPage = permissionService.getAllPermission(pageable);
-		return ResponseEntity.ok(permissionsPage);
+	public ResponseEntity<Page<PermissionWithRolesDTO>> listPermissions(
+		@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "10") int size,
+		@RequestParam(defaultValue = "description,asc") String[] sort
+	) {
+		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.by(sort[0])));
+		Page<PermissionWithRolesDTO> response = permissionService.getAllPermissions(pageable);
+		return ResponseEntity.ok(response);
 	}
 }

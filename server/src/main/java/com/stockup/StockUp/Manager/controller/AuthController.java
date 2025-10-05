@@ -5,7 +5,7 @@ import com.stockup.StockUp.Manager.controller.Docs.AuthControllerDocs;
 import com.stockup.StockUp.Manager.dto.security.request.LoginRequestDTO;
 import com.stockup.StockUp.Manager.dto.security.response.TokenDTO;
 import com.stockup.StockUp.Manager.exception.InvalidCredentialsException;
-import com.stockup.StockUp.Manager.security.jwt.JwtTokenProvider;
+import com.stockup.StockUp.Manager.security.JwtTokenProvider;
 import com.stockup.StockUp.Manager.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

@@ -1,6 +1,7 @@
 package com.stockup.StockUp.Manager.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.stockup.StockUp.Manager.model.security.Permission;
 import com.stockup.StockUp.Manager.model.security.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -10,11 +11,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -66,7 +67,14 @@ public class User extends BaseEntity implements UserDetails {
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return roles;
+		Set<GrantedAuthority> authorities = new HashSet<>();
+		for (Role role : roles) {
+			authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+			for (Permission perm : role.getPermissions()) {
+				authorities.add(new SimpleGrantedAuthority(perm.getDescription()));
+			}
+		}
+		return authorities;
 	}
 	
 	@Override

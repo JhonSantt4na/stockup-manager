@@ -2,6 +2,8 @@ package com.stockup.StockUp.Manager.service;
 
 import com.stockup.StockUp.Manager.dto.permission.PermissionCreateDTO;
 import com.stockup.StockUp.Manager.dto.permission.PermissionUpdateDTO;
+import com.stockup.StockUp.Manager.dto.permission.PermissionWithRolesDTO;
+import com.stockup.StockUp.Manager.dto.permission.RoleInPermissionDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.model.security.Permission;
 import com.stockup.StockUp.Manager.repository.PermissionRepository;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -69,11 +72,21 @@ public class PermissionService {
 		logger.info("Permission successfully disabled [{}]", description);
 	}
 	
-	public Page<Permission> getAllPermission(Pageable pageable) {
-		logger.debug("Listing all permissions");
+	public Page<PermissionWithRolesDTO> getAllPermissions(Pageable pageable) {
+		logger.debug("Listing all permissions with pagination: page={}, size={}",
+			pageable.getPageNumber(), pageable.getPageSize());
+		
 		Page<Permission> permissionList = permissionRepository.findAll(pageable);
 		logger.info("Total permissions found [{}]", permissionList.getTotalElements());
-		return permissionList;
+		
+		return permissionList.map(permission -> new PermissionWithRolesDTO(
+			permission.getId(),
+			permission.getDescription(),
+			permission.isEnabled(),
+			permission.getRoles().stream()
+				.map(r -> new RoleInPermissionDTO(r.getId(), r.getName()))
+				.collect(Collectors.toList())
+		));
 	}
 	
 	public Permission getPermissionByDescription(String description) {
