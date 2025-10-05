@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.security.jwt;
+package com.stockup.StockUp.Manager.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -6,13 +6,11 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.stockup.StockUp.Manager.dto.security.response.TokenDTO;
 import com.stockup.StockUp.Manager.exception.InvalidJwtAuthenticationException;
-import com.stockup.StockUp.Manager.model.security.Role;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 
+@Log4j2
 @Service
 public class JwtTokenProvider {
 	
@@ -67,6 +66,7 @@ public class JwtTokenProvider {
 		Date accessValidity = new Date(now.getTime() + accessTokenValidity);
 		String accessToken = buildToken(username, roles, now, accessValidity);
 		String refreshToken = buildToken(username, roles, now, new Date(now.getTime() + refreshTokenValidity));
+		log.info("Generating JWT for user [{}] with roles: {}", username, roles);
 		return new TokenDTO(username, true, now, accessValidity, accessToken, refreshToken);
 	}
 	

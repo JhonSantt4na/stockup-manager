@@ -84,16 +84,6 @@ public class UserController implements UserControllerDocs {
 	}
 	
 	@Override
-	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping
-	public ResponseEntity<Page<UserResponseDTO>> listUsers(
-		@RequestParam(required = false) String role,
-		Pageable pageable) {
-		Page<UserResponseDTO> usersPage = service.listUsers(role, pageable);
-		return ResponseEntity.ok(usersPage);
-	}
-	
-	@Override
 	@GetMapping("/me")
 	public ResponseEntity<UserResponseDTO> getProfile(@AuthenticationPrincipal User authenticatedUser){
 		try {
@@ -107,6 +97,17 @@ public class UserController implements UserControllerDocs {
 			throw new RuntimeException("Error retrieving profile", e);
 		}
 	}
+	
+	@Override
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping
+	public ResponseEntity<Page<UserResponseDTO>> listUsers(
+		@RequestParam(required = false) String role,
+		Pageable pageable) {
+		Page<UserResponseDTO> usersPage = service.listUsers(role, pageable);
+		return ResponseEntity.ok(usersPage);
+	}
+	
 	
 	@Override
 	@PutMapping("/change-password")

@@ -2,6 +2,7 @@ package com.stockup.StockUp.Manager.controller.Docs;
 
 import com.stockup.StockUp.Manager.dto.permission.PermissionCreateDTO;
 import com.stockup.StockUp.Manager.dto.permission.PermissionUpdateDTO;
+import com.stockup.StockUp.Manager.dto.permission.PermissionWithRolesDTO;
 import com.stockup.StockUp.Manager.model.security.Permission;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,9 +11,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -72,14 +77,25 @@ public interface PermissionControllerDocs {
 	ResponseEntity<Void> deletePermission(@Parameter(description = "Descrição da permissão") String description);
 	
 	@Operation(
-		summary = "Listar todas as permissões",
-		description = "Retorna uma lista de todas as permissões cadastradas. Acesso restrito a administradores.",
-		tags = {"Admin - Permissão"},
+		summary = "Listar permissões paginadas",
+		description = "Retorna uma lista de permissões com suas roles associadas, paginadas e ordenáveis",
 		responses = {
-			@ApiResponse(responseCode = "200", description = "Lista retornada com sucesso", content = @Content(schema = @Schema(implementation = Permission.class))),
-			@ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content),
-			@ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
+			@ApiResponse(
+				responseCode = "200",
+				description = "Lista de permissões obtida com sucesso",
+				content = @Content(
+					mediaType = "application/json",
+					schema = @Schema(implementation = PermissionWithRolesDTO.class)
+				)
+			),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
+			@ApiResponse(responseCode = "403", description = "Acesso negado")
 		}
 	)
-	ResponseEntity<Page<Permission>> getAllPermissions(Pageable pageable);
+	@GetMapping("/list")
+	public ResponseEntity<Page<PermissionWithRolesDTO>> listPermissions(
+		@Parameter(description = "Número da página (0 baseado)") @RequestParam(defaultValue = "0") int page,
+		@Parameter(description = "Tamanho da página") @RequestParam(defaultValue = "10") int size,
+		@Parameter(description = "Ordenação, ex: description,asc") @RequestParam(defaultValue = "description,asc") String[] sort
+	);
 }

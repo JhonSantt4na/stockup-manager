@@ -4,6 +4,8 @@ import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.controller.Docs.RoleControllerDocs;
 import com.stockup.StockUp.Manager.dto.roles.RoleDTO;
 import com.stockup.StockUp.Manager.dto.roles.RoleUpdateDTO;
+import com.stockup.StockUp.Manager.dto.roles.RoleWithUsersDTO;
+import com.stockup.StockUp.Manager.mapper.RoleMapper;
 import com.stockup.StockUp.Manager.model.security.Role;
 import com.stockup.StockUp.Manager.service.RoleService;
 import jakarta.validation.Valid;
@@ -26,6 +28,7 @@ import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 public class RoleController implements RoleControllerDocs {
 	
 	private final RoleService roleService;
+	private RoleMapper roleMapper;
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
@@ -86,11 +89,21 @@ public class RoleController implements RoleControllerDocs {
 	}
 	
 	@Override
-	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/list")
-	public ResponseEntity<Page<Role>> listRoles(Pageable pageable) {
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Page<RoleDTO>> listRoles(Pageable pageable) {
 		Page<Role> rolesPage = roleService.getAllRoles(pageable);
-		return ResponseEntity.ok(rolesPage);
+		Page<RoleDTO> dtoPage = rolesPage.map(roleMapper::toDTO);
+		return ResponseEntity.ok(dtoPage);
+	}
+	
+	@Override
+	@GetMapping("/list-with-users")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Page<RoleWithUsersDTO>> listRolesWithUsers(Pageable pageable) {
+		Page<Role> rolesPage = roleService.getAllRoles(pageable);
+		Page<RoleWithUsersDTO> dtoPage = rolesPage.map(roleMapper::toWithUsersDTO);
+		return ResponseEntity.ok(dtoPage);
 	}
 	
 	@Override
