@@ -1,20 +1,24 @@
 package com.stockup.StockUp.Manager.controller.Docs;
 
-import com.stockup.StockUp.Manager.dto.ChangePasswordRequestDTO;
-import com.stockup.StockUp.Manager.dto.security.request.RegisterRequestDTO;
-import com.stockup.StockUp.Manager.dto.security.response.UserResponseDTO;
+import com.stockup.StockUp.Manager.dto.user.request.ChangePasswordRequestDTO;
+import com.stockup.StockUp.Manager.dto.user.request.RegisterUserRequestDTO;
+import com.stockup.StockUp.Manager.dto.user.request.UpdateUserRequestDTO;
+import com.stockup.StockUp.Manager.dto.user.response.RegistrationResponseDTO;
+import com.stockup.StockUp.Manager.dto.user.response.UserResponseDTO;
 import com.stockup.StockUp.Manager.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -24,30 +28,34 @@ public interface UserControllerDocs {
 	
 	@Operation(
 		summary = "Registrar um novo usuário",
-		description = "Registra um novo usuário no sistema. Acesso restrito a administradores.",
-		tags = {"Admin - Usuários"},
+		description = "Registra um novo usuário no sistema com role USER default e gera token automático para login imediato. Endpoint público (sem autenticação necessária).",
+		tags = {"Usuários"},
 		responses = {
-			@ApiResponse(responseCode = "201", description = "Usuário registrado com sucesso", content = @Content(schema = @Schema(implementation = UserResponseDTO.class))),
-			@ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content),
-			@ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content),
+			@ApiResponse(responseCode = "201", description = "Usuário registrado com sucesso e token gerado", content = @Content(schema = @Schema(implementation = RegistrationResponseDTO.class))),
+			@ApiResponse(responseCode = "400", description = "Dados inválidos ou username/email já em uso", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
 		}
 	)
-	ResponseEntity<UserResponseDTO> register(@Valid @RequestBody RegisterRequestDTO credentials);
+	ResponseEntity<RegistrationResponseDTO> register(@Valid @RequestBody RegisterUserRequestDTO credentials);
 	
 	@Operation(
 		summary = "Atualizar dados de um usuário",
-		description = "Atualiza os dados de um usuário existente. Acesso restrito a administradores.",
-		tags = {"Admin - Usuários"},
+		description = "Atualiza os dados de um usuário logado (self-update). Campos opcionais: fullName, email, password. Não é possível alterar o username.",
+		tags = {"Usuários"},
+		security = @SecurityRequirement(name = "Bearer Authentication"),
 		responses = {
 			@ApiResponse(responseCode = "200", description = "Usuário atualizado com sucesso", content = @Content(schema = @Schema(implementation = UserResponseDTO.class))),
-			@ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content),
-			@ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content),
+			@ApiResponse(responseCode = "400", description = "Dados inválidos ou email já em uso", content = @Content),
+			@ApiResponse(responseCode = "401", description = "Não autorizado (sem token ou inativo)", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
 		}
 	)
-	ResponseEntity<UserResponseDTO> updated(@Valid @RequestBody RegisterRequestDTO credentials);
+	@PutMapping("/update")
+	public ResponseEntity<UserResponseDTO> updated(
+		@AuthenticationPrincipal User authenticatedUser,
+		@Valid @RequestBody UpdateUserRequestDTO dto
+	);
 	
 	@Operation(
 		summary = "Buscar usuário por username",

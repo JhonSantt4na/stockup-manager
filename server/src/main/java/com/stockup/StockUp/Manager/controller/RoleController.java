@@ -2,9 +2,9 @@ package com.stockup.StockUp.Manager.controller;
 
 import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.controller.Docs.RoleControllerDocs;
-import com.stockup.StockUp.Manager.dto.roles.RoleDTO;
-import com.stockup.StockUp.Manager.dto.roles.RoleUpdateDTO;
-import com.stockup.StockUp.Manager.dto.roles.RoleWithUsersDTO;
+import com.stockup.StockUp.Manager.dto.roles.request.RoleDTO;
+import com.stockup.StockUp.Manager.dto.roles.request.RoleUpdateDTO;
+import com.stockup.StockUp.Manager.dto.roles.response.RoleWithUsersDTO;
 import com.stockup.StockUp.Manager.mapper.RoleMapper;
 import com.stockup.StockUp.Manager.model.security.Role;
 import com.stockup.StockUp.Manager.service.RoleService;
@@ -28,7 +28,7 @@ import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 public class RoleController implements RoleControllerDocs {
 	
 	private final RoleService roleService;
-	private RoleMapper roleMapper;
+	private final RoleMapper roleMapper;
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")

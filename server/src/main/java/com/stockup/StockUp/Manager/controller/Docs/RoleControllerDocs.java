@@ -1,8 +1,8 @@
 package com.stockup.StockUp.Manager.controller.Docs;
 
-import com.stockup.StockUp.Manager.dto.roles.RoleDTO;
-import com.stockup.StockUp.Manager.dto.roles.RoleUpdateDTO;
-import com.stockup.StockUp.Manager.dto.roles.RoleWithUsersDTO;
+import com.stockup.StockUp.Manager.dto.roles.request.RoleDTO;
+import com.stockup.StockUp.Manager.dto.roles.request.RoleUpdateDTO;
+import com.stockup.StockUp.Manager.dto.roles.response.RoleWithUsersDTO;
 import com.stockup.StockUp.Manager.model.security.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

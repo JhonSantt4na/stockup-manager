@@ -1,9 +1,10 @@
 package com.stockup.StockUp.Manager.dto.security.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -14,8 +15,13 @@ public class TokenDTO implements Serializable {
 	
 	private String username;
 	private Boolean authenticated;
-	private Date created;
-	private Date expiration;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+	private LocalDateTime created;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+	private LocalDateTime expiration;
+	
 	private String accessToken;
 	private String refreshToken;
 }

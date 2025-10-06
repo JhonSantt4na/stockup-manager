@@ -1,19 +1,22 @@
 package com.stockup.StockUp.Manager.service;
 
-import com.stockup.StockUp.Manager.dto.ChangePasswordRequestDTO;
-import com.stockup.StockUp.Manager.dto.security.request.RegisterRequestDTO;
-import com.stockup.StockUp.Manager.dto.security.response.UserResponseDTO;
+import com.stockup.StockUp.Manager.dto.security.response.TokenDTO;
+import com.stockup.StockUp.Manager.dto.user.request.ChangePasswordRequestDTO;
+import com.stockup.StockUp.Manager.dto.user.request.RegisterUserRequestDTO;
+import com.stockup.StockUp.Manager.dto.user.response.RegistrationResponseDTO;
+import com.stockup.StockUp.Manager.dto.user.request.UpdateUserRequestDTO;
+import com.stockup.StockUp.Manager.dto.user.response.UserResponseDTO;
 import com.stockup.StockUp.Manager.exception.InvalidCredentialsException;
 import com.stockup.StockUp.Manager.exception.UsernameAlreadyExistsException;
 import com.stockup.StockUp.Manager.mapper.UserMapper;
 import com.stockup.StockUp.Manager.model.User;
 import com.stockup.StockUp.Manager.model.security.Role;
-import com.stockup.StockUp.Manager.repository.PermissionRepository;
 import com.stockup.StockUp.Manager.repository.RoleRepository;
 import com.stockup.StockUp.Manager.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +24,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,24 +32,24 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class UserService implements UserDetailsService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+	private final PasswordEncoder passwordEncoder;
+	private final UserRepository userRepository;
+	private final RoleRepository roleRepository;
+	private final UserMapper mapper;
 	
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+	private final AuthService authService;
 	
-	@Autowired
-	private UserRepository userRepository;
-	
-	@Autowired
-	private PermissionRepository permissionRepository;
-	
-	@Autowired
-	private RoleRepository roleRepository;
-	
-	@Autowired
-	private UserMapper mapper;
+	public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, RoleRepository roleRepository, UserMapper mapper, @Lazy AuthService authService) {
+		this.passwordEncoder = passwordEncoder;
+		this.userRepository = userRepository;
+		this.roleRepository = roleRepository;
+		this.mapper = mapper;
+		this.authService = authService;
+	}
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -116,7 +118,7 @@ public class UserService implements UserDetailsService {
 		return roles;
 	}
 	
-	public UserResponseDTO registerUser(RegisterRequestDTO credentials) {
+	public RegistrationResponseDTO registerUser(RegisterUserRequestDTO credentials) {
 		logger.info("Registering new user: [{}]", credentials.getUsername());
 		
 		if (userRepository.existsByUsername(credentials.getUsername())) {
@@ -124,50 +126,100 @@ public class UserService implements UserDetailsService {
 			throw new UsernameAlreadyExistsException("Username already exists: " + credentials.getUsername());
 		}
 		
-		User newUser = mapper.registerToUser(credentials);
+		if (userRepository.existsByEmail(credentials.getEmail())) {
+			logger.warn("Attempt to register duplicate email: [{}]", credentials.getEmail());
+			throw new IllegalArgumentException("Email already in use: " + credentials.getEmail());
+		}
+		
+		User newUser = new User();
+		newUser.setUsername(credentials.getUsername());
+		newUser.setFullName(credentials.getFullName());
+		newUser.setEmail(credentials.getEmail());
 		newUser.setPassword(passwordEncoder.encode(credentials.getPassword()));
 		newUser.setCreatedAt(LocalDateTime.now());
+		newUser.setEnabled(true);
+		
+		Role userRole = roleRepository.findByName("USER")
+			.orElseThrow(() -> {
+				logger.error("Default USER role not found during registration");
+				return new RuntimeException("Default USER role not found");
+			});
+		newUser.setRoles(new ArrayList<>(List.of(userRole)));
 		
 		User userSaved = userRepository.save(newUser);
-		logger.info("User registered successfully: [{}]", credentials.getUsername());
+		logger.info("User registered successfully: [{}] with default role USER", credentials.getUsername());
 		
-		return mapper.entityToResponse(userSaved);
+		List<String> roleNames = userSaved.getRoles().stream()
+			.map(Role::getName)
+			.collect(Collectors.toList());
+		TokenDTO tokenDto = authService.generateTokenForNewUser(userSaved.getUsername(), roleNames);
+		logger.debug("Generated auto-login TokenDTO for new user [{}]", credentials.getUsername());
+		
+		UserResponseDTO userDto = new UserResponseDTO(
+			userSaved.getId(),
+			userSaved.getUsername(),
+			userSaved.getFullName(),
+			userSaved.getEmail(),
+			roleNames
+		);
+		
+		return new RegistrationResponseDTO(userDto, tokenDto);
 	}
 	
-	public UserResponseDTO updatedUser(RegisterRequestDTO credentials) {
-		logger.info("Updating user: [{}]", credentials.getUsername());
+	public UserResponseDTO updatedUser(String username, UpdateUserRequestDTO dto) {
+		logger.info("Updating user: [{}]", username);
 		
-		User user = userRepository.findByUsername(credentials.getUsername())
-			.orElseThrow(() -> {
-				logger.warn("User not found for update: [{}]", credentials.getUsername());
-				return new UsernameNotFoundException("User not found with username: " + credentials.getUsername());
-			});
+		User user = userRepository.findByUsername(username)
+			.orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 		
 		boolean changed = false;
 		
-		if (credentials.getFullName() != null && !credentials.getFullName().isBlank()) {
-			user.setFullName(credentials.getFullName());
+		if (dto.getFullName() != null && !dto.getFullName().isBlank()) {
+			user.setFullName(dto.getFullName());
 			changed = true;
 		}
 		
-		if (credentials.getEmail() != null && !credentials.getEmail().isBlank()) {
-			user.setEmail(credentials.getEmail());
+		if (dto.getEmail() != null && !dto.getEmail().isBlank()) {
+			if (userRepository.existsByEmailAndIdNot(dto.getEmail(), user.getId())) {
+				logger.warn("Email already in use for update: [{}]", dto.getEmail());
+				throw new IllegalArgumentException("Email already in use: " + dto.getEmail());
+			}
+			user.setEmail(dto.getEmail());
 			changed = true;
 		}
 		
-		if (credentials.getPassword() != null && !credentials.getPassword().isBlank()) {
-			user.setPassword(passwordEncoder.encode(credentials.getPassword()));
+		if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+			user.setPassword(passwordEncoder.encode(dto.getPassword()));
 			changed = true;
 		}
 		
 		if (changed) {
 			user.setUpdatedAt(LocalDateTime.now());
-			User updatedUser = userRepository.save(user);
-			logger.info("User updated successfully: [{}]", credentials.getUsername());
-			return mapper.entityToResponse(updatedUser);
+			User savedUser = userRepository.save(user);
+			logger.info("User updated successfully: [{}]", username);
+			
+			List<String> roleNames = savedUser.getRoles().stream()
+				.map(Role::getName)
+				.collect(Collectors.toList());
+			return new UserResponseDTO(
+				savedUser.getId(),
+				savedUser.getUsername(),
+				savedUser.getFullName(),
+				savedUser.getEmail(),
+				roleNames
+			);
 		} else {
-			logger.info("No fields provided for update for user [{}]", credentials.getUsername());
-			return mapper.entityToResponse(user);
+			logger.info("No fields provided for update for user [{}]", username);
+			List<String> roleNames = user.getRoles().stream()
+				.map(Role::getName)
+				.collect(Collectors.toList());
+			return new UserResponseDTO(
+				user.getId(),
+				user.getUsername(),
+				user.getFullName(),
+				user.getEmail(),
+				roleNames
+			);
 		}
 	}
 	
@@ -218,7 +270,7 @@ public class UserService implements UserDetailsService {
 		
 		return users.map(user -> {
 			UserResponseDTO dto = mapper.entityToResponse(user);
-			logger.debug("User mapped to DTO: {}", dto.username());
+			logger.debug("User mapped to DTO: {}", dto.getUsername());
 			return dto;
 		});
 	}

@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.service;
 
-import com.stockup.StockUp.Manager.dto.roles.RoleDTO;
-import com.stockup.StockUp.Manager.dto.roles.RoleUpdateDTO;
+import com.stockup.StockUp.Manager.dto.roles.request.RoleDTO;
+import com.stockup.StockUp.Manager.dto.roles.request.RoleUpdateDTO;
 import com.stockup.StockUp.Manager.model.security.Permission;
 import com.stockup.StockUp.Manager.model.security.Role;
 import com.stockup.StockUp.Manager.repository.PermissionRepository;

@@ -1,10 +1,9 @@
-package com.stockup.StockUp.Manager.dto.roles;
+package com.stockup.StockUp.Manager.dto.roles.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
 import java.util.UUID;
 
