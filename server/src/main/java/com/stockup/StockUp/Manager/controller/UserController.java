@@ -1,66 +1,66 @@
 package com.stockup.StockUp.Manager.controller;
 
 import com.stockup.StockUp.Manager.audit.AuditLogger;
-import com.stockup.StockUp.Manager.controller.Docs.UserControllerDocs;
-import com.stockup.StockUp.Manager.dto.ChangePasswordRequestDTO;
-import com.stockup.StockUp.Manager.dto.security.request.RegisterRequestDTO;
-import com.stockup.StockUp.Manager.dto.security.response.UserResponseDTO;
-import com.stockup.StockUp.Manager.mapper.UserMapper;
-import com.stockup.StockUp.Manager.model.User;
+import com.stockup.StockUp.Manager.dto.user.request.ChangePasswordRequestDTO;
+import com.stockup.StockUp.Manager.dto.user.request.RegisterUserRequestDTO;
+import com.stockup.StockUp.Manager.dto.user.response.RegistrationResponseDTO;
+import com.stockup.StockUp.Manager.dto.user.request.UpdateUserRequestDTO;
+import com.stockup.StockUp.Manager.dto.user.response.UserResponseDTO;
 import com.stockup.StockUp.Manager.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
 import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 
 @RestController
-@RequestMapping("/users")
 @RequiredArgsConstructor
-public class UserController implements UserControllerDocs {
+@RequestMapping("/users")
+public class UserController {
 	
 	private final UserService service;
-	private UserMapper mapper;
 	
-	@Override
-	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/register")
-	public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody RegisterRequestDTO credentials) {
+	public ResponseEntity<RegistrationResponseDTO> register(@Valid @RequestBody RegisterUserRequestDTO credentials) {
 		try {
-			UserResponseDTO response = service.registerUser(credentials);
-			AuditLogger.log("USER_REGISTER", getCurrentUser(), "SUCCESS", "User registered: " + credentials.getUsername());
+			RegistrationResponseDTO response = service.registerUser(credentials);
+			String currentUser = getCurrentUser() != null ? getCurrentUser() : "ANONYMOUS";
+			AuditLogger.log("USER_REGISTER", currentUser, "SUCCESS", "User registered: " + credentials.getUsername() + " with auto-token");
 			return ResponseEntity.status(HttpStatus.CREATED).body(response);
 			
 		} catch (Exception e) {
-			AuditLogger.log("USER_REGISTER", getCurrentUser(), "FAILED", "Error registering user: " + e.getMessage());
+			String currentUser = getCurrentUser() != null ? getCurrentUser() : "ANONYMOUS";
+			AuditLogger.log("USER_REGISTER", currentUser, "FAILED", "Error: " + e.getMessage());
 			throw new RuntimeException("Error registering user", e);
 		}
 	}
 	
-	@Override
-	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/update")
-	public ResponseEntity<UserResponseDTO> updated(@Valid @RequestBody RegisterRequestDTO credentials) {
+	public ResponseEntity<UserResponseDTO> updated(
+		Authentication authentication,
+		@Valid @RequestBody UpdateUserRequestDTO dto
+	) {
+		String username = authentication.getName();
+		
 		try {
-			UserResponseDTO response = service.updatedUser(credentials);
-			AuditLogger.log("USER_UPDATE", getCurrentUser(), "SUCCESS", "User updated: " + credentials.getUsername());
+			UserResponseDTO response = service.updatedUser(username, dto);
+			AuditLogger.log("USER_UPDATE", username, "SUCCESS", "User updated: " + username);
 			return ResponseEntity.ok(response);
 			
 		} catch (Exception e) {
-			AuditLogger.log("USER_UPDATE", getCurrentUser(), "FAILED", "Error updating user: " + e.getMessage());
+			AuditLogger.log("USER_UPDATE", username, "FAILED", "Error: " + e.getMessage());
 			throw new RuntimeException("Error updating user", e);
 		}
 	}
 	
-	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/find/{username}")
 	public ResponseEntity<UserResponseDTO> findByUsername(@PathVariable String username) {
@@ -68,7 +68,6 @@ public class UserController implements UserControllerDocs {
 		return ResponseEntity.ok(user);
 	}
 	
-	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/delete/{username}")
 	public ResponseEntity<Void> delete(@PathVariable String username) {
@@ -83,50 +82,48 @@ public class UserController implements UserControllerDocs {
 		}
 	}
 	
-	@Override
 	@GetMapping("/me")
-	public ResponseEntity<UserResponseDTO> getProfile(@AuthenticationPrincipal User authenticatedUser){
+	public ResponseEntity<UserResponseDTO> getProfile(Authentication authentication) {
 		try {
-			UserResponseDTO profile = mapper.entityToResponse(authenticatedUser);
-			AuditLogger.log("USER_PROFILE", authenticatedUser.getUsername(), "SUCCESS", "Profile retrieved successfully");
+			String username = authentication.getName();
+			UserResponseDTO profile = service.findUser(username);
+			AuditLogger.log("USER_PROFILE", username, "SUCCESS", "Profile retrieved successfully");
 			return ResponseEntity.ok(profile);
 			
 		} catch (Exception e) {
-			AuditLogger.log("USER_PROFILE", authenticatedUser != null ? authenticatedUser.getUsername() : "unknown",
-				"FAILED", "Error retrieving profile: " + e.getMessage());
+			String username = authentication.getName();
+			AuditLogger.log("USER_PROFILE", username, "FAILED", "Error retrieving profile: " + e.getMessage());
 			throw new RuntimeException("Error retrieving profile", e);
 		}
 	}
 	
-	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping
 	public ResponseEntity<Page<UserResponseDTO>> listUsers(
 		@RequestParam(required = false) String role,
-		Pageable pageable) {
+		Pageable pageable
+	) {
 		Page<UserResponseDTO> usersPage = service.listUsers(role, pageable);
 		return ResponseEntity.ok(usersPage);
 	}
 	
-	
-	@Override
 	@PutMapping("/change-password")
 	public ResponseEntity<Void> changePassword(
-		@AuthenticationPrincipal User authenticatedUser,
+		Authentication authentication,
 		@Valid @RequestBody ChangePasswordRequestDTO dto
 	) {
+		String username = authentication.getName();
 		try {
-			service.changePassword(authenticatedUser.getUsername(), dto);
-			AuditLogger.log("PASSWORD_CHANGE", authenticatedUser.getUsername(), "SUCCESS", "Password changed successfully");
+			service.changePassword(username, dto);
+			AuditLogger.log("PASSWORD_CHANGE", username, "SUCCESS", "Password changed successfully");
 			return ResponseEntity.noContent().build();
 			
 		} catch (Exception e) {
-			AuditLogger.log("PASSWORD_CHANGE", authenticatedUser.getUsername(), "FAILED", "Error changing password: " + e.getMessage());
+			AuditLogger.log("PASSWORD_CHANGE", username, "FAILED", "Error changing password: " + e.getMessage());
 			throw new RuntimeException("Error changing password", e);
 		}
 	}
 	
-	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/{username}/roles")
 	public ResponseEntity<List<String>> getUserRoles(@PathVariable String username) {
@@ -134,7 +131,6 @@ public class UserController implements UserControllerDocs {
 		return ResponseEntity.ok(roles);
 	}
 	
-	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/{username}/roles/assign")
 	public ResponseEntity<UserResponseDTO> assignRoles(
@@ -143,7 +139,7 @@ public class UserController implements UserControllerDocs {
 	) {
 		try {
 			UserResponseDTO updatedUser = service.assignRoles(username, roleNames);
-			AuditLogger.log("ROLE_ASSIGN", getCurrentUser(), "SUCCESS", "Role " + roleNames + " assigned to user: " + username);
+			AuditLogger.log("ROLE_ASSIGN", getCurrentUser(), "SUCCESS", "Roles " + roleNames + " assigned to user: " + username);
 			return ResponseEntity.ok(updatedUser);
 			
 		} catch (Exception e) {
@@ -152,7 +148,6 @@ public class UserController implements UserControllerDocs {
 		}
 	}
 	
-	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/{username}/roles/remove")
 	public ResponseEntity<UserResponseDTO> removeRoles(
@@ -161,7 +156,7 @@ public class UserController implements UserControllerDocs {
 	) {
 		try {
 			UserResponseDTO updatedUser = service.removeRoles(username, roleNames);
-			AuditLogger.log("ROLE_REMOVE", getCurrentUser(), "SUCCESS", "Role " + roleNames + " removed from user: " + username);
+			AuditLogger.log("ROLE_REMOVE", getCurrentUser(), "SUCCESS", "Roles " + roleNames + " removed from user: " + username);
 			return ResponseEntity.ok(updatedUser);
 			
 		} catch (Exception e) {

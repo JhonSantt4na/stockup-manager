@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.dto.roles;
+package com.stockup.StockUp.Manager.dto.roles.response;
 
 import java.util.List;
 import java.util.UUID;

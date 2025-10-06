@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.dto.permission;
+package com.stockup.StockUp.Manager.dto.permission.response;
 
 import java.util.UUID;
 

@@ -2,9 +2,9 @@ package com.stockup.StockUp.Manager.controller;
 
 import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.controller.Docs.PermissionControllerDocs;
-import com.stockup.StockUp.Manager.dto.permission.PermissionCreateDTO;
-import com.stockup.StockUp.Manager.dto.permission.PermissionUpdateDTO;
-import com.stockup.StockUp.Manager.dto.permission.PermissionWithRolesDTO;
+import com.stockup.StockUp.Manager.dto.permission.request.PermissionCreateDTO;
+import com.stockup.StockUp.Manager.dto.permission.request.PermissionUpdateDTO;
+import com.stockup.StockUp.Manager.dto.permission.response.PermissionWithRolesDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.model.security.Permission;
 import com.stockup.StockUp.Manager.service.PermissionService;
@@ -18,8 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 

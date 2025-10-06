@@ -17,6 +17,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -62,10 +65,11 @@ public class JwtTokenProvider {
 	}
 	
 	public TokenDTO createAccessToken(String username, List<String> roles) {
-		Date now = new Date();
-		Date accessValidity = new Date(now.getTime() + accessTokenValidity);
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime accessValidity = now.plusSeconds(accessTokenValidity / 1000);
 		String accessToken = buildToken(username, roles, now, accessValidity);
-		String refreshToken = buildToken(username, roles, now, new Date(now.getTime() + refreshTokenValidity));
+		LocalDateTime refreshValidity = now.plusSeconds(refreshTokenValidity / 1000);
+		String refreshToken = buildToken(username, roles, now, refreshValidity);
 		log.info("Generating JWT for user [{}] with roles: {}", username, roles);
 		return new TokenDTO(username, true, now, accessValidity, accessToken, refreshToken);
 	}
@@ -78,12 +82,14 @@ public class JwtTokenProvider {
 		return createAccessToken(username, roleNames);
 	}
 	
-	private String buildToken(String username, List<String> roleNames, Date issuedAt, Date expiresAt) {
+	private String buildToken(String username, List<String> roleNames, LocalDateTime issuedAt, LocalDateTime expiresAt) {
+		Instant issuedInstant = issuedAt.atZone(ZoneId.systemDefault()).toInstant();
+		Instant expiresInstant = expiresAt.atZone(ZoneId.systemDefault()).toInstant();
 		return JWT.create()
 			.withSubject(username)
 			.withClaim("roles", roleNames)
-			.withIssuedAt(issuedAt)
-			.withExpiresAt(expiresAt)
+			.withIssuedAt(Date.from(issuedInstant))
+			.withExpiresAt(Date.from(expiresInstant))
 			.withIssuer(issuer)
 			.sign(algorithm);
 	}

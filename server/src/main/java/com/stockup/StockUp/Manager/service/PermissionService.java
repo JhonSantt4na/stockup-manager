@@ -1,9 +1,9 @@
 package com.stockup.StockUp.Manager.service;
 
-import com.stockup.StockUp.Manager.dto.permission.PermissionCreateDTO;
-import com.stockup.StockUp.Manager.dto.permission.PermissionUpdateDTO;
-import com.stockup.StockUp.Manager.dto.permission.PermissionWithRolesDTO;
-import com.stockup.StockUp.Manager.dto.permission.RoleInPermissionDTO;
+import com.stockup.StockUp.Manager.dto.permission.request.PermissionCreateDTO;
+import com.stockup.StockUp.Manager.dto.permission.request.PermissionUpdateDTO;
+import com.stockup.StockUp.Manager.dto.permission.response.PermissionWithRolesDTO;
+import com.stockup.StockUp.Manager.dto.permission.response.RoleInPermissionDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.model.security.Permission;
 import com.stockup.StockUp.Manager.repository.PermissionRepository;
@@ -13,9 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service

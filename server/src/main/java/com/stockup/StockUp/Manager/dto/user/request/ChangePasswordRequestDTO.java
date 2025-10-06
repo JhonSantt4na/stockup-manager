@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.dto;
+package com.stockup.StockUp.Manager.dto.user.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

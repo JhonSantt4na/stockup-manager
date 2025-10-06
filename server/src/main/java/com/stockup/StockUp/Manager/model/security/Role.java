@@ -6,7 +6,6 @@ import com.stockup.StockUp.Manager.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import java.util.ArrayList;
