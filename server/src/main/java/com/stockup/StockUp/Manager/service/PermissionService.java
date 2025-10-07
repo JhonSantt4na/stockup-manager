@@ -54,7 +54,7 @@ public class PermissionService {
 		
 		permission.setDescription(dto.getNewDescription());
 		permission.setUpdatedAt(LocalDateTime.now());
-		
+		permission.setEnabled(dto.getEnabled());
 		Permission updated = permissionRepository.save(permission);
 		logger.info("Permission successfully updated from [{}] to [{}]",
 			dto.getOldDescription(), dto.getNewDescription());
@@ -65,9 +65,25 @@ public class PermissionService {
 		logger.info("Deleting Permission [{}]", description);
 		Permission permission = getPermissionByDescription(description);
 		permission.setDeletedAt(LocalDateTime.now());
-		permission.disable();
+		permission.setEnabled(false);
 		permissionRepository.save(permission);
 		logger.info("Permission successfully disabled [{}]", description);
+	}
+	
+	public Page<PermissionWithRolesDTO> getAllActivePermissions(Pageable pageable) {
+		logger.debug("Listing all active permissions with pagination: page={}, size={}", pageable.getPageNumber(), pageable.getPageSize());
+		
+		Page<Permission> permissionList = permissionRepository.findByEnabledTrue(pageable);
+		logger.info("Total active permissions found [{}]", permissionList.getTotalElements());
+		
+		return permissionList.map(permission -> new PermissionWithRolesDTO(
+			permission.getId(),
+			permission.getDescription(),
+			permission.isEnabled(),
+			permission.getRoles().stream()
+				.map(r -> new RoleInPermissionDTO(r.getId(), r.getName()))
+				.collect(Collectors.toList())
+		));
 	}
 	
 	public Page<PermissionWithRolesDTO> getAllPermissions(Pageable pageable) {

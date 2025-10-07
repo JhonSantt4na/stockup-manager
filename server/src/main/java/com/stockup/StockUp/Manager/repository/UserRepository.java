@@ -16,6 +16,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 	@Query("SELECT u FROM User u JOIN u.roles r WHERE r.name = :role AND u.deletedAt IS NULL")
 	Page<User> findAllByRoles_Name(String roleName, Pageable pageable);
 	
+	@Query("SELECT u FROM User u WHERE (:role IS NULL OR :role = '' OR LOWER(u.roles) LIKE LOWER(CONCAT('%', :role, '%')))")
+	Page<User> findByRole(@Param("role") String role, Pageable pageable);
+	
 	boolean existsByUsername(String username);
 	boolean existsByEmailAndIdNot(String email, UUID id);
 	boolean existsByEmail(String email);

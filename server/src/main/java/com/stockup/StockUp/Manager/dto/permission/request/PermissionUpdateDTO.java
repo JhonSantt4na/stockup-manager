@@ -10,4 +10,6 @@ public class PermissionUpdateDTO {
 	
 	@NotBlank(message = "New description is required")
 	private String newDescription;
+	
+	private Boolean enabled;
 }
