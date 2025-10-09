@@ -93,4 +93,27 @@ public interface PermissionControllerDocs {
 		@Parameter(description = "Tamanho da página") @RequestParam(defaultValue = "10") int size,
 		@Parameter(description = "Ordenação, ex: description,asc") @RequestParam(defaultValue = "description,asc") String[] sort
 	);
+	
+	@Operation(
+		summary = "Listar permissões paginadas",
+		description = "Retorna uma lista de permissões com suas roles associadas, paginadas e ordenáveis",
+		responses = {
+			@ApiResponse(
+				responseCode = "200",
+				description = "Lista de permissões obtida com sucesso",
+				content = @Content(
+					mediaType = "application/json",
+					schema = @Schema(implementation = PermissionWithRolesDTO.class)
+				)
+			),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
+			@ApiResponse(responseCode = "403", description = "Acesso negado")
+		}
+	)
+	@GetMapping("/list")
+	public ResponseEntity<Page<PermissionWithRolesDTO>> getAllPermissionsIsActive(
+		@Parameter(description = "Número da página (0 baseado)") @RequestParam(defaultValue = "0") int page,
+		@Parameter(description = "Tamanho da página") @RequestParam(defaultValue = "10") int size,
+		@Parameter(description = "Ordenação, ex: description,asc") @RequestParam(defaultValue = "description,asc") String[] sort
+	);
 }

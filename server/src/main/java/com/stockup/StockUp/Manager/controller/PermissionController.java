@@ -97,4 +97,16 @@ public class PermissionController implements PermissionControllerDocs {
 		Page<PermissionWithRolesDTO> response = permissionService.getAllPermissions(pageable);
 		return ResponseEntity.ok(response);
 	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/listActive")
+	public ResponseEntity<Page<PermissionWithRolesDTO>> getAllPermissionsIsActive(
+		@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "10") int size,
+		@RequestParam(defaultValue = "description,asc") String[] sort
+	) {
+		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sort[1].toUpperCase()), sort[0]));
+		Page<PermissionWithRolesDTO> response = permissionService.getAllActivePermissions(pageable);
+		return ResponseEntity.ok(response);
+	}
 }

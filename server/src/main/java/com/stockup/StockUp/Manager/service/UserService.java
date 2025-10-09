@@ -245,6 +245,7 @@ public class UserService implements UserDetailsService {
 				return new UsernameNotFoundException("User not found with username: " + username);
 			});
 		user.setDeletedAt(LocalDateTime.now());
+		user.setEnabled(false);
 		userRepository.save(user);
 		logger.info("User deleted successfully: [{}]", username);
 	}
@@ -252,10 +253,6 @@ public class UserService implements UserDetailsService {
 	public Page<UserResponseDTO> listUsers(String role, Pageable pageable) {
 		logger.info("Listing users with pagination: page={}, size={}, sort={}",
 			pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
-		
-		if (role != null && !role.isBlank()) {
-			logger.info("Filtering users by role: [{}]", role);
-		}
 		
 		Page<User> users;
 		if (role != null && !role.isBlank()) {
