@@ -1,5 +1,5 @@
-// src/components/RoleManager.js (Ajustado pros DTOs: create com RoleDTO, update com RoleUpdateDTO, assign com List<String> permissions)
-import React, { useEffect, useState } from 'react';
+// src/components/RoleManager.js (Corrigido: Body direto array pra assign/remove, Inline Edit Name)
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 
 const RoleManager = () => {
@@ -9,20 +9,20 @@ const RoleManager = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showAssignModal, setShowAssignModal] = useState(false);
   const [showManagePermissionsModal, setShowManagePermissionsModal] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
-  const [createForm, setCreateForm] = useState({ name: '', enabled: true, permissions: [] }); // RoleDTO: name, enabled, permissions (List<String>)
-  const [updateForm, setUpdateForm] = useState({ oldName: '', newName: '' }); // RoleUpdateDTO: oldName, newName
-  const [assignForm, setAssignForm] = useState({ permissionId: '' }); // Pra select, depois converte pra List
+  const [createForm, setCreateForm] = useState({ name: '', enabled: true, permissions: [] });
+  const [assignForm, setAssignForm] = useState({ permissionDescriptions: [] });
+  const [editingRoleId, setEditingRoleId] = useState(null);
+  const [editingName, setEditingName] = useState('');
 
   useEffect(() => {
     fetchRoles();
     fetchPermissions();
   }, []);
 
-  const fetchRoles = async () => {
+  const fetchRoles = useCallback(async () => {
     try {
       const response = await axios.get('http://localhost:8080/roles/list');
       const rolesArray = response.data.content || response.data || [];
@@ -33,34 +33,38 @@ const RoleManager = () => {
       console.error('Erro no fetchRoles:', err);
       setError('Erro ao listar roles: ' + err.message);
     }
-  };
+  }, []);
 
-  const fetchPermissions = async () => {
+  const fetchPermissions = useCallback(async () => {
     try {
       const response = await axios.get('http://localhost:8080/permissions/list?page=0&size=100');
       setPermissions(response.data.content || []);
     } catch (err) {
       setError('Erro ao listar permissions: ' + err.message);
     }
-  };
+  }, []);
 
-  const fetchRolePermissions = async (roleName) => {
+  const fetchRolePermissions = useCallback(async (roleName) => {
     try {
       const response = await axios.get(`http://localhost:8080/roles/${roleName}/permissions`);
       setRolePermissions(response.data);
     } catch (err) {
       setError('Erro ao listar permissions da role: ' + err.message);
     }
-  };
+  }, []);
 
   const handleCreateRole = async (e) => {
     e.preventDefault();
     try {
       const createData = {
-        name: createForm.name,
+        name: createForm.name.trim(),
         enabled: createForm.enabled,
-        permissions: createForm.permissions // Array vazio por padrão
+        permissions: createForm.permissions
       };
+      if (!createData.name) {
+        setError('Nome da role é obrigatório!');
+        return;
+      }
       await axios.post('http://localhost:8080/roles/create', createData);
       setSuccess('Role criada com sucesso!');
       setShowCreateModal(false);
@@ -71,63 +75,79 @@ const RoleManager = () => {
     }
   };
 
-  const handleUpdateRole = async (e) => {
-    e.preventDefault();
+  const handleInlineUpdateRole = async (roleId, oldName) => {
+    const newName = editingName.trim();
+    if (!newName) {
+      setError('Novo nome é obrigatório!');
+      return;
+    }
+    if (newName === oldName) {
+      setSuccess('Nome não alterado.');
+      setEditingRoleId(null);
+      setEditingName('');
+      return;
+    }
     try {
       const updateData = {
-        oldName: updateForm.oldName,
-        newName: updateForm.newName
+        oldName: oldName,
+        newName: newName
       };
+      console.log('Enviando updateData pra role:', updateData);
       await axios.put('http://localhost:8080/roles/update', updateData);
       setSuccess('Role atualizada com sucesso!');
-      setShowUpdateModal(false);
-      setUpdateForm({ oldName: '', newName: '' });
+      setEditingRoleId(null);
+      setEditingName('');
       fetchRoles();
     } catch (err) {
+      console.error('Erro no update role:', err);
       setError('Erro ao atualizar role: ' + err.response?.data?.message || err.message);
     }
+  };
+
+  const startInlineEdit = (role) => {
+    setEditingRoleId(role.id || role.name);
+    setEditingName(role.name);
+  };
+
+  const cancelInlineEdit = () => {
+    setEditingRoleId(null);
+    setEditingName('');
   };
 
   const handleAssignPermission = async (e) => {
     e.preventDefault();
     try {
-      // DTO espera List<String> permissions, então envia array com o id
-      const assignData = {
-        permissions: [assignForm.permissionId] // Array com o ID da permission
-      };
-      await axios.post(`http://localhost:8080/roles/${selectedRole.name}/permissions/assign`, assignData);
+      // Backend espera List<String> permissionDescriptions direto no body (array JSON)
+      console.log('Enviando assign permissionDescriptions:', assignForm.permissionDescriptions);
+      await axios.post(`http://localhost:8080/roles/${selectedRole.name}/permissions/assign`, assignForm.permissionDescriptions);
       setSuccess('Permission atribuída com sucesso!');
       setShowAssignModal(false);
-      setAssignForm({ permissionId: '' });
+      setAssignForm({ permissionDescriptions: [] });
       fetchRoles();
     } catch (err) {
+      console.error('Erro no assign:', err);
       setError('Erro ao atribuir permission: ' + err.response?.data?.message || err.message);
     }
   };
 
-  const handleRemovePermission = async (permissionId) => {
+  const handleRemovePermission = async (permissionDescription) => {
     if (window.confirm('Remover permission?')) {
       try {
-        const removeData = {
-          permissions: [permissionId] // Array com o ID pra remover
-        };
-        await axios.post(`http://localhost:8080/roles/${selectedRole.name}/permissions/remove`, removeData);
+        // Backend espera List<String> permissionDescriptions direto no body
+        console.log('Enviando remove permissionDescriptions:', [permissionDescription]);
+        await axios.post(`http://localhost:8080/roles/${selectedRole.name}/permissions/remove`, [permissionDescription]);
         setSuccess('Permission removida com sucesso!');
         fetchRolePermissions(selectedRole.name);
       } catch (err) {
+        console.error('Erro no remove:', err);
         setError('Erro ao remover permission: ' + err.response?.data?.message || err.message);
       }
     }
   };
 
-  const openUpdateModal = (role) => {
-    setSelectedRole(role);
-    setUpdateForm({ oldName: role.name, newName: role.name });
-    setShowUpdateModal(true);
-  };
-
   const openAssignModal = (role) => {
     setSelectedRole(role);
+    setAssignForm({ permissionDescriptions: [] });
     setShowAssignModal(true);
   };
 
@@ -139,6 +159,13 @@ const RoleManager = () => {
 
   const handleInputChange = (stateSetter, e) => {
     stateSetter({ ...stateSetter, [e.target.name]: e.target.value });
+  };
+
+  const handlePermissionSelect = (e) => {
+    const selectedDesc = e.target.value;
+    if (selectedDesc && !assignForm.permissionDescriptions.includes(selectedDesc)) {
+      setAssignForm({ ...assignForm, permissionDescriptions: [...assignForm.permissionDescriptions, selectedDesc] });
+    }
   };
 
   return (
@@ -154,19 +181,34 @@ const RoleManager = () => {
         <thead>
           <tr>
             <th style={{ border: '1px solid #ddd', padding: '8px' }}>Nome</th>
-            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Descrição</th>
             <th style={{ border: '1px solid #ddd', padding: '8px' }}>Permissions</th>
             <th style={{ border: '1px solid #ddd', padding: '8px' }}>Ações</th>
           </tr>
         </thead>
         <tbody>
           {roles.map((role) => (
-            <tr key={role.name}>
-              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{role.name}</td>
-              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{role.description || 'N/A'}</td>
+            <tr key={role.id || role.name}>
+              <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                {editingRoleId === (role.id || role.name) ? (
+                  <div style={{ display: 'flex', gap: '5px' }}>
+                    <input
+                      type="text"
+                      value={editingName}
+                      onChange={(e) => setEditingName(e.target.value)}
+                      style={{ padding: '5px', border: '1px solid #ddd', borderRadius: '4px' }}
+                    />
+                    <button onClick={() => handleInlineUpdateRole(role.id || role.name, role.name)} style={{ padding: '5px', background: '#28a745', color: 'white', border: 'none', borderRadius: '4px' }}>Salvar</button>
+                    <button onClick={cancelInlineEdit} style={{ padding: '5px', background: '#6c757d', color: 'white', border: 'none', borderRadius: '4px' }}>Cancelar</button>
+                  </div>
+                ) : (
+                  <>
+                    {role.name}
+                    <button onClick={() => startInlineEdit(role)} style={{ padding: '5px', background: '#007bff', color: 'white', border: 'none', marginLeft: '5px' }}>Editar</button>
+                  </>
+                )}
+              </td>
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{role.permissions ? role.permissions.length : 0}</td>
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                <button onClick={() => openUpdateModal(role)} style={{ padding: '5px', background: '#007bff', color: 'white', border: 'none', marginRight: '5px' }}>Editar</button>
                 <button onClick={() => openAssignModal(role)} style={{ padding: '5px', background: '#ffc107', color: 'black', border: 'none', marginRight: '5px' }}>Atribuir Permission</button>
                 <button onClick={() => openManagePermissionsModal(role)} style={{ padding: '5px', background: '#dc3545', color: 'white', border: 'none' }}>Gerenciar Permissions</button>
               </td>
@@ -182,9 +224,9 @@ const RoleManager = () => {
             <h4>Permissions da Role: {selectedRole.name}</h4>
             <ul style={{ listStyle: 'none', padding: 0 }}>
               {rolePermissions.map((perm) => (
-                <li key={perm.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px', borderBottom: '1px solid #ddd' }}>
-                  <span>{perm.description}</span>
-                  <button onClick={() => handleRemovePermission(perm.id)} style={{ padding: '5px', background: '#dc3545', color: 'white', border: 'none' }}>Remover</button>
+                <li key={perm} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px', borderBottom: '1px solid #ddd' }}>
+                  <span>{perm}</span>
+                  <button onClick={() => handleRemovePermission(perm)} style={{ padding: '5px', background: '#dc3545', color: 'white', border: 'none' }}>Remover</button>
                 </li>
               ))}
             </ul>
@@ -193,7 +235,7 @@ const RoleManager = () => {
         </div>
       )}
 
-      {/* Modal Create - Sem description (DTO não tem) */}
+      {/* Modal Create */}
       {showCreateModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div style={{ background: 'white', padding: '20px', borderRadius: '8px', maxWidth: '400px' }}>
@@ -217,40 +259,7 @@ const RoleManager = () => {
         </div>
       )}
 
-      {/* Modal Update - Sem description */}
-      {showUpdateModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{ background: 'white', padding: '20px', borderRadius: '8px', maxWidth: '400px' }}>
-            <h4>Atualizar Role: {selectedRole.name}</h4>
-            <form onSubmit={handleUpdateRole}>
-              <input
-                type="text"
-                name="oldName"
-                placeholder="Nome Atual (não mude)"
-                value={updateForm.oldName}
-                onChange={(e) => handleInputChange(setUpdateForm, e)}
-                required
-                style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
-              />
-              <input
-                type="text"
-                name="newName"
-                placeholder="Novo Nome"
-                value={updateForm.newName}
-                onChange={(e) => handleInputChange(setUpdateForm, e)}
-                required
-                style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
-              />
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <button type="submit" style={{ padding: '10px', background: '#007bff', color: 'white', border: 'none' }}>Atualizar</button>
-                <button type="button" onClick={() => setShowUpdateModal(false)} style={{ padding: '10px', background: '#6c757d', color: 'white', border: 'none' }}>Cancelar</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Modal Assign - Envia como List<String> */}
+      {/* Modal Assign */}
       {showAssignModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div style={{ background: 'white', padding: '20px', borderRadius: '8px', maxWidth: '400px' }}>
@@ -258,16 +267,22 @@ const RoleManager = () => {
             <form onSubmit={handleAssignPermission}>
               <select
                 name="permissionId"
-                value={assignForm.permissionId}
-                onChange={(e) => handleInputChange(setAssignForm, e)}
-                required
+                onChange={handlePermissionSelect}
                 style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
               >
                 <option value="">Selecione uma Permission</option>
                 {permissions.map((perm) => (
-                  <option key={perm.id} value={perm.id}>{perm.description}</option>
+                  <option key={perm.description} value={perm.description}>{perm.description}</option>
                 ))}
               </select>
+              <ul style={{ listStyle: 'none', padding: 0, marginBottom: '10px' }}>
+                {assignForm.permissionDescriptions.map((desc) => (
+                  <li key={desc} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px' }}>
+                    <span>{desc}</span>
+                    <button type="button" onClick={() => setAssignForm({ ...assignForm, permissionDescriptions: assignForm.permissionDescriptions.filter(d => d !== desc) })} style={{ padding: '2px 5px', background: '#dc3545', color: 'white', border: 'none' }}>Remover</button>
+                  </li>
+                ))}
+              </ul>
               <div style={{ display: 'flex', gap: '10px' }}>
                 <button type="submit" style={{ padding: '10px', background: '#28a745', color: 'white', border: 'none' }}>Atribuir</button>
                 <button type="button" onClick={() => setShowAssignModal(false)} style={{ padding: '10px', background: '#6c757d', color: 'white', border: 'none' }}>Cancelar</button>
