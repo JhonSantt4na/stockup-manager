@@ -1,8 +1,9 @@
-// src/components/Register.js
+// src/components/Register/Register.jsx
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';  // Novo caminho
+import { registerUser } from '../../services/authService';  // Extraída pra service
+import './Register.css';  // CSS separado
 
 const Register = () => {
   const [formData, setFormData] = useState({ 
@@ -19,10 +20,7 @@ const Register = () => {
     e.preventDefault();
     try {
       console.log('Registro: Enviando POST pra /users/register com:', formData);
-      const response = await axios.post('http://localhost:8080/users/register', formData);
-      console.log('Registro: Response.data (sucesso):', response.data);
-
-      const data = response.data;
+      const data = await registerUser(formData);  // Usa service
 
       // Extrai user e token do response
       const userData = data.user;
@@ -62,16 +60,16 @@ const Register = () => {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '100px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
-      <h2>Registro</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="register-container">
+      <h2 className="register-title">Registro</h2>
+      <form onSubmit={handleSubmit} className="register-form">
         <input
           type="text"
           name="username"
           placeholder="Username"
           onChange={handleChange}
           required
-          style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
+          className="register-input"
         />
         <input
           type="text"
@@ -79,7 +77,7 @@ const Register = () => {
           placeholder="Nome Completo"
           onChange={handleChange}
           required
-          style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
+          className="register-input"
         />
         <input
           type="email"
@@ -87,7 +85,7 @@ const Register = () => {
           placeholder="Email"
           onChange={handleChange}
           required
-          style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
+          className="register-input"
         />
         <input
           type="password"
@@ -95,12 +93,14 @@ const Register = () => {
           placeholder="Password (mín. 8 chars)"
           onChange={handleChange}
           required
-          style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
+          className="register-input"
         />
-        <button type="submit" style={{ width: '100%', padding: '10px', background: '#28a745', color: 'white', border: 'none' }}>Registrar</button>
+        <button type="submit" className="register-btn">Registrar</button>
       </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <p style={{ textAlign: 'center' }}><a href="/login" style={{ color: '#007bff' }}>Já tem conta? Faça login</a></p>
+      {error && <p className="error-message">{error}</p>}
+      <p className="login-link">
+        <a href="/login">Já tem conta? Faça login</a>
+      </p>
     </div>
   );
 };

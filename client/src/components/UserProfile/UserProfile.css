@@ -1,0 +1,181 @@
+/* src/components/UserProfile/UserProfile.css */
+.profile-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.profile-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.info-section {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.info-item {
+  margin-bottom: 10px;
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.edit-info-btn {
+  padding: 8px 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 10px;
+}
+
+.edit-info-btn:hover {
+  background: #0056b3;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.edit-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.save-btn {
+  padding: 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+  flex: 1;
+}
+
+.save-btn:hover:not(.disabled) {
+  background: #0056b3;
+}
+
+.save-btn.disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  padding: 10px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+  flex: 1;
+}
+
+.cancel-btn:hover {
+  background: #545b62;
+}
+
+.password-form {
+  margin-bottom: 20px;
+}
+
+.password-input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.password-input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.password-input:disabled {
+  background-color: #f8f9fa;
+  cursor: not-allowed;
+}
+
+.change-password-btn {
+  padding: 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+  width: 100%;
+}
+
+.change-password-btn:hover:not(.disabled) {
+  background: #0056b3;
+}
+
+.change-password-btn.disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.success-message {
+  color: green;
+  margin-bottom: 10px;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 10px;
+}
+
+.logout-btn {
+  padding: 10px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+  width: 100%;
+}
+
+.logout-btn:hover {
+  background: #c82333;
+}
+
+.loading {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}

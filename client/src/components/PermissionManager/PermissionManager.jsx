@@ -1,6 +1,7 @@
-// src/components/PermissionManager.js (Completo: Envia enabled sempre, fallback newDescription = old se não mudado)
+// src/components/PermissionManager/PermissionManager.jsx
 import React, { useEffect, useState, useCallback } from 'react';
-import axios from 'axios';
+import { fetchPermissions, createPermission, updatePermission, deletePermission } from '../../services/permissionService';  // Extraídas pra service
+import './PermissionManager.css';  // CSS separado
 
 const PermissionManager = () => {
   const [permissions, setPermissions] = useState([]);
@@ -13,7 +14,7 @@ const PermissionManager = () => {
   const [currentOldDescription, setCurrentOldDescription] = useState('');
   const [showOnlyActive, setShowOnlyActive] = useState(true);
 
-  const fetchPermissions = useCallback(async () => {
+  const fetchPermissionsCallback = useCallback(async () => {
     try {
       const endpoint = showOnlyActive ? '/listActive' : '/list';
       const params = {
@@ -21,10 +22,8 @@ const PermissionManager = () => {
         size: 100,
         sort: 'description,asc'
       };
-      console.log('Chamando endpoint:', `/permissions${endpoint}`);
-      const response = await axios.get(`http://localhost:8080/permissions${endpoint}`, { params });
-      console.log('Permissions recebidas:', response.data.content);
-      setPermissions(response.data.content || []);
+      const response = await fetchPermissions(endpoint, params);  // Usa service
+      setPermissions(response.content || []);
       setError('');
     } catch (err) {
       console.error('Erro no fetchPermissions:', err);
@@ -33,17 +32,17 @@ const PermissionManager = () => {
   }, [showOnlyActive]);
 
   useEffect(() => {
-    fetchPermissions();
-  }, [fetchPermissions]);
+    fetchPermissionsCallback();
+  }, [fetchPermissionsCallback]);
 
   const handleCreatePermission = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:8080/permissions/create', createForm);
+      await createPermission(createForm);  // Usa service
       setSuccess('Permission criada com sucesso!');
       setShowCreateModal(false);
       setCreateForm({ description: '' });
-      fetchPermissions();
+      fetchPermissionsCallback();
     } catch (err) {
       setError('Erro ao criar permission: ' + err.response?.data?.message || err.message);
     }
@@ -51,9 +50,6 @@ const PermissionManager = () => {
 
   const handleUpdatePermission = async (e) => {
     e.preventDefault();
-    console.log('handleUpdatePermission chamado!');
-    console.log('Form values:', updateForm, 'Old current:', currentOldDescription);
-    // Fallback: se newDescription vazio, usa old (salva só enabled)
     const newDesc = updateForm.newDescription ? updateForm.newDescription.trim() : currentOldDescription;
     if (!newDesc) {
       setError('Descrição é obrigatória!');
@@ -65,39 +61,29 @@ const PermissionManager = () => {
         newDescription: newDesc,
         enabled: updateForm.enabled // Sempre enviado
       };
-      console.log('Enviando updateData:', updateData);
-      const response = await axios.put('http://localhost:8080/permissions/update', updateData);
-      console.log('Update response:', response);
+      await updatePermission(updateData);  // Usa service
       setSuccess('Permission atualizada com sucesso!');
       setShowUpdateModal(false);
       setUpdateForm({ oldDescription: '', newDescription: '', enabled: false });
       setCurrentOldDescription('');
-      setTimeout(() => fetchPermissions(), 500); // Delay pra re-fetch
+      setTimeout(() => fetchPermissionsCallback(), 500); // Delay pra re-fetch
     } catch (err) {
       console.error('Erro no update:', err);
-      console.error('Status:', err.response?.status, 'Message:', err.response?.data?.message);
       setError('Erro ao atualizar permission: ' + (err.response?.data?.message || err.message));
     }
   };
 
   const handleDeletePermission = async (description) => {
-    console.log('Delete clicado pra description:', description);
     if (window.confirm('Deletar permission "' + description + '"? Isso é irreversível!')) {
-      console.log('Confirm ok, enviando DELETE pra /permissions/delete/' + description);
       try {
-        const encodedDescription = encodeURIComponent(description);
-        const response = await axios.delete(`http://localhost:8080/permissions/delete/${encodedDescription}`);
-        console.log('Delete response:', response);
+        await deletePermission(description);  // Usa service
         alert('Permission deletada com sucesso!');
-        fetchPermissions();
+        fetchPermissionsCallback();
       } catch (err) {
         console.error('Erro no delete:', err);
-        console.error('Status:', err.response?.status, 'Message:', err.response?.data?.message);
         alert('Erro ao deletar: ' + (err.response?.data?.message || err.message || 'Tente novamente'));
         setError('Erro ao deletar ' + description + ': ' + (err.response?.data?.message || err.message));
       }
-    } else {
-      console.log('Delete cancelado pelo user');
     }
   };
 
@@ -109,7 +95,6 @@ const PermissionManager = () => {
       newDescription: oldDesc, 
       enabled: perm.enabled
     });
-    console.log('Abrindo modal pra perm:', perm, 'Enabled:', perm.enabled);
     setShowUpdateModal(true);
   };
 
@@ -126,16 +111,16 @@ const PermissionManager = () => {
   };
 
   return (
-    <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
-      <h3>Gerenciar Permissions</h3>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
-      <button onClick={() => setShowCreateModal(true)} style={{ padding: '10px', background: '#28a745', color: 'white', border: 'none', marginBottom: '10px' }}>
+    <div className="permission-manager-container">
+      <h3 className="permission-manager-title">Gerenciar Permissions</h3>
+      {error && <p className="error-message">{error}</p>}
+      {success && <p className="success-message">{success}</p>}
+      <button onClick={() => setShowCreateModal(true)} className="create-btn">
         Criar Nova Permission
       </button>
 
-      <div style={{ marginBottom: '10px' }}>
-        <label>
+      <div className="filter-section">
+        <label className="filter-label">
           <input
             type="checkbox"
             checked={showOnlyActive}
@@ -145,18 +130,22 @@ const PermissionManager = () => {
         </label>
       </div>
 
-      <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #ddd' }}>
+      <table className="permissions-table">
         <thead>
-          <tr><th style={{ border: '1px solid #ddd', padding: '8px' }}>Descrição</th><th style={{ border: '1px solid #ddd', padding: '8px' }}>Status</th><th style={{ border: '1px solid #ddd', padding: '8px' }}>Ações</th></tr>
+          <tr>
+            <th className="table-header">Descrição</th>
+            <th className="table-header">Status</th>
+            <th className="table-header">Ações</th>
+          </tr>
         </thead>
         <tbody>
           {permissions.map((perm) => (
-            <tr key={perm.description}>
-              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{perm.description}</td>
-              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{perm.enabled ? 'Ativo' : 'Inativo'}</td>
-              <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                <button onClick={() => openUpdateModal(perm)} style={{ padding: '5px', background: '#007bff', color: 'white', border: 'none', marginRight: '5px' }}>Editar</button>
-                <button onClick={() => handleDeletePermission(perm.description)} style={{ padding: '5px', background: '#dc3545', color: 'white', border: 'none', cursor: 'pointer' }}>Deletar</button>
+            <tr key={perm.description} className="table-row">
+              <td className="table-cell">{perm.description}</td>
+              <td className="table-cell">{perm.enabled ? 'Ativo' : 'Inativo'}</td>
+              <td className="table-cell">
+                <button onClick={() => openUpdateModal(perm)} className="edit-btn">Editar</button>
+                <button onClick={() => handleDeletePermission(perm.description)} className="delete-btn">Deletar</button>
               </td>
             </tr>
           ))}
@@ -165,9 +154,9 @@ const PermissionManager = () => {
 
       {/* Modal Create */}
       {showCreateModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{ background: 'white', padding: '20px', borderRadius: '8px', maxWidth: '400px' }}>
-            <h4>Criar Permission</h4>
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h4 className="modal-title">Criar Permission</h4>
             <form onSubmit={handleCreatePermission}>
               <input
                 type="text"
@@ -176,11 +165,11 @@ const PermissionManager = () => {
                 value={createForm.description}
                 onChange={(e) => handleInputChange(setCreateForm, e)}
                 required
-                style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
+                className="modal-input"
               />
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <button type="submit" style={{ padding: '10px', background: '#28a745', color: 'white', border: 'none' }}>Criar</button>
-                <button type="button" onClick={() => setShowCreateModal(false)} style={{ padding: '10px', background: '#6c757d', color: 'white', border: 'none' }}>Cancelar</button>
+              <div className="modal-buttons">
+                <button type="submit" className="submit-btn">Criar</button>
+                <button type="button" onClick={() => setShowCreateModal(false)} className="cancel-btn">Cancelar</button>
               </div>
             </form>
           </div>
@@ -189,20 +178,20 @@ const PermissionManager = () => {
 
       {/* Modal Update - Checkbox Enabled */}
       {showUpdateModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{ background: 'white', padding: '20px', borderRadius: '8px', maxWidth: '400px' }}>
-            <h4>Atualizar Permission</h4>
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h4 className="modal-title">Atualizar Permission</h4>
             <form onSubmit={handleUpdatePermission}>
-              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Descrição Atual: {currentOldDescription}</label>
+              <label className="modal-label">Descrição Atual: {currentOldDescription}</label>
               <input
                 type="text"
                 name="newDescription"
                 placeholder="Nova Descrição (deixe igual se não quiser mudar)"
                 value={updateForm.newDescription}
                 onChange={(e) => handleInputChange(setUpdateForm, e)}
-                style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
+                className="modal-input"
               />
-              <label style={{ display: 'block', marginBottom: '10px' }}>
+              <label className="modal-checkbox-label">
                 <input
                   type="checkbox"
                   name="enabled"
@@ -211,9 +200,9 @@ const PermissionManager = () => {
                 />
                 Ativar Permission (enabled)
               </label>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <button type="submit" style={{ padding: '10px', background: '#007bff', color: 'white', border: 'none' }}>Atualizar</button>
-                <button type="button" onClick={() => setShowUpdateModal(false)} style={{ padding: '10px', background: '#6c757d', color: 'white', border: 'none' }}>Cancelar</button>
+              <div className="modal-buttons">
+                <button type="submit" className="submit-btn">Atualizar</button>
+                <button type="button" onClick={() => setShowUpdateModal(false)} className="cancel-btn">Cancelar</button>
               </div>
             </form>
           </div>

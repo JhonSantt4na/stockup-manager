@@ -1,8 +1,9 @@
-// src/components/UserProfile.js (Atualizado com Form pra Editar Nome e Email)
+// src/components/UserProfile/UserProfile.jsx
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';  // Novo caminho
 import { useNavigate } from 'react-router-dom';
+import { getCurrentUser, updateProfile, changePassword } from '../../services/userService';  // Extraídas pra service
+import './UserProfile.css';  // CSS separado
 
 const UserProfile = () => {
   const { user, logout } = useAuth();
@@ -25,12 +26,12 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/users/me');
-        setProfile(response.data);
+        const response = await getCurrentUser();  // Usa service
+        setProfile(response);
         // Preenche o form de edição com dados atuais
         setEditProfileForm({
-          fullName: response.data.fullName || '',
-          email: response.data.email || ''
+          fullName: response.fullName || '',
+          email: response.email || ''
         });
         setError('');
       } catch (err) {
@@ -51,12 +52,12 @@ const UserProfile = () => {
     setError('');
     setSuccess('');
     try {
-      await axios.put('http://localhost:8080/users/update', editProfileForm); // Assumindo body { fullName, email }
+      await updateProfile(editProfileForm);  // Usa service
       setSuccess('Perfil atualizado com sucesso!');
       setEditMode(false); // Sai do modo edição
       // Recarrega o perfil
-      const response = await axios.get('http://localhost:8080/users/me');
-      setProfile(response.data);
+      const response = await getCurrentUser();
+      setProfile(response);
     } catch (err) {
       console.error('Erro ao atualizar perfil:', err);
       setError(err.response?.data?.message || 'Erro ao atualizar perfil. Verifique os dados.');
@@ -80,10 +81,10 @@ const UserProfile = () => {
     setError('');
     setSuccess('');
     try {
-      await axios.put('http://localhost:8080/users/change-password', {
+      await changePassword({
         currentPassword: changePasswordForm.currentPassword,
         newPassword: changePasswordForm.newPassword
-      });
+      });  // Usa service
       setSuccess('Senha alterada com sucesso!');
       setChangePasswordForm({ currentPassword: '', newPassword: '', confirmNewPassword: '' });
     } catch (err) {
@@ -104,31 +105,31 @@ const UserProfile = () => {
   };
 
   if (!profile) {
-    return <div style={{ padding: '20px' }}>Carregando perfil...</div>;
+    return <div className="loading">Carregando perfil...</div>;
   }
 
   return (
-    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-      <h2>Meu Perfil</h2>
+    <div className="profile-container">
+      <h2 className="profile-title">Meu Perfil</h2>
       
       {/* Informações (Visualização ou Edição) */}
-      <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
-        <h3>Informações Pessoais</h3>
+      <div className="info-section">
+        <h3 className="section-title">Informações Pessoais</h3>
         {!editMode ? (
           <>
-            <p><strong>Username:</strong> {profile.username}</p>
-            <p><strong>Nome Completo:</strong> {profile.fullName || 'N/A'}</p>
-            <p><strong>Email:</strong> {profile.email}</p>
-            <p><strong>Roles:</strong> {profile.roles ? profile.roles.join(', ') : 'N/A'}</p>
+            <p className="info-item"><strong>Username:</strong> {profile.username}</p>
+            <p className="info-item"><strong>Nome Completo:</strong> {profile.fullName || 'N/A'}</p>
+            <p className="info-item"><strong>Email:</strong> {profile.email}</p>
+            <p className="info-item"><strong>Roles:</strong> {profile.roles ? profile.roles.join(', ') : 'N/A'}</p>
             <button 
               onClick={() => setEditMode(true)} 
-              style={{ padding: '8px 12px', background: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+              className="edit-info-btn"
             >
               Editar Nome e Email
             </button>
           </>
         ) : (
-          <form onSubmit={handleEditProfile}>
+          <form onSubmit={handleEditProfile} className="edit-form">
             <input
               type="text"
               name="fullName"
@@ -136,7 +137,7 @@ const UserProfile = () => {
               value={editProfileForm.fullName}
               onChange={(e) => handleInputChange('profile', e)}
               required
-              style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
+              className="edit-input"
             />
             <input
               type="email"
@@ -145,26 +146,20 @@ const UserProfile = () => {
               value={editProfileForm.email}
               onChange={(e) => handleInputChange('profile', e)}
               required
-              style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
+              className="edit-input"
             />
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div className="edit-buttons">
               <button 
                 type="submit" 
                 disabled={loading}
-                style={{ 
-                  padding: '10px', 
-                  background: loading ? '#6c757d' : '#007bff', 
-                  color: 'white', 
-                  border: 'none', 
-                  cursor: loading ? 'not-allowed' : 'pointer' 
-                }}
+                className={`save-btn ${loading ? 'disabled' : ''}`}
               >
                 {loading ? 'Atualizando...' : 'Salvar Alterações'}
               </button>
               <button 
                 type="button" 
                 onClick={() => setEditMode(false)} 
-                style={{ padding: '10px', background: '#6c757d', color: 'white', border: 'none', cursor: 'pointer' }}
+                className="cancel-btn"
               >
                 Cancelar
               </button>
@@ -174,10 +169,10 @@ const UserProfile = () => {
       </div>
 
       {/* Trocar Senha (Mantido igual) */}
-      <h3>Trocar Senha</h3>
-      {success && <p style={{ color: 'green' }}>{success}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleChangePassword} style={{ marginBottom: '20px' }}>
+      <h3 className="section-title">Trocar Senha</h3>
+      {success && <p className="success-message">{success}</p>}
+      {error && <p className="error-message">{error}</p>}
+      <form onSubmit={handleChangePassword} className="password-form">
         <input
           type="password"
           name="currentPassword"
@@ -186,7 +181,7 @@ const UserProfile = () => {
           onChange={(e) => handleInputChange('password', e)}
           required
           disabled={loading}
-          style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
+          className="password-input"
         />
         <input
           type="password"
@@ -196,7 +191,7 @@ const UserProfile = () => {
           onChange={(e) => handleInputChange('password', e)}
           required
           disabled={loading}
-          style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
+          className="password-input"
         />
         <input
           type="password"
@@ -206,18 +201,12 @@ const UserProfile = () => {
           onChange={(e) => handleInputChange('password', e)}
           required
           disabled={loading}
-          style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
+          className="password-input"
         />
         <button 
           type="submit" 
           disabled={loading}
-          style={{ 
-            padding: '10px', 
-            background: loading ? '#6c757d' : '#007bff', 
-            color: 'white', 
-            border: 'none', 
-            cursor: loading ? 'not-allowed' : 'pointer' 
-          }}
+          className={`change-password-btn ${loading ? 'disabled' : ''}`}
         >
           {loading ? 'Alterando...' : 'Alterar Senha'}
         </button>
@@ -225,7 +214,7 @@ const UserProfile = () => {
 
       <button 
         onClick={logout}
-        style={{ padding: '10px', background: '#dc3545', color: 'white', border: 'none', cursor: 'pointer' }}
+        className="logout-btn"
       >
         Logout
       </button>
