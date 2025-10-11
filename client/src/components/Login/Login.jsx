@@ -1,8 +1,9 @@
-// src/components/Login.js
+// src/components/Login/Login.jsx
 import React, { useState, useRef } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';  // Novo caminho
+import { loginUser } from '../../services/authService';  // Extraída pra service
+import './Login.css';  // CSS separado
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -23,10 +24,7 @@ const Login = () => {
 
     try {
       console.log('Login: Enviando POST pra /auth/login com username:', username);
-      const response = await axios.post('http://localhost:8080/auth/login', { username, password });
-      console.log('Login: Response.data (formato exato):', response.data);
-
-      const data = response.data;
+      const data = await loginUser({ username, password });  // Usa service
 
       // Verifica se autenticou
       if (!data.authenticated) {
@@ -75,9 +73,9 @@ const Login = () => {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '100px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="login-container">
+      <h2 className="login-title">Login</h2>
+      <form onSubmit={handleSubmit} className="login-form">
         <input
           type="text"
           placeholder="Username"
@@ -85,8 +83,8 @@ const Login = () => {
           onChange={(e) => setUsername(e.target.value)}
           required
           disabled={loading}
-          style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
-          autocomplete="username"
+          className="login-input"
+          autoComplete="username"
         />
         <input
           type="password"
@@ -95,26 +93,21 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
           disabled={loading}
-          style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
-          autocomplete="current-password"
+          className="login-input"
+          autoComplete="current-password"
         />
         <button 
           type="submit" 
           disabled={loading}
-          style={{ 
-            width: '100%', 
-            padding: '10px', 
-            background: loading ? '#6c757d' : '#007bff', 
-            color: 'white', 
-            border: 'none',
-            cursor: loading ? 'not-allowed' : 'pointer'
-          }}
+          className={`login-btn ${loading ? 'disabled' : ''}`}
         >
           {loading ? 'Entrando... (aguarde)' : 'Entrar'}
         </button>
       </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <p style={{ textAlign: 'center' }}><a href="/register" style={{ color: '#007bff' }}>Não tem conta? Registre-se</a></p>
+      {error && <p className="error-message">{error}</p>}
+      <p className="register-link">
+        <a href="/register">Não tem conta? Registre-se</a>
+      </p>
     </div>
   );
 };

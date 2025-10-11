@@ -1,12 +1,12 @@
 // src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
-import Login from './components/Login';
-import Register from './components/Register';
-import UserList from './components/UserList';
-import Dashboard from './components/Dashboard';
-import UserProfile from './components/UserProfile';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import Register from './components/Register/Register';
+import UserList from './components/UserList/UserList';
+import Dashboard from './components/Dashboard/Dashboard';
+import UserProfile from './components/UserProfile/UserProfile';
+import Login from './components/Login/Login';
 
 const ProtectedRoute = ({ children }) => {
   const { token } = useAuth();

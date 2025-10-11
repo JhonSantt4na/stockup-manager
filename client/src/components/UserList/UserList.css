@@ -1,0 +1,243 @@
+/* src/components/UserList/UserList.css (Ajustado: Filtros verticais com .filter-section flex-direction: column, .filter-group flex row para horizontal dentro do grupo) */
+.user-list-container {
+  padding: 20px;
+}
+
+.user-list-title {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.filters-section {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: inline;
+  gap: 20px;  /* Espaço entre grupos (linha em branco) */
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;  /* Label acima do input-group */
+  gap: 5px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;  /* Horizontal dentro do grupo: input + btn lado a lado */
+}
+
+.filter-label {
+  font-weight: bold;
+}
+
+.search-input,
+.role-select {
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: border-color 0.3s;
+  width: 200px;  /* Input/select ocupa espaço disponível */
+}
+
+.search-input:focus,
+.role-select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.search-btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+  white-space: nowrap;
+}
+
+.search-btn:hover {
+  background: #0056b3;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.clear-btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  background: #6c757d;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+  align-self: flex-start; 
+}
+
+.clear-btn:hover {
+  background: #545b62;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.table-header,
+.table-cell {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.user-row.active {
+  opacity: 1;
+  background-color: white;
+}
+
+.user-row.inactive {
+  opacity: 0.5;
+  background-color: #f8f9fa;
+}
+
+.table-row:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.details-btn {
+  padding: 5px 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  margin-right: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.details-btn:hover {
+  background: #0056b3;
+}
+
+.add-role-btn {
+  padding: 5px 10px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  margin-right: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.add-role-btn:hover {
+  background: #218838;
+}
+
+.remove-role-btn {
+  padding: 5px 10px;
+  background: #ffc107;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  margin-right: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.remove-role-btn:hover {
+  background: #e0a800;
+}
+
+.delete-btn {
+  padding: 5px 10px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.delete-btn:hover {
+  background: #c82333;
+}
+
+.pagination {
+  margin-top: 20px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-btn {
+  padding: 10px;
+  margin: 0 5px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.page-btn:hover:not(:disabled) {
+  background: #545b62;
+}
+
+.page-btn:disabled {
+  background: #e9ecef;
+  cursor: not-allowed;
+}
+
+.page-info {
+  font-weight: bold;
+}
+
+.no-data {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  color: #666;
+}
+
+.error-container {
+  padding: 20px;
+  color: red;
+  text-align: center;
+}
+
+.retry-btn {
+  padding: 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s;
+}
+
+.retry-btn:hover {
+  background: #0056b3;
+}
+
+.success-message {
+  color: green;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 4px;
+}
