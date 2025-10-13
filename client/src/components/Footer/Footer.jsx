@@ -5,8 +5,8 @@ const Footer = () => {
   return (
     <footer>
       <div className="container">
-        <div class="form-logo">
-            <img src="/Logo.png" alt="StockUp Manager" class="logo-img"></img>
+        <div className="form-logo">
+            <img src="/Logo.png" alt="StockUp Manager" className="logo-img"></img>
         </div>
         <nav className="footer-links">
           <a href="#">Privacidade</a>

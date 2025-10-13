@@ -31,14 +31,22 @@
   padding: 2rem;
 }
 
-.main-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 @media (max-width: 768px) {
   .login-header h1 {
     font-size: 1.5rem;
+  }
+  
+  
+  .login-container {
+    margin: 0.25rem auto 0.125rem auto;
+  }
+  
+  .login-header {
+    padding: 0.75rem;
+  }
+  
+  .login-body {
+    padding: 0.75rem;
   }
 }

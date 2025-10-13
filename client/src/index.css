@@ -31,14 +31,16 @@ code {
 }
 
 .main-content {
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 1;
+  padding: 1rem;
 }
 
+
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .form-group label {
@@ -51,10 +53,10 @@ code {
 .form-group input,
 .form-group select {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.5rem;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   background: #f8fafc;
 }
@@ -68,16 +70,16 @@ code {
 
 .btn-primary {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.5rem;
   background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
   color: white;
   border: none;
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .btn-primary:hover:not(:disabled) {
