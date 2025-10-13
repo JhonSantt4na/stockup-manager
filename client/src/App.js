@@ -1,34 +1,79 @@
-// src/App.js
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import Register from './components/Register/Register';
-import UserList from './components/UserList/UserList';
-import Dashboard from './components/Dashboard/Dashboard';
-import UserProfile from './components/UserProfile/UserProfile';
-import Login from './components/Login/Login';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
+import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
+import { useAuth } from "./contexts/AuthContext";
+import './index.css';
 
-const ProtectedRoute = ({ children }) => {
-  const { token } = useAuth();
-  return token ? children : <Navigate to="/login" />;
-};
+function Dashboard() {
+  const { user, logout } = useAuth();
+  return (
+    <div>
+      <h1>Bem-vindo, {user?.name}!</h1>
+      <p>Seu painel de gerenciamento de estoque e PDV aqui.</p>
+      <button onClick={logout} className="btn-secondary">Sair</button>
+    </div>
+  );
+}
+
+function ProtectedRoute({ children }) {
+  const { user, loading } = useAuth();
+  const location = useLocation();
+  if (loading) return <div>Carregando...</div>;
+  return user ? children : <Navigate to="/" state={{ from: location }} replace />;
+}
+
+function GuestRoute({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <div>Carregando...</div>;
+  return user ? <Navigate to="/dashboard" replace /> : children;
+}
+
+function AppContent() {
+  return (
+    <div className="App">
+      <Header />
+      <main>
+        <Routes>
+          <Route 
+            path="/" 
+            element={
+              <GuestRoute>
+                <Login />
+              </GuestRoute>
+            } 
+          />
+          <Route 
+            path="/register" 
+            element={
+              <GuestRoute>
+                <Register />
+              </GuestRoute>
+            } 
+          />
+          <Route 
+            path="/dashboard" 
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+      <Footer />
+    </div>
+  );
+}
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <div className="App">
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/users" element={<ProtectedRoute><UserList /></ProtectedRoute>} />
-            <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
-            <Route path="/" element={<Navigate to="/login" />} />
-          </Routes>
-        </div>
-      </Router>
-    </AuthProvider>
+    <Router>
+      <AppContent />
+    </Router>
   );
 }
 

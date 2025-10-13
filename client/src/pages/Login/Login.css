@@ -1,0 +1,52 @@
+/* Login.css */
+.login-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  max-width: 450px;
+  width: 100%;
+  position: relative;
+}
+
+.login-header {
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+.form-logo .logo-img {
+  width: auto;
+  height: 55px;
+  object-fit: contain;
+}
+
+.login-header p {
+  opacity: 0.95;
+  font-size: 0.95rem;
+}
+
+.login-body {
+  padding: 2rem;
+}
+
+
+@media (max-width: 768px) {
+  .login-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  
+  .login-container {
+    margin: 0.25rem auto 0.125rem auto;
+  }
+  
+  .login-header {
+    padding: 0.75rem;
+  }
+  
+  .login-body {
+    padding: 0.75rem;
+  }
+}
