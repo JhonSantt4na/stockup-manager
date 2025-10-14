@@ -1,4 +1,3 @@
-// src/pages/Login/Login.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -24,12 +23,9 @@ function Login() {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-    watch,
   } = useForm({
     resolver: yupResolver(schema),
   });
-
-  const password = watch("password");
 
   const onSubmit = async (data) => {
     const trimmedUsername = data.username.trim();
@@ -60,7 +56,7 @@ function Login() {
 
       setSuccessMsg("Login realizado com sucesso! Redirecionando...");
       setTimeout(() => {
-        window.location.href = "/dashboard";
+      navigate("/dashboard");
       }, 1500);
     } catch (err) {
       console.error("Erro no login:", err.response?.data || err.message);

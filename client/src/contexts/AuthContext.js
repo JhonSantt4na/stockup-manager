@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -12,34 +13,37 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const login = useCallback((newToken, userData) => {
+    const decoded = jwtDecode(newToken);
+    const roles = decoded?.roles || [];
+
+    const updatedUserData = {
+      ...userData,
+      roles,
+      isAdmin: roles.includes('ADMIN') || roles.includes('ROLE_ADMIN') || false
+    };
+
     setToken(newToken);
-    setUser(userData);
+    setUser(updatedUserData);
+
     localStorage.setItem('token', newToken);
-    localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem('user', JSON.stringify(updatedUserData));
+
     axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
   }, []);
 
-  const logout = useCallback(async () => {
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (refreshToken) {
-      try {
-        await axios.post('/auth/logout');
-      } catch (err) {
-        console.error('Erro no logout:', err);
-      }
-    }
+  const logout = useCallback(() => {
     setToken(null);
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('refreshToken');
     delete axios.defaults.headers.common['Authorization'];
-    window.location.href = '/';
   }, []);
 
   const refreshAccessToken = useCallback(async () => {
     const refreshToken = localStorage.getItem('refreshToken');
-    const username = user?.name;
+    const username = user?.username || user?.name;
+
     if (!refreshToken || !username) {
       logout();
       return false;
@@ -49,11 +53,14 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.put(`/auth/refresh/${username}`, {}, {
         headers: { 'X-Refresh-Token': refreshToken }
       });
+
       const { accessToken, refreshToken: newRefreshToken } = response.data;
       login(accessToken, user);
+
       if (newRefreshToken) {
         localStorage.setItem('refreshToken', newRefreshToken);
       }
+
       return true;
     } catch (err) {
       console.error('Refresh falhou:', err);
@@ -66,9 +73,8 @@ export const AuthProvider = ({ children }) => {
     const loadUser = async () => {
       if (token && user) {
         try {
-          // Verifica token com /users/me (seu endpoint)
-          await axios.get('/users/me');
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          await axios.get('/users/me');
         } catch (err) {
           if (err.response?.status === 401) {
             await refreshAccessToken();
@@ -82,7 +88,8 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     };
     loadUser();
-  }, [token, user, logout, refreshAccessToken]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
 
   const value = { token, user, loading, login, logout, refreshAccessToken };
 
