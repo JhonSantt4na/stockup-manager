@@ -7,16 +7,7 @@ import Register from "./pages/Register/Register";
 import { useAuth } from "./contexts/AuthContext";
 import './index.css';
 
-function Dashboard() {
-  const { user, logout } = useAuth();
-  return (
-    <div>
-      <h1>Bem-vindo, {user?.name}!</h1>
-      <p>Seu painel de gerenciamento de estoque e PDV aqui.</p>
-      <button onClick={logout} className="btn-secondary">Sair</button>
-    </div>
-  );
-}
+import Dashboard from "./pages/Dashboard/Dashboard";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();

@@ -8,7 +8,11 @@ import { Reports } from "../pages/Reports";
 import { Config } from "../pages/Config";
 
 export const AppRoutes = () => {
-  const { user } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return <div>Carregando...</div>;
+  }
 
   if (!user) {
     return <Navigate to="/" replace />;
