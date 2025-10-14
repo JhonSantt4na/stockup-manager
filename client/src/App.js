@@ -8,6 +8,9 @@ import { useAuth } from "./contexts/AuthContext";
 import './index.css';
 
 import Dashboard from "./pages/Dashboard/Dashboard";
+import Roles from "./pages/Roles/Roles";
+import Permissions from "./pages/Permissions/Permissions";
+import Config from "./pages/Config/Config";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -49,6 +52,30 @@ function AppContent() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/roles" 
+            element={
+              <ProtectedRoute>
+                <Roles />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/permissions" 
+            element={
+              <ProtectedRoute>
+                <Permissions />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/config" 
+            element={
+              <ProtectedRoute>
+                <Config />
               </ProtectedRoute>
             } 
           />

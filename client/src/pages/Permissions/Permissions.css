@@ -1,0 +1,61 @@
+/* Permissions.css */
+.permissions-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 20px;
+}
+.permissions-container h2 {
+  margin-bottom: 18px;
+}
+.permissions-form {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+.permissions-form-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.permissions-form-row input {
+  padding: 8px;
+}
+.permissions-form-row button {
+  padding: 8px;
+  border: 0;
+  border-radius: 6px;
+  font-weight: 600;
+}
+.permissions-form-row button[type="submit"] {
+  background: #2563eb;
+  color: white;
+}
+.permissions-form-row .permissions-cancel-btn {
+  background: #f1f5f9;
+  color: #222;
+}
+.permissions-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.permissions-table th {
+  padding: 8px;
+  text-align: left;
+  background: #e5e7eb;
+}
+.permissions-table td {
+  padding: 8px;
+}
+.permissions-table-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+.permissions-row-removed {
+  opacity: 0.5;
+  background: #f8d7da;
+}
