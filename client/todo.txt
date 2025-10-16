@@ -1,0 +1,7 @@
+Ajustar o Remover 
+O editar do nome do modal funcionar
+o modal de mostra todas as Permission do btn de ver mais adicionar da mesma?
+forma no de gerenciar a listagem ser igual menos com as cores so pra ter o mesmo 
+layout para adionar uma nova permission ou remover uma permission existente
+
+ao remover uma permission existente ele precisa mudar a cor de quando selecionado para vermelho
