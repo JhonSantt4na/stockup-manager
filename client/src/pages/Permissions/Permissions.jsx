@@ -1,99 +1,210 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./Permissions.css";
 
-const initialPermissions = [
-  { id: 1, name: "READ_USERS", description: "Pode visualizar usuários", removed: false },
-  { id: 2, name: "EDIT_PRODUCTS", description: "Pode editar produtos", removed: false },
-  { id: 3, name: "ACCESS_PDV", description: "Pode acessar PDV", removed: false },
-];
-
 const Permissions = () => {
-  const [permissions, setPermissions] = useState(initialPermissions);
+  const [permissions, setPermissions] = useState([]);
   const [editPermission, setEditPermission] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [form, setForm] = useState({ name: "", description: "" });
+  const [editForm, setEditForm] = useState({ name: "", description: "" });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!form.name.trim()) return;
-    if (editPermission) {
-      setPermissions((prev) =>
-        prev.map((perm) => perm.id === editPermission.id ? { ...perm, ...form } : perm)
-      );
-      setEditPermission(null);
-    } else {
-      setPermissions((prev) => [
-        ...prev,
-        { id: Date.now(), name: form.name, description: form.description, removed: false },
-      ]);
+  // Busca as permissões do backend
+  const fetchPermissions = async () => {
+    try {
+      const response = await axios.get("/permissions/list", {
+        params: { page: 0, size: 100, sort: ["name", "asc"] },
+      });
+      setPermissions(response.data.content);
+    } catch (error) {
+      console.error("Erro ao buscar permissões:", error);
     }
-    setForm({ name: "", description: "" });
   };
 
+  useEffect(() => {
+    fetchPermissions();
+  }, []);
+
+  // Criação de nova permissão
+  const handleAddSubmit = async (e) => {
+    e.preventDefault();
+    if (!form.name.trim() || !form.description.trim()) return;
+
+    try {
+      await axios.post("/permissions/create", {
+        name: form.name,
+        description: form.description,
+      });
+      setForm({ name: "", description: "" });
+      fetchPermissions();
+    } catch (error) {
+      console.error("Erro ao adicionar permissão:", error);
+      alert("Erro ao criar permissão. Verifique se já existe uma com o mesmo nome.");
+    }
+  };
+
+  // Atualização de permissão existente
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    if (!editForm.name.trim() || !editForm.description.trim()) return;
+
+    try {
+      await axios.put("/permissions/update", {
+        oldName: editPermission.name,
+        newName: editForm.name,
+        newDescription: editForm.description,
+      });
+
+      setShowEditModal(false);
+      setEditPermission(null);
+      fetchPermissions();
+    } catch (error) {
+      console.error("Erro ao atualizar permissão:", error);
+      alert("Erro ao atualizar permissão. Tente novamente.");
+    }
+  };
+
+  // Abre modal e preenche com dados da permissão
   const handleEdit = (perm) => {
     setEditPermission(perm);
-    setForm({ name: perm.name, description: perm.description });
+    setEditForm({
+      name: perm.name,
+      description: perm.description || "",
+    });
+    setShowEditModal(true);
   };
 
-  const handleSoftDelete = (id) => {
-    setPermissions((prev) => prev.map(p => (p.id === id ? { ...p, removed: !p.removed } : p)));
+  // Deleção de permissão
+  const handleDelete = async (name) => {
+    if (!window.confirm(`Tem certeza que deseja excluir a permissão "${name}"?`)) return;
+    try {
+      await axios.delete(`/permissions/delete/${name}`);
+      fetchPermissions();
+    } catch (error) {
+      console.error("Erro ao deletar permissão:", error);
+      alert("Erro ao excluir permissão. Verifique se ela está vinculada a alguma role.");
+    }
   };
 
   const handleCancel = () => {
+    setShowEditModal(false);
     setEditPermission(null);
-    setForm({ name: "", description: "" });
+    setEditForm({ name: "", description: "" });
   };
 
   return (
     <div className="permissions-container">
-      <h2>Permissões</h2>
-      <form onSubmit={handleSubmit} className="permissions-form">
+      <h2>Gerenciamento de Permissões</h2>
+
+      {/* Formulário de criação */}
+      <form onSubmit={handleAddSubmit} className="permissions-form">
         <div className="permissions-form-row">
           <input
             type="text"
             placeholder="Nome da permissão"
             value={form.name}
             required
-            onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
           />
           <input
             type="text"
-            placeholder="Descrição"
+            placeholder="Descrição da permissão"
             value={form.description}
-            onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+            required
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
-          <button type="submit">
-            {editPermission ? "Salvar" : "Adicionar"}
+          <button type="submit" className="btn-add-permission">
+            Adicionar
           </button>
-          {editPermission && (
-            <button onClick={handleCancel} type="button" className="permissions-cancel-btn">Cancelar</button>
-          )}
         </div>
       </form>
+
+      {/* Tabela de permissões */}
       <table className="permissions-table">
         <thead>
           <tr>
             <th>Nome</th>
             <th>Descrição</th>
-            <th>Removido?</th>
             <th>Ações</th>
           </tr>
         </thead>
         <tbody>
-          {permissions.map((perm) => (
-            <tr key={perm.id} className={perm.removed ? "permissions-row-removed" : ""}>
-              <td>{perm.name}</td>
-              <td>{perm.description}</td>
-              <td>{perm.removed ? "Sim" : "Não"}</td>
-              <td className="permissions-table-actions">
-                <button onClick={() => handleEdit(perm)}>Editar</button>
-                <button onClick={() => handleSoftDelete(perm.id)}>
-                  {perm.removed ? "Restaurar" : "Remover"}
-                </button>
+          {permissions.length > 0 ? (
+            permissions.map((perm) => (
+              <tr key={perm.id || perm.name}>
+                <td>{perm.name}</td>
+                <td>{perm.description || "—"}</td>
+                <td className="permissions-table-actions">
+                  <button
+                    className="btn-edit-permission"
+                    onClick={() => handleEdit(perm)}
+                  >
+                    Editar
+                  </button>
+                  <button
+                    className="btn-remove-permission"
+                    onClick={() => handleDelete(perm.name)}
+                  >
+                    Remover
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="3" style={{ textAlign: "center", padding: "1rem" }}>
+                Nenhuma permissão encontrada.
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
+
+      {/* Modal de Edição */}
+      {showEditModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <h3>Editar Permissão</h3>
+              <button className="modal-close" onClick={handleCancel}>×</button>
+            </div>
+            <div className="modal-body">
+              <form onSubmit={handleEditSubmit}>
+                <div className="edit-name-section">
+                  <label>Nome</label>
+                  <input
+                    type="text"
+                    className="role-name-input"
+                    value={editForm.name}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, name: e.target.value })
+                    }
+                    placeholder="Nome da permissão"
+                    required
+                  />
+                </div>
+                <div className="edit-name-section">
+                  <label>Descrição</label>
+                  <input
+                    type="text"
+                    className="role-name-input"
+                    value={editForm.description}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, description: e.target.value })
+                    }
+                    placeholder="Descrição da permissão"
+                    required
+                  />
+                </div>
+              </form>
+            </div>
+            <div className="modal-footer">
+              <button onClick={handleCancel} className="btn-cancel">Cancelar</button>
+              <button onClick={handleEditSubmit} className="btn-save">Salvar</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

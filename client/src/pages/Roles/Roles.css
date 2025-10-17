@@ -1,8 +1,8 @@
-/* Roles.css */
 .roles-container {
   max-width: 1400px;
   margin: 2rem auto;
   padding: 20px;
+  min-height: 65vh;
 }
 .roles-container h2 {
   margin-bottom: 18px;

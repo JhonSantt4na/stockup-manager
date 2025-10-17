@@ -15,7 +15,7 @@ const Roles = () => {
   const [error, setError] = useState(null);
   const [permissions, setPermissions] = useState([]);
 
-  // Estados para modais de permissions
+  // Estados para modais
   const [selectedRoleForView, setSelectedRoleForView] = useState(null);
   const [selectedRoleForManage, setSelectedRoleForManage] = useState(null);
   const [selectedRoleForCreateManage, setSelectedRoleForCreateManage] = useState(null);
@@ -23,30 +23,29 @@ const Roles = () => {
   const [selectedToAdd, setSelectedToAdd] = useState([]);
   const [selectedToRemove, setSelectedToRemove] = useState([]);
 
-  // Função helper pra pegar token
-  const getToken = () => localStorage.getItem('token');
+  // Token
+  const getToken = () => localStorage.getItem("token");
 
-  // Função helper pra fazer fetch com auth
   const apiFetch = useCallback(async (url, options = {}) => {
     const token = getToken();
-    if (!token) {
-      throw new Error('Você precisa fazer login para acessar esta página.');
-    }
+    if (!token) throw new Error("Você precisa fazer login para acessar esta página.");
+
     const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
       ...options.headers,
     };
+
     const response = await fetch(url, { ...options, headers });
     return response;
   }, []);
 
-  // Carrega roles do backend
+  // Buscar roles
   const fetchRoles = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await apiFetch('/roles/list?page=0&size=100');
+      const response = await apiFetch("/roles/list?page=0&size=100");
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`Erro ${response.status}: ${errorText}`);
@@ -55,16 +54,16 @@ const Roles = () => {
       setRoles(data.content || []);
     } catch (err) {
       setError(err.message);
-      console.error('Erro ao carregar roles:', err);
+      console.error("Erro ao carregar roles:", err);
     } finally {
       setLoading(false);
     }
   }, [apiFetch]);
 
-  // Carrega all permissions do backend
+  // Buscar todas as permissions
   const fetchAllPermissions = useCallback(async () => {
     try {
-      const response = await apiFetch('/permissions/list?page=0&size=100');
+      const response = await apiFetch("/permissions/list?page=0&size=100");
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`Erro ${response.status}: ${errorText}`);
@@ -73,7 +72,7 @@ const Roles = () => {
       setAllPermissions(data.content || []);
     } catch (err) {
       setError(err.message);
-      console.error('Erro ao carregar permissions:', err);
+      console.error("Erro ao carregar permissions:", err);
     }
   }, [apiFetch]);
 
@@ -82,13 +81,11 @@ const Roles = () => {
     fetchAllPermissions();
   }, [fetchRoles, fetchAllPermissions]);
 
-  // Fetch permissions para uma role específica
+  // Buscar permissions de uma role específica
   const fetchPermissions = async (roleName) => {
     try {
       const response = await apiFetch(`/roles/${roleName}/permissions`);
-      if (!response.ok) {
-        throw new Error('Erro ao carregar permissions');
-      }
+      if (!response.ok) throw new Error("Erro ao carregar permissions");
       const perms = await response.json();
       return perms;
     } catch (err) {
@@ -97,25 +94,22 @@ const Roles = () => {
     }
   };
 
-  // Submit handler para Add/Edit
+  // Criar ou editar Role
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.name.trim() === "") {
-      setError('Nome da role é obrigatório');
+      setError("Nome da role é obrigatório");
       return;
     }
     try {
       setError(null);
-      const url = roleEdit ? '/roles/update' : '/roles/create';
-      const method = roleEdit ? 'PUT' : 'POST';
-      const body = roleEdit 
+      const url = roleEdit ? "/roles/update" : "/roles/create";
+      const method = roleEdit ? "PUT" : "POST";
+      const body = roleEdit
         ? JSON.stringify({ oldName: roleEdit.name, newName: form.name })
         : JSON.stringify({ name: form.name });
 
-      const response = await apiFetch(url, {
-        method,
-        body,
-      });
+      const response = await apiFetch(url, { method, body });
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -123,42 +117,48 @@ const Roles = () => {
       }
 
       const savedRole = await response.json();
+
       if (!roleEdit && selectedPermissions.length > 0) {
         await apiFetch(`/roles/${savedRole.name}/permissions/assign`, {
-          method: 'POST',
+          method: "POST",
           body: JSON.stringify(selectedPermissions),
         });
       }
+
       if (roleEdit) {
-        setRoles(prev => prev.map(r => 
-          r.name === roleEdit.name ? { ...r, name: savedRole.name } : r
-        ));
+        setRoles((prev) =>
+          prev.map((r) => (r.name === roleEdit.name ? { ...r, name: savedRole.name } : r))
+        );
         setRoleEdit(null);
       } else {
-        setRoles(prev => [...prev, { ...savedRole, id: savedRole.id, permissions: selectedPermissions }]);
-        setSelectedPermissions([]); // Reset
+        setRoles((prev) => [
+          ...prev,
+          { ...savedRole, id: savedRole.id, permissions: selectedPermissions },
+        ]);
+        setSelectedPermissions([]);
       }
+
       setForm({ name: "" });
     } catch (err) {
       setError(err.message);
-      console.error('Erro ao salvar role:', err);
+      console.error("Erro ao salvar role:", err);
     }
   };
 
   const handleEdit = (role) => {
     setRoleEdit(role);
     setForm({ name: role.name });
-    setSelectedPermissions([]); // Reset on edit
+    setSelectedPermissions([]);
     setError(null);
   };
 
   const handleDelete = async (roleName) => {
     if (!window.confirm(`Tem certeza que deseja remover a role "${roleName}"?`)) return;
-    
+
     try {
       setError(null);
       const response = await apiFetch(`/roles/delete/${roleName}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       if (!response.ok) {
@@ -166,43 +166,45 @@ const Roles = () => {
         throw new Error(`Erro ${response.status}: ${errorText}`);
       }
 
-      setRoles(prev => prev.filter(r => r.name !== roleName));
+      setRoles((prev) => prev.filter((r) => r.name !== roleName));
       await fetchRoles();
     } catch (err) {
       setError(err.message);
-      console.error('Erro ao remover role:', err);
+      console.error("Erro ao remover role:", err);
     }
   };
 
-  // Handlers para modais
+  // Abrir modais
   const openManagePermissions = async (role) => {
     const currentPerms = await fetchPermissions(role.name);
     setCurrentPermissions(currentPerms);
     setSelectedToAdd([]);
     setSelectedToRemove([]);
     setSelectedRoleForManage(role);
-    setForm({ name: role.name }); // Preenche o input com o nome da role
+    setForm({ name: role.name });
   };
 
   const openCreateManagePermissions = () => {
-    setCurrentPermissions([]); // Vazio para new
+    setCurrentPermissions([]);
     setSelectedToAdd([]);
     setSelectedToRemove([]);
     setSelectedRoleForCreateManage(true);
-    setSelectedPermissions([]); // Reset
+    setSelectedPermissions([]);
   };
 
+  // Adicionar/remover permissions
   const handleApplyAdd = async () => {
     if (selectedToAdd.length === 0) return;
     try {
-      const response = await apiFetch(`/roles/${selectedRoleForManage.name}/permissions/assign`, {
-        method: 'POST',
-        body: JSON.stringify(selectedToAdd),
-      });
-      if (!response.ok) {
-        throw new Error('Erro ao adicionar permissions');
-      }
-      setCurrentPermissions(prev => [...new Set([...prev, ...selectedToAdd])]);
+      const response = await apiFetch(
+        `/roles/${selectedRoleForManage.name}/permissions/assign`,
+        {
+          method: "POST",
+          body: JSON.stringify(selectedToAdd),
+        }
+      );
+      if (!response.ok) throw new Error("Erro ao adicionar permissions");
+      setCurrentPermissions((prev) => [...new Set([...prev, ...selectedToAdd])]);
       setSelectedToAdd([]);
       await fetchRoles();
     } catch (err) {
@@ -213,14 +215,17 @@ const Roles = () => {
   const handleApplyRemove = async () => {
     if (selectedToRemove.length === 0) return;
     try {
-      const response = await apiFetch(`/roles/${selectedRoleForManage.name}/permissions/remove`, {
-        method: 'POST',
-        body: JSON.stringify(selectedToRemove),
-      });
-      if (!response.ok) {
-        throw new Error('Erro ao remover permissions');
-      }
-      setCurrentPermissions(prev => prev.filter(p => !selectedToRemove.includes(p)));
+      const response = await apiFetch(
+        `/roles/${selectedRoleForManage.name}/permissions/remove`,
+        {
+          method: "POST",
+          body: JSON.stringify(selectedToRemove),
+        }
+      );
+      if (!response.ok) throw new Error("Erro ao remover permissions");
+      setCurrentPermissions((prev) =>
+        prev.filter((p) => !selectedToRemove.includes(p))
+      );
       setSelectedToRemove([]);
       await fetchRoles();
     } catch (err) {
@@ -240,27 +245,22 @@ const Roles = () => {
     setError(null);
   };
 
+  // Toggles
   const toggleToAddCreate = (perm) => {
-    setSelectedToAdd(prev =>
-      prev.includes(perm)
-        ? prev.filter(p => p !== perm)
-        : [...prev, perm]
+    setSelectedToAdd((prev) =>
+      prev.includes(perm) ? prev.filter((p) => p !== perm) : [...prev, perm]
     );
   };
 
   const toggleToAdd = (perm) => {
-    setSelectedToAdd(prev =>
-      prev.includes(perm)
-        ? prev.filter(p => p !== perm)
-        : [...prev, perm]
+    setSelectedToAdd((prev) =>
+      prev.includes(perm) ? prev.filter((p) => p !== perm) : [...prev, perm]
     );
   };
 
   const toggleToRemove = (perm) => {
-    setSelectedToRemove(prev =>
-      prev.includes(perm)
-        ? prev.filter(p => p !== perm)
-        : [...prev, perm]
+    setSelectedToRemove((prev) =>
+      prev.includes(perm) ? prev.filter((p) => p !== perm) : [...prev, perm]
     );
   };
 
@@ -293,7 +293,9 @@ const Roles = () => {
     return (
       <div className="permissions-tags">
         {visible.map((perm, idx) => (
-          <span key={idx} className={`permission-tag perm-color-${idx % 5}`}>{perm}</span>
+          <span key={idx} className={`permission-tag perm-color-${idx % 5}`}>
+            {perm}
+          </span>
         ))}
         {hasMore && (
           <button onClick={() => openViewPermissions(role)} className="view-more-btn">
@@ -315,7 +317,7 @@ const Roles = () => {
             placeholder="Nome da role"
             value={form.name}
             required
-            onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+            onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
           />
           <Button className="btn-manage-perm" onClick={openCreateManagePermissions}>
             Gerenciar Permissions
@@ -330,6 +332,7 @@ const Roles = () => {
           )}
         </div>
       </form>
+
       <table className="roles-table">
         <thead>
           <tr>
@@ -358,9 +361,10 @@ const Roles = () => {
           ))}
         </tbody>
       </table>
+
       {roles.length === 0 && !loading && <p>Nenhuma role encontrada.</p>}
 
-      {/* Modal para Ver Todas Permissions */}
+      {/* Modal Ver Todas Permissions */}
       <Modal
         isOpen={!!selectedRoleForView}
         onClose={closeModal}
@@ -369,13 +373,17 @@ const Roles = () => {
       >
         <div className="permissions-grid">
           {permissions.map((perm, idx) => (
-            <span key={idx} className={`permission-tag perm-color-${idx % 5}`}>{perm}</span>
+            <span key={idx} className={`permission-tag perm-color-${idx % 5}`}>
+              {perm}
+            </span>
           ))}
-          {permissions.length === 0 && <p className="empty-state">Nenhuma permission atribuída.</p>}
+          {permissions.length === 0 && (
+            <p className="empty-state">Nenhuma permission atribuída.</p>
+          )}
         </div>
       </Modal>
 
-      {/* Modal para Gerenciar Permissions de Role Existente */}
+      {/* Modal Gerenciar Permissions Existente */}
       <Modal
         isOpen={!!selectedRoleForManage}
         onClose={closeModal}
@@ -390,20 +398,26 @@ const Roles = () => {
               <input
                 type="text"
                 value={form.name}
-                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                 placeholder="Novo nome da role"
                 className="role-name-input"
               />
             </div>
-            <Button type="button" className="btn-edit" onClick={() => handleEdit(selectedRoleForManage)}>
+            <Button
+              type="button"
+              className="btn-edit"
+              onClick={() => handleEdit(selectedRoleForManage)}
+            >
               Salvar Nome
             </Button>
           </div>
+
           <div className="divider"></div>
+
           <div className="section">
             <h4>Permissions Atuais ({currentPermissions.length})</h4>
             <div className="checklist-container">
-              {currentPermissions.sort().map(perm => (
+              {currentPermissions.sort().map((perm) => (
                 <ChecklistItem
                   key={perm}
                   perm={perm}
@@ -419,18 +433,20 @@ const Roles = () => {
               </Button>
             )}
           </div>
+
           <div className="divider"></div>
+
           <div className="section">
             <h4>Adicionar Permissions</h4>
             <div className="checklist-container">
               {allPermissions
-                .filter(p => !currentPermissions.includes(p.description))
-                .sort((a, b) => a.description.localeCompare(b.description))
-                .map(perm => (
+                .filter((p) => !currentPermissions.includes(p.name))
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((perm) => (
                   <ChecklistItem
-                    key={perm.description}
-                    perm={perm.description}
-                    checked={selectedToAdd.includes(perm.description)}
+                    key={perm.name}
+                    perm={perm.name}
+                    checked={selectedToAdd.includes(perm.name)}
                     onChange={toggleToAdd}
                   />
                 ))}
@@ -444,7 +460,7 @@ const Roles = () => {
         </div>
       </Modal>
 
-      {/* Modal para Gerenciar Permissions no Create (new role) */}
+      {/* Modal Gerenciar Permissions ao Criar Nova Role */}
       <Modal
         isOpen={!!selectedRoleForCreateManage}
         onClose={closeModal}
@@ -457,18 +473,21 @@ const Roles = () => {
             <h4>Adicionar Permissions</h4>
             <div className="checklist-container">
               {allPermissions
-                .sort((a, b) => a.description.localeCompare(b.description))
-                .map(perm => (
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((perm) => (
                   <ChecklistItem
-                    key={perm.description}
-                    perm={perm.description}
-                    checked={selectedToAdd.includes(perm.description)}
+                    key={perm.name}
+                    perm={perm.name}
+                    checked={selectedToAdd.includes(perm.name)}
                     onChange={toggleToAddCreate}
                   />
                 ))}
             </div>
             {selectedToAdd.length > 0 && (
-              <Button onClick={handleApplyCreateSelection} className="section-btn add-btn">
+              <Button
+                onClick={handleApplyCreateSelection}
+                className="section-btn add-btn"
+              >
                 Selecionar ({selectedToAdd.length})
               </Button>
             )}
