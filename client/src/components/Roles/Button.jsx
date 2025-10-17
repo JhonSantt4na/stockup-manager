@@ -1,16 +1,6 @@
+// src/components/Roles/Button.jsx
 import React from "react";
 
-const Button = ({ children, className, onClick, type = "button", disabled = false }) => {
-  return (
-    <button
-      type={type}
-      className={className}
-      onClick={onClick}
-      disabled={disabled}
-    >
-      {children}
-    </button>
-  );
-};
+const Button = (props) => <button {...props}>{props.children}</button>;
 
 export default Button;

@@ -7,6 +7,7 @@ import Register from "./pages/Register/Register";
 import { useAuth } from "./contexts/AuthContext";
 import './index.css';
 
+import Users from "./pages/Users/Users";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Roles from "./pages/Roles/Roles";
 import Permissions from "./pages/Permissions/Permissions";
@@ -55,6 +56,15 @@ function AppContent() {
               </ProtectedRoute>
             } 
           />
+           <Route 
+            path="/users" 
+            element={
+              <ProtectedRoute>
+                <Users />
+              </ProtectedRoute>
+            } 
+          />
+
           <Route 
             path="/roles" 
             element={

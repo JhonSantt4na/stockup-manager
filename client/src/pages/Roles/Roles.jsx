@@ -51,7 +51,11 @@ const Roles = () => {
         throw new Error(`Erro ${response.status}: ${errorText}`);
       }
       const data = await response.json();
-      setRoles(data.content || []);
+      const processedRoles = (data.content || []).map(role => ({
+        ...role,
+        permissions: role.permissions ? role.permissions : []
+      }));
+      setRoles(processedRoles);
     } catch (err) {
       setError(err.message);
       console.error("Erro ao carregar roles:", err);
@@ -94,7 +98,7 @@ const Roles = () => {
     }
   };
 
-  // Criar ou editar Role
+  // Criar Role
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.name.trim() === "") {
@@ -103,13 +107,8 @@ const Roles = () => {
     }
     try {
       setError(null);
-      const url = roleEdit ? "/roles/update" : "/roles/create";
-      const method = roleEdit ? "PUT" : "POST";
-      const body = roleEdit
-        ? JSON.stringify({ oldName: roleEdit.name, newName: form.name })
-        : JSON.stringify({ name: form.name });
-
-      const response = await apiFetch(url, { method, body });
+      const body = JSON.stringify({ name: form.name });
+      const response = await apiFetch("/roles/create", { method: "POST", body });
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -118,38 +117,24 @@ const Roles = () => {
 
       const savedRole = await response.json();
 
-      if (!roleEdit && selectedPermissions.length > 0) {
+      if (selectedPermissions.length > 0) {
         await apiFetch(`/roles/${savedRole.name}/permissions/assign`, {
           method: "POST",
           body: JSON.stringify(selectedPermissions),
         });
       }
 
-      if (roleEdit) {
-        setRoles((prev) =>
-          prev.map((r) => (r.name === roleEdit.name ? { ...r, name: savedRole.name } : r))
-        );
-        setRoleEdit(null);
-      } else {
-        setRoles((prev) => [
-          ...prev,
-          { ...savedRole, id: savedRole.id, permissions: selectedPermissions },
-        ]);
-        setSelectedPermissions([]);
-      }
-
+      setRoles((prev) => [
+        ...prev,
+        { ...savedRole, permissions: selectedPermissions },
+      ]);
+      setSelectedPermissions([]);
       setForm({ name: "" });
+      await fetchRoles();
     } catch (err) {
       setError(err.message);
       console.error("Erro ao salvar role:", err);
     }
-  };
-
-  const handleEdit = (role) => {
-    setRoleEdit(role);
-    setForm({ name: role.name });
-    setSelectedPermissions([]);
-    setError(null);
   };
 
   const handleDelete = async (roleName) => {
@@ -171,6 +156,33 @@ const Roles = () => {
     } catch (err) {
       setError(err.message);
       console.error("Erro ao remover role:", err);
+    }
+  };
+
+  // Atualizar nome da role no modal
+  const handleUpdateName = async () => {
+    if (form.name.trim() === "" || form.name === selectedRoleForManage.name) {
+      return;
+    }
+    try {
+      setError(null);
+      const body = JSON.stringify({ oldName: selectedRoleForManage.name, newName: form.name });
+      const response = await apiFetch("/roles/update", { method: "PUT", body });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Erro ${response.status}: ${errorText}`);
+      }
+
+      const saved = await response.json();
+      setRoles((prev) =>
+        prev.map((r) => (r.name === selectedRoleForManage.name ? { ...r, name: saved.name } : r))
+      );
+      setSelectedRoleForManage((prev) => ({ ...prev, name: saved.name }));
+      await fetchRoles();
+    } catch (err) {
+      setError(err.message);
+      console.error("Erro ao atualizar nome da role:", err);
     }
   };
 
@@ -236,13 +248,6 @@ const Roles = () => {
   const handleApplyCreateSelection = () => {
     setSelectedPermissions(selectedToAdd);
     setSelectedRoleForCreateManage(null);
-  };
-
-  const handleCancel = () => {
-    setRoleEdit(null);
-    setForm({ name: "" });
-    setSelectedPermissions([]);
-    setError(null);
   };
 
   // Toggles
@@ -323,13 +328,8 @@ const Roles = () => {
             Gerenciar Permissions
           </Button>
           <Button type="submit" className="btn-add-role">
-            {roleEdit ? "Salvar" : "Adicionar"}
+            Adicionar
           </Button>
-          {roleEdit && (
-            <Button onClick={handleCancel} className="roles-cancel-btn">
-              Cancelar
-            </Button>
-          )}
         </div>
       </form>
 
@@ -406,7 +406,7 @@ const Roles = () => {
             <Button
               type="button"
               className="btn-edit"
-              onClick={() => handleEdit(selectedRoleForManage)}
+              onClick={handleUpdateName}
             >
               Salvar Nome
             </Button>

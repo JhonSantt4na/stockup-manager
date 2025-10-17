@@ -1,32 +1,32 @@
-/* src/pages/Roles/Roles.css */
-.roles-container {
+/* src/pages/Users/Users.css */
+.users-container {
   max-width: 1400px;
   margin: 2rem auto;
   padding: 20px;
   min-height: 65vh;
 }
-.roles-container h2 {
+.users-container h2 {
   margin-bottom: 18px;
 }
-.roles-form {
+.users-form {
   margin-bottom: 24px;
   padding: 16px;
   background: #f8fafc;
   border-radius: 8px;
 }
-.roles-form-row {
+.users-form-row {
   display: flex;
   gap: 12px;
   align-items: center;
   flex-wrap: wrap;
 }
-.roles-form-row input {
+.users-form-row input {
   padding: 8px;
   border: 1px solid #d1d5db;
   border-radius: 6px;
   min-width: 200px;
 }
-.roles-form-row button {
+.users-form-row button {
   padding: 8px 16px;
   border: 0;
   border-radius: 6px;
@@ -34,29 +34,23 @@
   cursor: pointer;
   transition: background 0.2s ease;
 }
-.btn-add-role {
+.btn-add-user {
   background: #10b981;
   color: white;
 }
-.btn-add-role:hover {
+.btn-add-user:hover {
   background: #059669;
 }
-.roles-cancel-btn {
-  background: #ef4444;
-  color: white;
-}
-.roles-cancel-btn:hover {
-  background: #dc2626;
-}
-.role-name-input {
+.user-fullname-input, .user-email-input, .user-password-input {
   padding: 8px;
   border: 1px solid #d1d5db;
   border-radius: 6px;
   width: 100%;
+  margin-bottom: 8px;
 }
-.edit-name-section {
+.edit-user-section {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 12px;
   margin-bottom: 16px;
   position: sticky;
@@ -65,12 +59,11 @@
   z-index: 10;
   padding: 8px 0;
 }
-.edit-name-section h4 {
+.edit-user-section h4 {
   margin: 0;
   font-size: 1rem;
   color: #111827;
   font-weight: 600;
-  white-space: nowrap;
 }
 .btn-edit {
   background: #10b981;
@@ -85,7 +78,7 @@
 .btn-edit:hover {
   background: #059669;
 }
-.roles-table {
+.users-table {
   width: 100%;
   border-collapse: collapse;
   background: white;
@@ -93,26 +86,26 @@
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
-.roles-table th {
+.users-table th {
   padding: 12px 8px;
   text-align: left;
   background: #e5e7eb;
   font-weight: 600;
 }
-.roles-table td {
+.users-table td {
   padding: 12px 8px;
   border-bottom: 1px solid #e5e7eb;
 }
-.roles-table-actions-role,
-.roles-table-actions-perm {
+.users-table-actions-user,
+.users-table-actions-role {
   display: flex;
   flex-direction: row;
   gap: 6px;
   justify-content: flex-start;
   align-items: center;
 }
-.roles-table-actions-role button,
-.roles-table-actions-perm button {
+.users-table-actions-user button,
+.users-table-actions-role button {
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 6px;
@@ -122,27 +115,27 @@
   transition: background 0.2s ease;
   white-space: nowrap;
 }
-.btn-manage-perm {
+.btn-manage-role {
   background: #60a5fa;
   color: white;
 }
-.btn-manage-perm:hover {
+.btn-manage-role:hover {
   background: #3b82f6;
 }
-.roles-table-actions-role .btn-remove-role {
+.users-table-actions-user .btn-remove-user {
   background: #dc2626;
   color: white;
 }
-.roles-table-actions-role .btn-remove-role:hover {
+.users-table-actions-user .btn-remove-user:hover {
   background: #b91c1c;
 }
-.permissions-tags {
+.roles-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
   align-items: center;
 }
-.permission-tag {
+.role-tag {
   padding: 0.25rem 0.5rem;
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -291,15 +284,12 @@
 .remove-btn:hover {
   background: #dc2626;
 }
-.permissions-grid {
+.roles-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 8px;
   padding: 24px;
   background: #f9fafb;
-}
-.view-modal .modal-body .permissions-grid {
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
 }
 .empty-state {
   text-align: center;
@@ -380,7 +370,7 @@
   border-color: #ef4444;
   color: #991b1b;
 }
-.roles-error {
+.users-error {
   background: #fee2e2;
   color: #dc2626;
   padding: 12px;
@@ -389,26 +379,26 @@
   border: 1px solid #fecaca;
 }
 @media (max-width: 768px) {
-  .roles-container {
+  .users-container {
     padding: 16px;
   }
-  .roles-form-row {
+  .users-form-row {
     flex-direction: column;
     align-items: stretch;
   }
-  .roles-table {
+  .users-table {
     font-size: 0.875rem;
   }
-  .roles-table-actions-role,
-  .roles-table-actions-perm {
+  .users-table-actions-user,
+  .users-table-actions-role {
     flex-wrap: wrap;
   }
-  .roles-table-actions-role button,
-  .roles-table-actions-perm button {
+  .users-table-actions-user button,
+  .users-table-actions-role button {
     flex: 1;
     min-width: 100px;
   }
-  .edit-name-section {
+  .edit-user-section {
     flex-direction: column;
     align-items: flex-start;
   }
