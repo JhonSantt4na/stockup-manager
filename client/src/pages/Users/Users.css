@@ -8,6 +8,56 @@
 .users-container h2 {
   margin-bottom: 18px;
 }
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+.search-input {
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  flex: 1;
+  max-width: 300px;
+}
+.btn-toggle-active {
+  background: #60a5fa;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.btn-toggle-active:hover {
+  background: #3b82f6;
+}
+.btn-add-user {
+  background: #10b981;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.btn-add-user:hover {
+  background: #059669;
+}
+.add-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.add-modal input {
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+}
 .users-form {
   margin-bottom: 24px;
   padding: 16px;
@@ -34,12 +84,12 @@
   cursor: pointer;
   transition: background 0.2s ease;
 }
-.btn-add-user {
-  background: #10b981;
+.btn-cancel {
+  background: #ef4444;
   color: white;
 }
-.btn-add-user:hover {
-  background: #059669;
+.btn-cancel:hover {
+  background: #dc2626;
 }
 .user-fullname-input, .user-email-input, .user-password-input {
   padding: 8px;
@@ -47,6 +97,23 @@
   border-radius: 6px;
   width: 100%;
   margin-bottom: 8px;
+}
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.password-container input {
+  flex: 1;
+  padding-right: 60px; /* Space for button */
+}
+.password-container button {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
 }
 .edit-user-section {
   display: flex;
@@ -122,12 +189,19 @@
 .btn-manage-role:hover {
   background: #3b82f6;
 }
-.users-table-actions-user .btn-remove-user {
+.btn-deactivate {
   background: #dc2626;
   color: white;
 }
-.users-table-actions-user .btn-remove-user:hover {
+.btn-deactivate:hover {
   background: #b91c1c;
+}
+.btn-activate {
+  background: #10b981;
+  color: white;
+}
+.btn-activate:hover {
+  background: #059669;
 }
 .roles-tags {
   display: flex;
@@ -377,6 +451,36 @@
   border-radius: 6px;
   margin-bottom: 16px;
   border: 1px solid #fecaca;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+.pagination button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #10b981;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.pagination button:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+.pagination button:hover:not(:disabled) {
+  background: #059669;
+}
+.btn-confirm {
+  background: #10b981;
+  color: white;
+}
+.btn-confirm:hover {
+  background: #059669;
 }
 @media (max-width: 768px) {
   .users-container {

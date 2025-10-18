@@ -1,3 +1,23 @@
-Adicionar um endpoint para listar todas as permissions da role pelo name
+No btn de Exibir quero um check list com as opcoes:
+ExibirAtivos
+ExibirInativos
+ExibirTodos
 
-USER PAGE 
+Gerenciar Roles
+Adicionar o campo de Username para mudar
+remover o input de senha antiga
+Adicionar um btn azul ao lado do btn de Salvar Alterações com "Mudar a Senha"
+e mantenha Roles Atuais (3) e Adicionar Roles inline sem ser em coluna
+
+
+se manter tudo ate aqui :
+Adicionar a Paginação
+
+
+CONFIG 
+Adicionar a opc de Mudar a logo
+
+
+Ajustar os Relatorios e ajustar os modals dos insights 
+
+Depois Adicionar uma navbar no header e remover da dasboard
