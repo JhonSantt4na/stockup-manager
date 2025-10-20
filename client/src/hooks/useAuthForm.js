@@ -40,7 +40,7 @@ export const useAuthForm = (initialToggles = 1) => {
       const error = validateRequired(value, key);
       if (error) newErrors[key] = error;
     });
-    // Validações específicas
+    
     if (fields.registerPassword && validatePassword(fields.registerPassword)) {
       newErrors.registerPassword = validatePassword(fields.registerPassword);
     }

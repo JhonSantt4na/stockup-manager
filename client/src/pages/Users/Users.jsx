@@ -1,363 +1,132 @@
-// src/pages/Users/Users.jsx
 import React, { useEffect, useState, useCallback } from "react";
+import UserService from "../../Services/UserService";
+import { FaPlus, FaUserShield } from "react-icons/fa";
+import UserModal from "../../components/Modals/UserModal";
+import RolesModal from "../../components/Modals/RolesModal";
+import RolesListModal from "../../components/Modals/RolesListModal";
+import ConfirmModal from "../../components/Modals/ConfirmModal";
+import SuccessModal from "../../components/Modals/SuccessModal";
 import "./Users.css";
-import Button from "../../components/Roles/Button";
-import Modal from "../../components/Roles/Modal";
-import ChecklistItem from "../../components/Roles/ChecklistItem";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]);
-  const [allRoles, setAllRoles] = useState([]);
-  const [form, setForm] = useState({ username: "", fullName: "", email: "", password: "", confirmPassword: "", oldPassword: "" });
-  const [selectedRoles, setSelectedRoles] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [rolesView, setRolesView] = useState([]);
-  const [showActiveOnly, setShowActiveOnly] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showOldPassword, setShowOldPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [confirmAction, setConfirmAction] = useState(null); // {username, enabled}
-  const [searchTerm, setSearchTerm] = useState("");
+  const [error, setError] = useState("");
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
-  // Estados para modais
-  const [selectedUserForView, setSelectedUserForView] = useState(null);
-  const [selectedUserForManage, setSelectedUserForManage] = useState(null);
-  const [selectedForCreateManage, setSelectedForCreateManage] = useState(null);
-  const [currentRoles, setCurrentRoles] = useState([]);
-  const [selectedToAdd, setSelectedToAdd] = useState([]);
-  const [selectedToRemove, setSelectedToRemove] = useState([]);
+  const [userModalOpen, setUserModalOpen] = useState(false);
+  const [rolesModalOpen, setRolesModalOpen] = useState(false);
+  const [rolesListModalOpen, setRolesListModalOpen] = useState(false);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [pendingAction, setPendingAction] = useState(null);
 
-  // Token
-  const getToken = () => localStorage.getItem("token");
-
-  const apiFetch = useCallback(async (url, options = {}) => {
-    const token = getToken();
-    if (!token) throw new Error("Você precisa fazer login para acessar esta página.");
-
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-      ...options.headers,
-    };
-
-    const response = await fetch(url, { ...options, headers });
-    return response;
-  }, []);
-
-  // Buscar users
-  const fetchUsers = useCallback(async () => {
-    try {
+  const fetchUsers = useCallback(
+    async (pageNumber = 0) => {
       setLoading(true);
-      setError(null);
-      const params = new URLSearchParams({ page: 0, size: 100 });
-      if (showActiveOnly) params.append('enabled', true);
-      const response = await apiFetch(`/users?${params.toString()}`);
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Erro ${response.status}: ${errorText}`);
+      try {
+        const data = await UserService.getUsers(pageNumber, 10, search, filter);
+        setUsers(data.content || []);
+        setTotalPages(data.totalPages || 0);
+        setPage(data.number || 0);
+        setError("");
+      } catch (err) {
+        console.error("Erro ao carregar usuários:", err);
+        setError("Erro ao carregar usuários.");
+      } finally {
+        setLoading(false);
       }
-      const data = await response.json();
-      setUsers(data.content || []);
-      setFilteredUsers(data.content || []);
-    } catch (err) {
-      setError(err.message);
-      console.error("Erro ao carregar users:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [apiFetch, showActiveOnly]);
-
-  // Buscar todas as roles
-  const fetchAllRoles = useCallback(async () => {
-    try {
-      const response = await apiFetch("/roles/list?page=0&size=100");
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Erro ${response.status}: ${errorText}`);
-      }
-      const data = await response.json();
-      setAllRoles(data.content || []);
-    } catch (err) {
-      setError(err.message);
-      console.error("Erro ao carregar roles:", err);
-    }
-  }, [apiFetch]);
+    },
+    [search, filter]
+  );
 
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
 
-  useEffect(() => {
-    fetchAllRoles();
-  }, [fetchAllRoles]);
+  const handleSearch = (e) => setSearch(e.target.value);
+  const handleFilterChange = (value) => setFilter(value);
 
-  useEffect(() => {
-    const filtered = users.filter(user => user.username.toLowerCase().includes(searchTerm.toLowerCase()));
-    setFilteredUsers(filtered);
-  }, [searchTerm, users]);
+  const handleAddUser = () => {
+    setSelectedUser(null);
+    setUserModalOpen(true);
+  };
 
-  // Buscar roles de um user específico
-  const fetchUserRoles = async (username) => {
+  const handleManageRoles = (user) => {
+    setSelectedUser(user);
+    setRolesModalOpen(true);
+  };
+
+  const handleShowRoles = (user) => {
+    setSelectedUser(user);
+    setRolesListModalOpen(true);
+  };
+
+  const showSuccess = (message) => {
+    setSuccessMessage(message);
+    setSuccessModalOpen(true);
+  };
+
+  const handleToggleClick = (user) => {
+    setSelectedUser(user);
+    setPendingAction(user.enabled ? "desativar" : "ativar");
+    setConfirmModalOpen(true);
+  };
+
+  const handleConfirmToggle = async () => {
+    if (!selectedUser) return;
+    
     try {
-      const response = await apiFetch(`/users/${username}/roles`);
-      if (!response.ok) throw new Error("Erro ao carregar roles");
-      const roles = await response.json();
-      return roles;
+      await UserService.toggleUser(selectedUser.username);
+      fetchUsers(page);
+      setConfirmModalOpen(false);
+      showSuccess(`Usuário ${pendingAction}do com sucesso!`);
     } catch (err) {
-      setError(err.message);
-      return [];
+      alert(`Erro ao ${pendingAction} usuário.`);
     }
   };
 
-  // Criar User
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (form.username.trim() === "" || form.fullName.trim() === "" || form.email.trim() === "" || form.password.trim() === "") {
-      setError("Todos os campos são obrigatórios para criar um usuário");
-      return;
-    }
-    if (form.password !== form.confirmPassword) {
-      setError("As senhas não coincidem");
-      return;
-    }
-    try {
-      setError(null);
-      const body = JSON.stringify({
-        username: form.username,
-        fullName: form.fullName,
-        email: form.email,
-        password: form.password
-      });
-      const response = await apiFetch("/users/register", { method: "POST", body });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Erro ${response.status}: ${errorText}`);
-      }
-
-      const saved = await response.json();
-      const savedUser = saved.user; // Assuming RegistrationResponseDTO
-
-      if (selectedRoles.length > 0) {
-        await apiFetch(`/users/${savedUser.username}/roles/assign`, {
-          method: "POST",
-          body: JSON.stringify(selectedRoles),
-        });
-      }
-
-      setUsers((prev) => [
-        ...prev,
-        { ...savedUser, roles: selectedRoles, enabled: true },
-      ]);
-      setSelectedRoles([]);
-      setForm({ username: "", fullName: "", email: "", password: "", confirmPassword: "", oldPassword: "" });
-      setShowAddModal(false);
-      await fetchUsers();
-    } catch (err) {
-      setError(err.message);
-      console.error("Erro ao salvar user:", err);
-    }
+  const handleNextPage = () => {
+    if (page + 1 < totalPages) fetchUsers(page + 1);
   };
 
-  const handleToggleEnabled = (username, enabled) => {
-    setConfirmAction({ username, enabled });
+  const handlePrevPage = () => {
+    if (page > 0) fetchUsers(page - 1);
   };
 
-  const confirmToggleEnabled = async () => {
-    const { username, enabled } = confirmAction;
-    try {
-      setError(null);
-      const response = await apiFetch(`/users/toggle/${username}`, {
-        method: "PUT",
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Erro ${response.status}: ${errorText}`);
-      }
-
-      await fetchUsers();
-      setConfirmAction(null);
-    } catch (err) {
-      setError(err.message);
-      console.error("Erro ao alterar status do user:", err);
-      setConfirmAction(null);
-    }
+  const getRoleColor = (role) => {
+    const colors = {
+      'ADMIN': '#ef4444',
+      'USER': '#3b82f6', 
+      'MANAGER': '#f59e0b',
+      'SUPERVISOR': '#10b981',
+      'MODERATOR': '#8b5cf6'
+    };
+    return colors[role] || '#666';
   };
 
-  // Atualizar user no modal
-  const handleUpdateUser = async () => {
-    if (form.fullName.trim() === "" && form.email.trim() === "" && (form.password.trim() === "" || form.oldPassword.trim() === "")) {
-      return;
-    }
-    if (form.password && form.password !== form.confirmPassword) {
-      setError("As novas senhas não coincidem");
-      return;
-    }
-    try {
-      setError(null);
-      let response;
-      if (form.password) {
-        const changePassBody = JSON.stringify({
-          currentPassword: form.oldPassword,
-          newPassword: form.password
-        });
-        response = await apiFetch(`/users/change-password`, { method: "PUT", body: changePassBody });
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Erro ao alterar senha: ${response.status}: ${errorText}`);
-        }
-      }
-      const updateBody = JSON.stringify({
-        fullName: form.fullName,
-        email: form.email,
-      });
-      response = await apiFetch(`/users/update/${selectedUserForManage.username}`, { method: "PUT", body: updateBody });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Erro ${response.status}: ${errorText}`);
-      }
-
-      const saved = await response.json();
-      setUsers((prev) =>
-        prev.map((u) => (u.username === selectedUserForManage.username ? { ...u, ...saved } : u))
-      );
-      setSelectedUserForManage((prev) => ({ ...prev, ...saved }));
-      await fetchUsers();
-    } catch (err) {
-      setError(err.message);
-      console.error("Erro ao atualizar user:", err);
-    }
-  };
-
-  // Abrir modais
-  const openManageRoles = async (user) => {
-    const current = await fetchUserRoles(user.username);
-    setCurrentRoles(current);
-    setSelectedToAdd([]);
-    setSelectedToRemove([]);
-    setSelectedUserForManage(user);
-    setForm({ username: user.username, fullName: user.fullName, email: user.email, password: "", confirmPassword: "", oldPassword: "" });
-    setShowPassword(false);
-    setShowOldPassword(false);
-    setShowConfirmPassword(false);
-  };
-
-  const openCreateManageRoles = () => {
-    setSelectedForCreateManage(true);
-    setSelectedToAdd(selectedRoles);
-  };
-
-  // Adicionar/remover roles
-  const handleApplyAdd = async () => {
-    if (selectedToAdd.length === 0) return;
-    try {
-      const response = await apiFetch(
-        `/users/${selectedUserForManage.username}/roles/assign`,
-        {
-          method: "POST",
-          body: JSON.stringify(selectedToAdd),
-        }
-      );
-      if (!response.ok) throw new Error("Erro ao adicionar roles");
-      setCurrentRoles((prev) => [...new Set([...prev, ...selectedToAdd])]);
-      setSelectedToAdd([]);
-      await fetchUsers();
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  const handleApplyRemove = async () => {
-    if (selectedToRemove.length === 0) return;
-    try {
-      const response = await apiFetch(
-        `/users/${selectedUserForManage.username}/roles/remove`,
-        {
-          method: "POST",
-          body: JSON.stringify(selectedToRemove),
-        }
-      );
-      if (!response.ok) throw new Error("Erro ao remover roles");
-      setCurrentRoles((prev) =>
-        prev.filter((p) => !selectedToRemove.includes(p))
-      );
-      setSelectedToRemove([]);
-      await fetchUsers();
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  const handleApplyCreateSelection = () => {
-    setSelectedRoles(selectedToAdd);
-    setSelectedForCreateManage(null);
-  };
-
-  // Toggles
-  const toggleToAddCreate = (role) => {
-    setSelectedToAdd((prev) =>
-      prev.includes(role) ? prev.filter((p) => p !== role) : [...prev, role]
-    );
-  };
-
-  const toggleToAdd = (role) => {
-    setSelectedToAdd((prev) =>
-      prev.includes(role) ? prev.filter((p) => p !== role) : [...prev, role]
-    );
-  };
-
-  const toggleToRemove = (role) => {
-    setSelectedToRemove((prev) =>
-      prev.includes(role) ? prev.filter((p) => p !== role) : [...prev, role]
-    );
-  };
-
-  const closeModal = () => {
-    setSelectedUserForView(null);
-    setSelectedUserForManage(null);
-    setSelectedForCreateManage(null);
-    setCurrentRoles([]);
-    setSelectedToAdd([]);
-    setSelectedToRemove([]);
-    setRolesView([]);
-    setForm({ username: "", fullName: "", email: "", password: "", confirmPassword: "", oldPassword: "" });
-    setShowPassword(false);
-    setShowOldPassword(false);
-    setShowConfirmPassword(false);
-    setShowAddModal(false);
-    setConfirmAction(null);
-  };
-
-  const openViewRoles = async (user) => {
-    setSelectedUserForView(user);
-    const roles = await fetchUserRoles(user.username);
-    setRolesView(roles);
-  };
-
-  if (loading) {
-    return <div className="users-container">Carregando users...</div>;
-  }
-
-  const renderRolesTags = (user) => {
-    const userRoles = user.roles || [];
-    const visible = userRoles.slice(0, 3);
-    const hasMore = userRoles.length > 3;
-
+  const renderRoles = (roles, user) => {
+    if (!roles || roles.length === 0) return "-";
+    
     return (
-      <div className="roles-tags">
-        {visible.map((role, idx) => (
-          <span key={idx} className={`role-tag perm-color-${idx % 5}`}>
+      <div className="roles-wrapper">
+        {roles.slice(0, 2).map((role) => (
+          <span 
+            key={role} 
+            className="role-text"
+            style={{ color: getRoleColor(role) }}
+          >
             {role}
           </span>
         ))}
-        {hasMore && (
-          <button onClick={() => openViewRoles(user)} className="view-more-btn">
-            Ver mais ({userRoles.length - 3})
+        {roles.length > 2 && (
+          <button className="ver-mais" onClick={() => handleShowRoles(user)}>
+            +{roles.length - 2} mais
           </button>
         )}
       </div>
@@ -366,309 +135,138 @@ const Users = () => {
 
   return (
     <div className="users-container">
-      <h2>Users</h2>
-      {error && <div className="users-error">{error}</div>}
-      <div className="header-actions">
-        <Button className="btn-toggle-active" onClick={() => setShowActiveOnly(!showActiveOnly)}>
-          {showActiveOnly ? "Exibir Todos" : "Exibir Apenas Ativos"}
-        </Button>
-        <input
-          type="text"
-          placeholder="Buscar por username"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
-        />
-        <Button className="btn-add-user" onClick={() => setShowAddModal(true)}>
-          Adicionar User
-        </Button>
+      <div className="users-header">
+        <div className="header-controls">
+          <h2>Administração de Usuários</h2>
+          <div className="controls-group">
+            <select className="filter-select search-box" value={filter} onChange={(e) => handleFilterChange(e.target.value)}>
+              <option value="all">Exibir todos</option>
+              <option value="active">Exibir usuários ativos</option>
+              <option value="inactive">Exibir usuários inativos</option>
+            </select>
+            <input
+              type="text"
+              placeholder="Buscar usuário..."
+              className="search-input search-box"
+              value={search}
+              onChange={handleSearch}
+            />
+            <button className="btn-add" onClick={handleAddUser}>
+              <FaPlus /> Novo Usuário
+            </button>
+          </div>
+        </div>
       </div>
 
-      <table className="users-table">
-        <thead>
-          <tr>
-            <th>Username</th>
-            <th>Nome Completo</th>
-            <th>Email</th>
-            <th>Roles</th>
-            <th>Ativos</th>
-            <th>Ações Roles</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredUsers.map((user) => (
-            <tr key={user.id || user.username}>
-              <td>{user.username}</td>
-              <td>{user.fullName}</td>
-              <td>{user.email}</td>
-              <td>{renderRolesTags(user)}</td>
-              <td className="users-table-actions-user">
-                <Button 
-                  className={user.enabled ? "btn-deactivate" : "btn-activate"} 
-                  onClick={() => handleToggleEnabled(user.username, user.enabled)}
-                >
-                  {user.enabled ? "Desativar" : "Ativar"}
-                </Button>
-              </td>
-              <td className="users-table-actions-role">
-                <Button className="btn-manage-role" onClick={() => openManageRoles(user)}>
-                  Gerenciar
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {filteredUsers.length === 0 && !loading && <p>Nenhum user encontrado.</p>}
-
-      {/* Modal Adicionar User */}
-      <Modal
-        isOpen={showAddModal}
-        onClose={closeModal}
-        title="Adicionar Novo User"
-        footer={
-          <div className="modal-footer">
-            <Button className="btn-cancel" onClick={closeModal}>Cancelar</Button>
-            <Button type="submit" className="btn-manage-role" onClick={handleSubmit}>Adicionar</Button>
-          </div>
-        }
-        className="add-modal"
-      >
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Username"
-            value={form.username}
-            onChange={(e) => setForm((f) => ({ ...f, username: e.target.value }))}
-          />
-          <input
-            type="text"
-            placeholder="Nome completo"
-            value={form.fullName}
-            onChange={(e) => setForm((f) => ({ ...f, fullName: e.target.value }))}
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            value={form.email}
-            onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-          />
-          <div className="password-container">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Senha"
-              value={form.password}
-              onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-            />
-            <button type="button" onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? "Esconder" : "Mostrar"}
-            </button>
-          </div>
-          <div className="password-container">
-            <input
-              type={showConfirmPassword ? "text" : "password"}
-              placeholder="Confirme Senha"
-              value={form.confirmPassword}
-              onChange={(e) => setForm((f) => ({ ...f, confirmPassword: e.target.value }))}
-            />
-            <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-              {showConfirmPassword ? "Esconder" : "Mostrar"}
-            </button>
-          </div>
-          <Button className="btn-manage-role" onClick={openCreateManageRoles}>
-            Gerenciar Roles
-          </Button>
-        </form>
-      </Modal>
-
-      {/* Modal Ver Todas Roles */}
-      <Modal
-        isOpen={!!selectedUserForView}
-        onClose={closeModal}
-        title={`Roles de ${selectedUserForView?.username}`}
-        footer={<Button onClick={closeModal}>Fechar</Button>}
-      >
-        <div className="roles-grid">
-          {rolesView.map((role, idx) => (
-            <span key={idx} className={`role-tag perm-color-${idx % 5}`}>
-              {role}
-            </span>
-          ))}
-          {rolesView.length === 0 && (
-            <p className="empty-state">Nenhuma role atribuída.</p>
-          )}
+      {loading ? (
+        <p className="loading">Carregando usuários...</p>
+      ) : error ? (
+        <p className="error">{error}</p>
+      ) : (
+        <div className="table-container">
+          <table className="users-table">
+            <thead>
+              <tr>
+                <th>Usuário</th>
+                <th>Email</th>
+                <th>Funções</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.length > 0 ? (
+                users.map((user, index) => (
+                  <tr key={user.id}>
+                    <td>{user.username}</td>
+                    <td>{user.email}</td>
+                    <td className="roles-column">{user.roles ? renderRoles(user.roles, user) : "-"}</td>
+                    <td>
+                      <span className={user.enabled ? "dot-green" : "dot-red"}></span>
+                      {user.enabled ? " Ativo" : " Inativo"}
+                    </td>
+                    <td className="actions-inline">
+                      <button
+                        className={`btn-toggle ${user.enabled ? "btn-red" : "btn-green"}`}
+                        onClick={() => handleToggleClick(user)}
+                      >
+                        {user.enabled ? "Desativar" : "Ativar"}
+                      </button>
+                      <button className="btn-roles" onClick={() => handleManageRoles(user)}>
+                        <FaUserShield /> Gerenciar
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: "center", color: "#666" }}>
+                    Nenhum usuário encontrado.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
-      </Modal>
+      )}
 
-      {/* Modal Gerenciar Roles Existente */}
-      <Modal
-        isOpen={!!selectedUserForManage}
-        onClose={closeModal}
-        title={`Gerenciar Roles de ${selectedUserForManage?.username}`}
-        footer={<Button onClick={closeModal}>Fechar</Button>}
-        className="manage-modal"
-      >
-        <div className="manage-sections">
-          <div className="section">
-            <div className="edit-user-section">
-              <h4>Editar Usuário</h4>
-              <input
-                type="text"
-                placeholder="Nome completo"
-                value={form.fullName}
-                onChange={(e) => setForm((f) => ({ ...f, fullName: e.target.value }))}
-                className="user-fullname-input"
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                value={form.email}
-                onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-                className="user-email-input"
-              />
-              <div className="password-container">
-                <input
-                  type={showOldPassword ? "text" : "password"}
-                  placeholder="Senha Antiga (para alterar senha)"
-                  value={form.oldPassword}
-                  onChange={(e) => setForm((f) => ({ ...f, oldPassword: e.target.value }))}
-                />
-                <button type="button" onClick={() => setShowOldPassword(!showOldPassword)}>
-                  {showOldPassword ? "Esconder" : "Mostrar"}
-                </button>
-              </div>
-              <div className="password-container">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Nova Senha (opcional)"
-                  value={form.password}
-                  onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-                />
-                <button type="button" onClick={() => setShowPassword(!showPassword)}>
-                  {showPassword ? "Esconder" : "Mostrar"}
-                </button>
-              </div>
-              <div className="password-container">
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Confirme Nova Senha"
-                  value={form.confirmPassword}
-                  onChange={(e) => setForm((f) => ({ ...f, confirmPassword: e.target.value }))}
-                />
-                <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                  {showConfirmPassword ? "Esconder" : "Mostrar"}
-                </button>
-              </div>
-            </div>
-            <Button
-              type="button"
-              className="btn-edit"
-              onClick={handleUpdateUser}
-            >
-              Salvar Alterações
-            </Button>
-          </div>
-
-          <div className="divider"></div>
-
-          <div className="section">
-            <h4>Roles Atuais ({currentRoles.length})</h4>
-            <div className="checklist-container">
-              {currentRoles.sort().map((role) => (
-                <ChecklistItem
-                  key={role}
-                  perm={role}
-                  checked={selectedToRemove.includes(role)}
-                  onChange={toggleToRemove}
-                  className="remove"
-                />
-              ))}
-            </div>
-            {selectedToRemove.length > 0 && (
-              <Button onClick={handleApplyRemove} className="section-btn remove-btn">
-                Remover Selecionadas ({selectedToRemove.length})
-              </Button>
-            )}
-          </div>
-
-          <div className="divider"></div>
-
-          <div className="section">
-            <h4>Adicionar Roles</h4>
-            <div className="checklist-container">
-              {allRoles
-                .filter((r) => !currentRoles.includes(r.name))
-                .sort((a, b) => a.name.localeCompare(b.name))
-                .map((role) => (
-                  <ChecklistItem
-                    key={role.name}
-                    perm={role.name}
-                    checked={selectedToAdd.includes(role.name)}
-                    onChange={toggleToAdd}
-                  />
-                ))}
-            </div>
-            {selectedToAdd.length > 0 && (
-              <Button onClick={handleApplyAdd} className="section-btn add-btn">
-                Adicionar Selecionadas ({selectedToAdd.length})
-              </Button>
-            )}
-          </div>
+      {!loading && totalPages > 1 && (
+        <div className="pagination">
+          <button onClick={handlePrevPage} disabled={page === 0}>◀ Anterior</button>
+          <span>Página {page + 1} de {totalPages}</span>
+          <button onClick={handleNextPage} disabled={page + 1 >= totalPages}>Próxima ▶</button>
         </div>
-      </Modal>
+      )}
 
-      {/* Modal Gerenciar Roles ao Criar Novo User */}
-      <Modal
-        isOpen={!!selectedForCreateManage}
-        onClose={closeModal}
-        title="Gerenciar Roles para Novo User"
-        footer={<Button onClick={closeModal}>Cancelar</Button>}
-        className="manage-modal"
-      >
-        <div className="manage-sections">
-          <div className="section">
-            <h4>Adicionar Roles</h4>
-            <div className="checklist-container">
-              {allRoles
-                .sort((a, b) => a.name.localeCompare(b.name))
-                .map((role) => (
-                  <ChecklistItem
-                    key={role.name}
-                    perm={role.name}
-                    checked={selectedToAdd.includes(role.name)}
-                    onChange={toggleToAddCreate}
-                  />
-                ))}
-            </div>
-            {selectedToAdd.length > 0 && (
-              <Button
-                onClick={handleApplyCreateSelection}
-                className="section-btn add-btn"
-              >
-                Selecionar ({selectedToAdd.length})
-              </Button>
-            )}
-          </div>
-        </div>
-      </Modal>
+      {/* Modal para criar/editar usuário */}
+      {userModalOpen && (
+        <UserModal 
+          user={selectedUser} 
+          onClose={() => { 
+            setUserModalOpen(false); 
+            fetchUsers(page); 
+          }}
+          onSuccess={showSuccess}
+        />
+      )}
 
-      {/* Modal Confirmação Toggle Enabled */}
-      <Modal
-        isOpen={!!confirmAction}
-        onClose={closeModal}
-        title="Confirmação"
-        footer={
-          <>
-            <Button onClick={closeModal}>Cancelar</Button>
-            <Button onClick={confirmToggleEnabled} className="btn-confirm">
-              Confirmar
-            </Button>
-          </>
-        }
-      >
-        <p>Tem certeza que deseja {confirmAction?.enabled ? 'desativar' : 'ativar'} o usuário "{confirmAction?.username}"?</p>
-      </Modal>
+      {/* Modal para gerenciar roles */}
+      {rolesModalOpen && (
+        <RolesModal 
+          user={selectedUser} 
+          onClose={() => { 
+            setRolesModalOpen(false); 
+            fetchUsers(page); 
+          }}
+          onSuccess={showSuccess}
+        />
+      )}
+
+      {/* Modal para visualizar lista de roles */}
+      {rolesListModalOpen && (
+        <RolesListModal 
+          user={selectedUser} 
+          onClose={() => setRolesListModalOpen(false)} 
+        />
+      )}
+
+      {/* Modal de confirmação para ativar/desativar */}
+      {confirmModalOpen && (
+        <ConfirmModal 
+          user={selectedUser}
+          actionType={pendingAction}
+          onClose={() => setConfirmModalOpen(false)}
+          onConfirm={handleConfirmToggle}
+        />
+      )}
+
+      {/* Modal de sucesso */}
+      {successModalOpen && (
+        <SuccessModal 
+          message={successMessage}
+          onClose={() => setSuccessModalOpen(false)}
+        />
+      )}
     </div>
   );
 };

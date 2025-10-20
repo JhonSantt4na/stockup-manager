@@ -1,0 +1,10 @@
+/* Login.css - Estilos específicos do Login */
+@import './AuthCommon.css';
+
+/* Estilos específicos do Login */
+.logo-highlight {
+  color: #45C35B;
+  font-weight: 800;
+  font-size: 30px;
+  opacity: 1;
+}
