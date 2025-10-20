@@ -5,7 +5,7 @@ import { Dashboard } from "../pages/Dashboard";
 import { Users } from "../pages/Users";
 import { Stock } from "../pages/Stock";
 import { Reports } from "../pages/Reports";
-import { Config } from "../pages/Config";
+import { settings } from "../pages/Config";
 
 export const AppRoutes = () => {
   const { user, loading } = useContext(AuthContext);
@@ -24,7 +24,7 @@ export const AppRoutes = () => {
       {user.roles?.includes("ADMIN") && (
         <>
           <Route path="/users" element={<Users />} />
-          <Route path="/config" element={<Config />} />
+          <Route path="/settings" element={<Config />} />
         </>
       )}
       <Route path="/stock" element={<Stock />} />

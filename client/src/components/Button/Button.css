@@ -1,0 +1,41 @@
+.btn {
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  width: auto;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+/* Variantes  gree, blue, red, orange, purple */
+.btn-gree { background: #2ecc71; color: #fff; }
+.btn-gree:hover { background: #059669; }
+
+.btn-blue { background: #60a5fa; color: #fff; }
+.btn-blue:hover { background: #3b82f6; }
+
+.btn-red { background: #ef4444; color: #fff; }
+.btn-red:hover { background: #dc2626; }
+
+.btn-orange { background: #e67e22; color: #fff; }
+.btn-orange:hover { background: #d35400; }
+
+.btn-purple { background: #9b59b6; color: #fff; }
+.btn-purple:hover { background: #8e44ad; }
+
+/* Tamanhos */
+.btn-small { padding: 6px 12px; border-radius: 6px; font-weight: 500;}
+.btn-medium { padding: 7px 12px; font-size: 16px; border-radius: 6px; font-weight: 600;}
+.btn-large { padding: 14px 28px; font-size: 18px; border-radius: 6px; font-weight: 600;}
+
+/* Estados */
+.btn-disabled, .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}

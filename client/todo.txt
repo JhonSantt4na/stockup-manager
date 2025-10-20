@@ -1,23 +1,48 @@
-No btn de Exibir quero um check list com as opcoes:
-ExibirAtivos
-ExibirInativos
-ExibirTodos
+Funcionar a Busca:
+    ExibirAtivos
+    ExibirInativos
+    ExibirTodos
 
-Gerenciar Roles
-Adicionar o campo de Username para mudar
-remover o input de senha antiga
-Adicionar um btn azul ao lado do btn de Salvar Alterações com "Mudar a Senha"
-e mantenha Roles Atuais (3) e Adicionar Roles inline sem ser em coluna
+Ajustar a Barra de Busca de Usuario
+Ajustar o tamanho geral da tela
+Ajustar Inativo e ativo
+Ajustar Btn 'Nome do User' ao Lado de Sair e Abri o Modal do Perfil proprio
+Ajustar a exibição das Funções (Admin, User, Pro etc..)
 
-
-se manter tudo ate aqui :
+Ajustar o CSS:
+    Modal Adicionar
+    Modal Gerenciar
+    Modal Ativar
+    Modal Roles + Btn ver mais
+    
+Ultima opção :
 Adicionar a Paginação
 
+Adicionar Page de Roles 
+    - Adicionar CRUD mais Modais
+    - RolesService 
+
+Adicionar Page de Permissions
+    - Adicionar CRUD mais Modais
+    - PermissionService
 
 CONFIG 
-Adicionar a opc de Mudar a logo
+Ajustar a Pagina
+Adicionar o CSS
 
 
-Ajustar os Relatorios e ajustar os modals dos insights 
-
-Depois Adicionar uma navbar no header e remover da dasboard
+| Função / Elemento                       | Cor                                                             | Hexadecimal |
+| --------------------------------------- | --------------------------------------------------------------- | ----------- |
+| **Primário (verde destaque)**           | ![#45C35B](https://via.placeholder.com/20/45C35B/000000?text=+) | `#45C35B`   |
+| **Primário escuro (hover, logotipo P)** | ![#1E8F3E](https://via.placeholder.com/20/1E8F3E/000000?text=+) | `#1E8F3E`   |
+| **Fundo geral da aplicação**            | ![#F4F5F7](https://via.placeholder.com/20/F4F5F7/000000?text=+) | `#F4F5F7`   |
+| **Painéis / Cards (fundo)**             | ![#FFFFFF](https://via.placeholder.com/20/FFFFFF/000000?text=+) | `#FFFFFF`   |
+| **Texto principal**                     | ![#1A1A1A](https://via.placeholder.com/20/1A1A1A/000000?text=+) | `#1A1A1A`   |
+| **Texto secundário / labels**           | ![#6C757D](https://via.placeholder.com/20/6C757D/000000?text=+) | `#6C757D`   |
+| **Barra lateral (sidebar)**             | ![#1E1E1E](https://via.placeholder.com/20/1E1E1E/000000?text=+) | `#1E1E1E`   |
+| **Ícones da sidebar**                   | ![#D1D1D1](https://via.placeholder.com/20/D1D1D1/000000?text=+) | `#D1D1D1`   |
+| **Hover dos ícones / item ativo**       | ![#45C35B](https://via.placeholder.com/20/45C35B/000000?text=+) | `#45C35B`   |
+| **Cor de alerta (amarelo)**             | ![#F5C542](https://via.placeholder.com/20/F5C542/000000?text=+) | `#F5C542`   |
+| **Cor de erro (vermelho)**              | ![#E74C3C](https://via.placeholder.com/20/E74C3C/000000?text=+) | `#E74C3C`   |
+| **Cor de bordas suaves / divisórias**   | ![#E0E0E0](https://via.placeholder.com/20/E0E0E0/000000?text=+) | `#E0E0E0`   |
+| **Botão "Add New Order" (verde forte)** | ![#2ECC71](https://via.placeholder.com/20/2ECC71/000000?text=+) | `#2ECC71`   |

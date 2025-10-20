@@ -1,0 +1,526 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #2C2C2C;
+  border-radius: 12px;
+  width: 500px;
+  max-width: 95%;
+  max-height: 90vh;
+  overflow: hidden;
+  border: 1px solid #444;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.roles-modal {
+  width: 500px;
+}
+
+.user-modal {
+  width: 450px;
+}
+
+.success-modal {
+  width: 400px;
+  text-align: center;
+  padding: 30px;
+}
+
+.roles-list-modal {
+  width: 400px;
+}
+
+.confirm-modal {
+  width: 450px;
+}
+
+/* Header escuro */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #444;
+  background-color: #2C2C2C;
+  position: relative;
+}
+
+.dark-header {
+  background-color: #2C2C2C !important;
+  border-bottom: 1px solid #444;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #D1D1D1;
+  font-size: 1.2rem;
+  font-weight: 600;
+  width: 100%;
+  text-align: center;
+}
+
+.header-center {
+  text-align: center;
+  width: 100%;
+  margin: 0;
+}
+
+/* Botão X vermelho */
+.btn-close {
+  background: none;
+  border: none;
+  color: #D1D1D1;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  transition: background-color 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 20px;
+}
+
+.red-close {
+  color: #ef4444 !important;
+}
+
+.btn-close:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.red-close:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+/* Body branco */
+.modal-body {
+  padding: 24px;
+}
+
+.white-body {
+  background-color: #fff !important;
+  color: #333;
+}
+
+.search-box {
+  background-color: #1a1a1a;
+  border: 1px solid #444;
+  color: #D1D1D1;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.25s ease;
+}
+
+.white-body .search-box {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #333;
+}
+
+.search-box:focus {
+  outline: none;
+  border-color: #45C35B;
+}
+
+.search-box::placeholder {
+  color: #888;
+}
+
+.white-body .search-box::placeholder {
+  color: #999;
+}
+
+.modal-form {
+  width: 100%;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  color: #D1D1D1;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.white-body .form-group label {
+  color: #333;
+}
+
+/* Botões */
+.btn-small {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.25s ease;
+  min-width: 100px;
+  font-weight: 500;
+}
+
+.btn-save, .btn-add-role, .btn-ok, .btn-confirm {
+  background: #45C35B;
+  color: #fff;
+}
+
+.btn-save:hover, .btn-add-role:hover, .btn-ok:hover, .btn-confirm:hover {
+  background: #3ca54f;
+}
+
+.btn-cancel {
+  background: #6b7280;
+  color: #fff;
+}
+
+.btn-cancel:hover {
+  background: #4b5563;
+}
+
+.red-cancel {
+  background: #ef4444 !important;
+  color: white;
+}
+
+.red-cancel:hover {
+  background: #dc2626 !important;
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+}
+
+.btn-green {
+  background: #45C35B !important;
+  color: white;
+}
+
+.btn-green:hover {
+  background: #3ca54f !important;
+}
+
+.btn-red {
+  background: #ef4444 !important;
+  color: white;
+}
+
+.btn-red:hover {
+  background: #dc2626 !important;
+}
+
+.btn-small:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Ações centralizadas */
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.center-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* Roles Management */
+.roles-management-section {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #444;
+}
+
+.white-body .roles-management-section {
+  border-top: 1px solid #ddd;
+}
+
+.roles-management-section h4 {
+  margin-bottom: 16px;
+  color: #D1D1D1;
+  font-size: 1.1rem;
+}
+
+.white-body .roles-management-section h4 {
+  color: #333;
+}
+
+.user-update-section h4 {
+  margin-bottom: 16px;
+  color: #D1D1D1;
+  font-size: 1.1rem;
+}
+
+.white-body .user-update-section h4 {
+  color: #333;
+}
+
+.roles-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: flex-end;
+}
+
+.role-select {
+  flex: 1;
+}
+
+.user-roles-list {
+  background: #1a1a1a;
+  padding: 16px;
+  border-radius: 6px;
+  border: 1px solid #444;
+}
+
+.white-body .user-roles-list {
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+}
+
+.user-roles-list h5 {
+  margin: 0 0 12px 0;
+  color: #D1D1D1;
+  font-size: 1rem;
+}
+
+.white-body .user-roles-list h5 {
+  color: #333;
+}
+
+.role-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #444;
+}
+
+.white-body .role-item {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.role-item:last-child {
+  border-bottom: none;
+}
+
+.role-name {
+  font-weight: 500;
+  color: #D1D1D1;
+}
+
+.white-body .role-name {
+  color: #333;
+}
+
+.no-roles {
+  color: #888;
+  text-align: center;
+  font-style: italic;
+  margin: 0;
+  padding: 10px;
+}
+
+.white-body .no-roles {
+  color: #666;
+}
+
+/* Roles List Modal */
+.roles-list-container {
+  text-align: center;
+}
+
+.roles-list-container h4 {
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.roles-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.role-item-simple {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border-left: 4px solid #45C35B;
+  transition: transform 0.2s ease;
+}
+
+.role-item-simple:hover {
+  transform: translateX(4px);
+  background-color: #e9ecef;
+}
+
+.role-item-simple .role-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* Confirm Modal */
+.confirm-content {
+  text-align: center;
+}
+
+.confirm-icon {
+  font-size: 3rem;
+  color: #f59e0b;
+  margin-bottom: 16px;
+}
+
+.confirm-content h4 {
+  margin-bottom: 16px;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.user-info {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.user-info p {
+  margin: 8px 0;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.user-info strong {
+  color: #333;
+}
+
+.warning-text {
+  color: #ef4444;
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+/* Success Modal */
+.success-icon {
+  font-size: 3rem;
+  color: #45C35B;
+  margin-bottom: 16px;
+}
+
+.success-modal h3 {
+  color: #D1D1D1;
+  margin-bottom: 12px;
+}
+
+.success-modal p {
+  color: #D1D1D1;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    margin: 10px;
+  }
+  
+  .roles-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+  
+  .center-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-header {
+    padding: 15px 20px;
+  }
+  
+  .modal-body {
+    padding: 20px;
+  }
+  
+  .btn-close {
+    right: 15px;
+  }
+  
+  .roles-list-modal,
+  .confirm-modal {
+    width: 95%;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    width: 98%;
+    margin: 5px;
+  }
+  
+  .modal-header h3 {
+    font-size: 1.1rem;
+    padding: 0 30px;
+  }
+  
+  .modal-body {
+    padding: 15px;
+  }
+  
+  .btn-small {
+    min-width: 90px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+  
+  .confirm-icon,
+  .success-icon {
+    font-size: 2.5rem;
+  }
+}

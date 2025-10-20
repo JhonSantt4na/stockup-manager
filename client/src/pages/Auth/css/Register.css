@@ -1,0 +1,22 @@
+/* Register.css - Estilos específicos do Register */
+@import './AuthCommon.css';
+
+/* Layout específico do Register */
+.form-row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.form-row .form-group {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Responsividade específica do Register */
+@media (max-width: 480px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}
