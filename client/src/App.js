@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import Settings from "./pages/settings/settings";
 import Users from "./pages/Users/Users";
 import Roles from "./pages/Roles/Roles";
+import Permissions from "./pages/Permissions/Permissions";
 import { useAuth } from "./contexts/AuthContext";
 import './index.css';
 
@@ -138,6 +139,16 @@ function AppContent() {
             <AdminRoute>
               <DashboardLayout>
                 <Roles />
+              </DashboardLayout>
+            </AdminRoute>
+          } 
+        />
+        <Route 
+          path="/permissions" 
+          element={
+            <AdminRoute>
+              <DashboardLayout>
+                <Permissions />
               </DashboardLayout>
             </AdminRoute>
           } 

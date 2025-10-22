@@ -1,35 +1,12 @@
-Funcionar a Busca:
-    ExibirAtivos
-    ExibirInativos
-    ExibirTodos
+Ajusra a Dashboard para exibir da forma correta com espaço para publicidade
+User Ajustar adicionar e Remover Roles Ajusta o conteuno no espaço. Ajustar os modals 
+Roles Ajusta o Nome de Exibição ou inves da Description. Ajustar os modals 
+Permissions ajustar a exibição na tela, e ajustar os modals e adicionar uma cor nas Roles
+Adicionar a paginação no Users e Roles
+Separar os modals por pastas 
+Separar as pages por ADMIN / USERS
 
-Ajustar a Barra de Busca de Usuario
-Ajustar o tamanho geral da tela
-Ajustar Inativo e ativo
-Ajustar Btn 'Nome do User' ao Lado de Sair e Abri o Modal do Perfil proprio
-Ajustar a exibição das Funções (Admin, User, Pro etc..)
-
-
-Ajustar o CSS:
-    Modal Adicionar
-    Modal Gerenciar
-    Modal Ativar
-    Modal Roles + Btn ver mais
-    
-Ultima opção :
-Adicionar a Paginação
-
-Adicionar Page de Roles 
-    - Adicionar CRUD mais Modais
-    - RolesService 
-
-Adicionar Page de Permissions
-    - Adicionar CRUD mais Modais
-    - PermissionService
-
-CONFIG 
-Ajustar a Pagina
-Adicionar o CSS
+CONFIG > Ajustar a Pagina e Adicionar o CSS
 
 
 | Função / Elemento                       | Cor                                                             | Hexadecimal |
