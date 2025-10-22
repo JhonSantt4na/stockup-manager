@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar/Navbar";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Settings from "./pages/settings/settings";
 import Users from "./pages/Users/Users";
+import Roles from "./pages/Roles/Roles";
 import { useAuth } from "./contexts/AuthContext";
 import './index.css';
 
@@ -17,6 +18,17 @@ function ProtectedRoute({ children }) {
   
   if (loading) return <div>Carregando...</div>;
   return user ? children : <Navigate to="/" state={{ from: location }} replace />;
+}
+
+function AdminRoute({ children }) {
+  const { user, loading } = useAuth();
+  const location = useLocation();
+  
+  if (loading) return <div>Carregando...</div>;
+  if (!user || !user.roles?.includes("ADMIN")) {
+    return <Navigate to="/dashboard" state={{ from: location }} replace />;
+  }
+  return children;
 }
 
 function GuestRoute({ children }) {
@@ -113,21 +125,31 @@ function AppContent() {
         <Route 
           path="/users" 
           element={
-            <ProtectedRoute>
+            <AdminRoute>
               <DashboardLayout>
                 <Users />
               </DashboardLayout>
-            </ProtectedRoute>
+            </AdminRoute>
+          } 
+        />
+        <Route 
+          path="/roles" 
+          element={
+            <AdminRoute>
+              <DashboardLayout>
+                <Roles />
+              </DashboardLayout>
+            </AdminRoute>
           } 
         />
         <Route 
           path="/settings" 
           element={
-            <ProtectedRoute>
+            <AdminRoute>
               <DashboardLayout>
                 <Settings />
               </DashboardLayout>
-            </ProtectedRoute>
+            </AdminRoute>
           } 
         />
         

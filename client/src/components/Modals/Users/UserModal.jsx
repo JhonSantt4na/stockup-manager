@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaTimes } from "react-icons/fa";
-import "./Modal.css";
+import "../Modal.css";
 
 const UserModal = ({ user, onClose, onSuccess }) => {
   const [form, setForm] = useState({ 
@@ -74,7 +74,7 @@ const UserModal = ({ user, onClose, onSuccess }) => {
 
   return (
     <div className="modal-backdrop">
-      <div className="modal-content user-modal">
+      <div className="modal-content user-modal compact-modal">
         <div className="modal-header dark-header">
           <h3 className="header-center">{user ? "Editar Usuário" : "Novo Usuário"}</h3>
           <button className="btn-close red-close" onClick={onClose}>
@@ -82,9 +82,9 @@ const UserModal = ({ user, onClose, onSuccess }) => {
           </button>
         </div>
         
-        <div className="modal-body white-body">
+        <div className="modal-body white-body compact-body">
           <form onSubmit={handleSubmit} className="modal-form">
-            <div className="form-grid">
+            <div className="form-grid centered-form compact-grid">
               {!user && (
                 <div className="form-group">
                   <label>Usuário</label>
@@ -148,7 +148,7 @@ const UserModal = ({ user, onClose, onSuccess }) => {
                 />
               </div>
             </div>
-            <div className="center-actions">
+            <div className="center-actions compact-actions">
               <button type="submit" className="btn-save btn-small" disabled={loading}>
                 {loading ? "Salvando..." : (user ? "Atualizar" : "Cadastrar")}
               </button>

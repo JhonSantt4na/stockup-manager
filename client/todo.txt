@@ -9,6 +9,7 @@ Ajustar Inativo e ativo
 Ajustar Btn 'Nome do User' ao Lado de Sair e Abri o Modal do Perfil proprio
 Ajustar a exibição das Funções (Admin, User, Pro etc..)
 
+
 Ajustar o CSS:
     Modal Adicionar
     Modal Gerenciar
@@ -46,3 +47,9 @@ Adicionar o CSS
 | **Cor de erro (vermelho)**              | ![#E74C3C](https://via.placeholder.com/20/E74C3C/000000?text=+) | `#E74C3C`   |
 | **Cor de bordas suaves / divisórias**   | ![#E0E0E0](https://via.placeholder.com/20/E0E0E0/000000?text=+) | `#E0E0E0`   |
 | **Botão "Add New Order" (verde forte)** | ![#2ECC71](https://via.placeholder.com/20/2ECC71/000000?text=+) | `#2ECC71`   |
+
+
+
+
+
+

@@ -1,18 +1,18 @@
-.users-container {
-  max-width: 100%; /* Ajustado para ocupar mais espaço ao lado da navbar */
-  margin: 2rem 0; /* Removido auto para centralizar menos */
-  padding: 0 2rem; /* Padding lateral para espaçamento */
+.roles-container {
+  max-width: 100%;
+  margin: 2rem 0;
+  padding: 0 2rem;
   min-height: 65vh;
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Expande para preencher o espaço disponível */
+  flex-grow: 1;
   overflow: hidden;
 }
 
-.users-header {
+.roles-header {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,7 +23,7 @@
   box-sizing: border-box;
 }
 
-.users-header h2 {
+.roles-header h2 {
   font-weight: 600;
   margin: 0;
   color: #D1D1D1;
@@ -56,21 +56,6 @@
   color: #888;
 }
 
-.filter-select {
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: none;
-  outline: none;
-  font-size: 0.9rem;
-  min-width: 200px;
-}
-
-.filter-select {
-  background-color: #1a1a1a;
-  border: 1px solid #444;
-  color: #D1D1D1;
-}
-
 .btn-add {
   display: flex;
   align-items: center;
@@ -92,25 +77,25 @@
 .table-container {
   background-color: #fff;
   padding: 0;
-  flex-grow: 1; /* Expande a tabela para preencher espaço */
+  flex-grow: 1;
 }
 
 /* Table */
-.users-table {
+.roles-table {
   width: 100%;
   border-collapse: collapse;
   background-color: #fff;
 }
 
-.users-table th, .users-table td {
+.roles-table th, .roles-table td {
   padding: 12px 16px;
   border-bottom: 1px solid #e0e0e0;
   text-align: left;
   color: #333;
 }
 
-.users-table th {
-  background-color: #2C2C2C; /* Mesma cor do header principal */
+.roles-table th {
+  background-color: #2C2C2C;
   color: #D1D1D1;
   font-weight: 600;
   text-transform: uppercase;
@@ -118,53 +103,34 @@
   border-bottom: 2px solid #45C35B;
 }
 
-.users-table tr:hover {
+.roles-table tr:hover {
   background-color: #f8f9fa;
 }
 
-/* Status dots */
-.dot-green {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: #45C35B;
-  display: inline-block;
-  margin-right: 6px;
-}
-
-.dot-red {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: #ef4444;
-  display: inline-block;
-  margin-right: 6px;
-}
-
-/* Roles tags - Ajustado para mais profissional */
-.role-tag {
+/* Permissions tags */
+.permission-tag {
   padding: 4px 8px;
   margin-right: 6px;
   font-size: 0.8rem;
   font-weight: 500;
-  border-radius: 16px; /* Pill shape */
-  border: 1px solid currentColor; /* Borda na cor do texto */
-  background-color: transparent; /* Fundo transparente com opacidade no JSX */
+  border-radius: 16px;
+  border: 1px solid currentColor;
+  background-color: transparent;
   display: inline-block;
 }
 
-.roles-column {
+.permissions-column {
   min-width: 200px;
 }
 
-.roles-wrapper {
+.permissions-wrapper {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 4px;
   align-items: center;
 }
 
-/* Ver mais link - Ajustado para mais profissional */
+/* Ver mais link */
 .ver-mais-link {
   color: #3b82f6;
   font-size: 0.8rem;
@@ -188,7 +154,7 @@
 }
 
 /* Botões da tabela */
-.btn-toggle, .btn-roles {
+.btn-manage, .btn-delete {
   padding: 6px 12px;
   border-radius: 6px;
   border: none;
@@ -202,28 +168,20 @@
   justify-content: center;
 }
 
-.btn-toggle.btn-green { 
-  background-color: #45C35B; 
-  color: #fff; 
-}
-.btn-toggle.btn-green:hover { 
-  background-color: #3ca54f; 
-}
-
-.btn-toggle.btn-red { 
-  background-color: #ef4444; 
-  color: #fff; 
-}
-.btn-toggle.btn-red:hover { 
-  background-color: #dc2626; 
-}
-
-.btn-roles { 
+.btn-manage { 
   background-color: #3b82f6; 
   color: #fff; 
 }
-.btn-roles:hover { 
+.btn-manage:hover { 
   background-color: #2563eb; 
+}
+
+.btn-delete { 
+  background-color: #ef4444; 
+  color: #fff; 
+}
+.btn-delete:hover { 
+  background-color: #dc2626; 
 }
 
 /* Pagination */
@@ -281,7 +239,7 @@
     width: 100%;
   }
   
-  .filter-select {
+  .search-input {
     min-width: 100%;
   }
   
@@ -289,17 +247,17 @@
     flex-direction: column;
   }
   
-  .users-container {
+  .roles-container {
     max-width: 100%;
     margin: 1rem 0;
     padding: 0 1rem;
   }
   
-  .users-table {
+  .roles-table {
     font-size: 0.8rem;
   }
   
-  .users-table th, .users-table td {
+  .roles-table th, .roles-table td {
     padding: 8px 12px;
   }
 }

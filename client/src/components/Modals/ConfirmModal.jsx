@@ -1,20 +1,35 @@
 import React from "react";
-import { FaExclamationTriangle, FaTimes } from "react-icons/fa";
+import { FaTimes, FaExclamationTriangle } from "react-icons/fa";
 import "./Modal.css";
 
-const ConfirmModal = ({ 
-  user, 
-  onClose, 
-  onConfirm, 
-  actionType = "ativar" 
-}) => {
-  const isActivate = actionType === "ativar";
-  
+const ConfirmModal = ({ item, itemType, actionType, onClose, onConfirm }) => {
+  const getItemName = () => {
+    if (!item) return "item desconhecido";
+    if (itemType === "role") {
+      return item.name || "função desconhecida";
+    }
+    return item.username || "usuário desconhecido";
+  };
+
+  const getTitle = () => {
+    if (itemType === "role") {
+      return `Confirmar ${actionType} da função?`;
+    }
+    return `Confirmar ${actionType} do usuário?`;
+  };
+
+  const getMessage = () => {
+    if (itemType === "role") {
+      return `Você tem certeza que deseja ${actionType} a função "${getItemName()}"? Esta ação pode ser irreversível.`;
+    }
+    return `Você tem certeza que deseja ${actionType} o usuário "${getItemName()}"? Esta ação pode ser irreversível.`;
+  };
+
   return (
     <div className="modal-backdrop">
       <div className="modal-content confirm-modal">
         <div className="modal-header dark-header">
-          <h3 className="header-center">Confirmação</h3>
+          <h3 className="header-center">{getTitle()}</h3>
           <button className="btn-close red-close" onClick={onClose}>
             <FaTimes />
           </button>
@@ -25,27 +40,15 @@ const ConfirmModal = ({
             <div className="confirm-icon">
               <FaExclamationTriangle />
             </div>
-            <h4>Deseja realmente {actionType} o usuário?</h4>
-            <div className="user-info">
-              <p><strong>Usuário:</strong> {user.username}</p>
-              <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Status atual:</strong> {user.enabled ? "Ativo" : "Inativo"}</p>
+            <h4>{getMessage()}</h4>
+            <div className="center-actions">
+              <button className="btn-confirm btn-small btn-red" onClick={onConfirm}>
+                Confirmar
+              </button>
+              <button className="btn-cancel btn-small" onClick={onClose}>
+                Cancelar
+              </button>
             </div>
-            <p className="warning-text">
-              Esta ação {isActivate ? "habilitará" : "desabilitará"} o acesso do usuário ao sistema.
-            </p>
-          </div>
-          
-          <div className="center-actions">
-            <button 
-              className={`btn-confirm btn-small ${isActivate ? 'btn-green' : 'btn-red'}`}
-              onClick={onConfirm}
-            >
-              Sim, {actionType}
-            </button>
-            <button className="btn-cancel btn-small red-cancel" onClick={onClose}>
-              Cancelar
-            </button>
           </div>
         </div>
       </div>

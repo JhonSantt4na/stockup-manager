@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaTimes } from "react-icons/fa";
-import "./Modal.css";
+import "../Modal.css";
 
 const RolesModal = ({ user, onClose, onSuccess }) => {
   const [userData, setUserData] = useState({ 
@@ -126,7 +126,7 @@ const RolesModal = ({ user, onClose, onSuccess }) => {
 
   return (
     <div className="modal-backdrop">
-      <div className="modal-content roles-modal">
+      <div className="modal-content roles-modal compact-modal">
         <div className="modal-header dark-header">
           <h3 className="header-center">Gerenciar Usuário - {user.username}</h3>
           <button className="btn-close red-close" onClick={onClose}>
@@ -134,12 +134,12 @@ const RolesModal = ({ user, onClose, onSuccess }) => {
           </button>
         </div>
         
-        <div className="modal-body white-body">
+        <div className="modal-body white-body compact-body">
           {/* Seção de atualização do usuário */}
           <div className="user-update-section">
             <h4>Atualizar Dados</h4>
             <form onSubmit={handleUserUpdate} className="modal-form">
-              <div className="form-grid">
+              <div className="form-grid centered-form compact-grid two-columns">
                 <div className="form-group">
                   <label>Nome Completo</label>
                   <input
@@ -185,7 +185,7 @@ const RolesModal = ({ user, onClose, onSuccess }) => {
                   />
                 </div>
               </div>
-              <div className="center-actions">
+              <div className="center-actions compact-actions">
                 <button type="submit" className="btn-save btn-small" disabled={loading}>
                   {loading ? "Salvando..." : "Atualizar"}
                 </button>
@@ -194,10 +194,10 @@ const RolesModal = ({ user, onClose, onSuccess }) => {
           </div>
 
           {/* Seção de gerenciamento de roles */}
-          <div className="roles-management-section">
+          <div className="roles-management-section compact-section">
             <h4>Gerenciar Funções</h4>
             
-            <div className="roles-controls">
+            <div className="roles-controls centered-form compact-controls">
               <div className="form-group">
                 <label>Selecionar Função</label>
                 <select 
@@ -224,11 +224,11 @@ const RolesModal = ({ user, onClose, onSuccess }) => {
               </button>
             </div>
 
-            <div className="user-roles-list">
+            <div className="user-roles-list compact-list">
               <h5>Funções Atribuídas:</h5>
               {userRoles.length > 0 ? (
                 userRoles.map(role => (
-                  <div key={role} className="role-item">
+                  <div key={role} className="role-item compact-item">
                     <span className="role-name">{role}</span>
                     <button 
                       className="btn-remove-role btn-small btn-danger"

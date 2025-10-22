@@ -1,6 +1,6 @@
 import React from "react";
 import { FaTimes } from "react-icons/fa";
-import "./Modal.css";
+import "../Modal.css";
 
 const RolesListModal = ({ user, onClose }) => {
   const getRoleColor = (role) => {
@@ -30,24 +30,18 @@ const RolesListModal = ({ user, onClose }) => {
             <div className="roles-grid">
               {user.roles && user.roles.length > 0 ? (
                 user.roles.map((role) => (
-                  <div 
+                  <span 
                     key={role} 
-                    className="role-item-simple"
-                    style={{ borderLeftColor: getRoleColor(role) }}
+                    className="role-tag"
+                    style={{ backgroundColor: `${getRoleColor(role)}20`, color: getRoleColor(role) }}
                   >
-                    <span className="role-name">{role}</span>
-                  </div>
+                    {role}
+                  </span>
                 ))
               ) : (
                 <p className="no-roles">Nenhuma função atribuída</p>
               )}
             </div>
-          </div>
-          
-          <div className="center-actions">
-            <button className="btn-ok btn-small" onClick={onClose}>
-              Fechar
-            </button>
           </div>
         </div>
       </div>
