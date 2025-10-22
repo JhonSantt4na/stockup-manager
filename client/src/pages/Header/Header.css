@@ -70,6 +70,25 @@
   background-color: rgba(209, 209, 209, 0.25);
 }
 
+.date-time-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 12px;
+  line-height: 1.2;
+}
+
+.time-highlight {
+  color: #45C35B;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.date-below {
+  color: #888;
+  font-size: 0.75rem;
+}
+
 .header-center {
   flex: 1;
   display: flex;
@@ -131,7 +150,7 @@
   color: #45C35B;
 }
 
-.user-info {
+.user-profile {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -226,6 +245,10 @@
   .user-button {
     display: none;
   }
+
+  .date-time-container {
+    font-size: 0.8rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -235,5 +258,9 @@
 
   .logo-img {
     height: 36px;
+  }
+
+  .date-time-container {
+    display: none; /* Esconder em telas muito pequenas para economizar espaço */
   }
 }

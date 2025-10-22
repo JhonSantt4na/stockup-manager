@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useCallback } from "react";
 import UserService from "../../Services/UserService";
 import { FaPlus, FaUserShield } from "react-icons/fa";
-import UserModal from "../../components/Modals/UserModal";
-import RolesModal from "../../components/Modals/RolesModal";
-import RolesListModal from "../../components/Modals/RolesListModal";
+import UserModal from "../../components/Modals/Users/UserModal";
+import RolesModal from "../../components/Modals/Users/RolesModal";
+import RolesListModal from "../../components/Modals/Users/RolesListModal";
 import ConfirmModal from "../../components/Modals/ConfirmModal";
 import SuccessModal from "../../components/Modals/SuccessModal";
 import "./Users.css";
@@ -105,7 +105,8 @@ const Users = () => {
       'USER': '#3b82f6', 
       'MANAGER': '#f59e0b',
       'SUPERVISOR': '#10b981',
-      'MODERATOR': '#8b5cf6'
+      'MODERATOR': '#8b5cf6',
+      'PRO': '#6366f1' // Adicionado exemplo para 'PRO', ajuste se necessário
     };
     return colors[role] || '#666';
   };
@@ -113,21 +114,28 @@ const Users = () => {
   const renderRoles = (roles, user) => {
     if (!roles || roles.length === 0) return "-";
     
+    // Sort: Admin primeiro, depois alfabético
+    const sortedRoles = [...roles].sort((a, b) => {
+      if (a === 'ADMIN') return -1;
+      if (b === 'ADMIN') return 1;
+      return a.localeCompare(b);
+    });
+
     return (
       <div className="roles-wrapper">
-        {roles.slice(0, 2).map((role) => (
+        {sortedRoles.slice(0, 2).map((role) => (
           <span 
             key={role} 
-            className="role-text"
-            style={{ color: getRoleColor(role) }}
+            className="role-tag"
+            style={{ backgroundColor: `${getRoleColor(role)}20`, color: getRoleColor(role) }} // Fundo claro para profissionalismo
           >
             {role}
           </span>
         ))}
-        {roles.length > 2 && (
-          <button className="ver-mais" onClick={() => handleShowRoles(user)}>
-            +{roles.length - 2} mais
-          </button>
+        {sortedRoles.length > 2 && (
+          <span className="ver-mais-link" onClick={() => handleShowRoles(user)}>
+            +{sortedRoles.length - 2} mais
+          </span>
         )}
       </div>
     );
@@ -146,7 +154,7 @@ const Users = () => {
             </select>
             <input
               type="text"
-              placeholder="Buscar usuário..."
+              placeholder="Buscar por username ou email..."
               className="search-input search-box"
               value={search}
               onChange={handleSearch}
@@ -168,6 +176,7 @@ const Users = () => {
             <thead>
               <tr>
                 <th>Usuário</th>
+                <th>Nome Completo</th>
                 <th>Email</th>
                 <th>Funções</th>
                 <th>Status</th>
@@ -179,6 +188,7 @@ const Users = () => {
                 users.map((user, index) => (
                   <tr key={user.id}>
                     <td>{user.username}</td>
+                    <td>{user.fullName || '-'}</td>
                     <td>{user.email}</td>
                     <td className="roles-column">{user.roles ? renderRoles(user.roles, user) : "-"}</td>
                     <td>
@@ -200,7 +210,7 @@ const Users = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" style={{ textAlign: "center", color: "#666" }}>
+                  <td colSpan="6" style={{ textAlign: "center", color: "#666" }}>
                     Nenhum usuário encontrado.
                   </td>
                 </tr>

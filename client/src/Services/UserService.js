@@ -8,11 +8,15 @@ const getAuthHeader = () => {
 };
 
 const UserService = {
-  // GET /users
+  // GET /users - Ajustado para mapear filter para enabled e adicionar search
   getUsers: async (page = 0, size = 10, search = '', filter = 'all') => {
+    let enabled = null;
+    if (filter === 'active') enabled = true;
+    if (filter === 'inactive') enabled = false;
+
     try {
       const response = await axios.get(
-        `${API_URL}?page=${page}&size=${size}&search=${search}&filter=${filter}`,
+        `${API_URL}?page=${page}&size=${size}${search ? `&search=${search}` : ''}${enabled !== null ? `&enabled=${enabled}` : ''}`,
         { headers: getAuthHeader() }
       );
       return response.data;

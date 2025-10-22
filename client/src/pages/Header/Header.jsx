@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react"; // Added useState import
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { FaBell, FaUserCircle, FaSearch, FaSignOutAlt } from "react-icons/fa";
+import ProfileModal from "../../components/Modals/Profile/ProfileModal"; // Importar o novo modal
 import "./Header.css";
 
 function Header() {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
 
   const isLoginPage = location.pathname === "/login";
 
@@ -17,7 +19,7 @@ function Header() {
   };
 
   const handleProfileClick = () => {
-    navigate("/profile");
+    setProfileModalOpen(true);
   };
 
   const handleHelpClick = () => {
@@ -29,6 +31,15 @@ function Header() {
     if (user?.roles?.some(role => ["PRO", "ROLE_PRO"].includes(role))) return <span className="role-badge pro-badge">PRO</span>;
     return <span className="role-badge free-badge">FREE</span>;
   };
+
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    const date = now.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' });
+    const time = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    return { date, time };
+  };
+
+  const { date, time } = getCurrentDateTime();
 
   return (
     <header className="app-header">
@@ -48,6 +59,10 @@ function Header() {
               <img src="/Logo.png" alt="StockUp Manager" className="logo-img" />
             </div>
             {user && getRoleBadge()}
+            <div className="date-time-container">
+              <div className="time-highlight">{time}</div>
+              <div className="date-below">{date}</div>
+            </div>
           </div>
 
           <div className="header-center">
@@ -64,7 +79,7 @@ function Header() {
           <div className="header-right">
             <FaBell className="header-icon" title="Notificações" />
 
-            <div className="user-info">
+            <div className="user-profile">
               <FaUserCircle className="user-avatar" />
               <button
                 className="user-button"
@@ -85,6 +100,14 @@ function Header() {
             </button>
           </div>
         </>
+      )}
+
+      {/* Modal de Perfil */}
+      {profileModalOpen && (
+        <ProfileModal 
+          user={user} 
+          onClose={() => setProfileModalOpen(false)} 
+        />
       )}
     </header>
   );
