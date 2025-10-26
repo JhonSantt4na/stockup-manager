@@ -1,3 +1,23 @@
+:root{
+  --page-bg: #ffffff;
+  --card-bg: #ffffff;
+  --card-radius: 12px;
+  --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+  --page-bg-dark: #2C2C2C;
+  --page-header-color: white;
+  --page-header-padding: 20px;
+
+  --page-body-bg: #ffffff;
+  --page-body-padding: 20px;
+
+  --page-footer-bg: #1E1E1E;
+  --page-footer-border: 2px solid #45C35B;
+  --page-footer-padding: 12px 20px;
+
+  --page-max-width: 1500px;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -31,21 +51,127 @@ body {
   background-color: #f5f6fa;
 }
 
+.footer-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  color: transparent;
+}
+
+.actions-inline{
+  padding: 12px 16px;
+  gap: 8px;
+  justify-content: center;
+  display: flex;
+}
+
+/* barra de rolagem */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--page-bg-dark);
+  border-radius: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #45C35B;
+  border-radius: 12px;
+  border: 3px solid var(--page-bg-dark);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #389849;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #45C35B var(--page-bg-dark);
+}
+   
+/*Tabelas*/
+.table-container {
+  background: transparent;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  background-color: transparent;
+  color: var(--page-bg-dark);
+}
+
+.table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.table tr {  
+  padding: 12px 16px;
+  border-bottom: 1px solid #eaeaea;
+  text-align: center;
+}
+
+.table th {
+  padding: 12px 16px;
+  border-bottom: var(--page-footer-border);
+  background-color: var(--page-bg-dark);
+  color: white;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.table tr:hover {
+  background-color: #fafafa;
+}
+
+/*Components*/
 .search-box {
-  background-color: #1a1a1a;
-  border: 1px solid #444;
-  color: #D1D1D1;
+  border: 1px solid #d1d1d1;
+  background-color: #fff;
+  color: var(--page-bg-dark);
   border-radius: 6px;
   padding: 8px 12px;
   font-size: 0.9rem;
 }
 
+.search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--page-bg-dark);
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.search-input:focus {
+  color: var(--page-bg-dark);
+}
+
+.search-input::placeholder {
+  color: var(--page-bg-dark);
+}
+
 .search-icon{
-  color: white;
+  color: var(--page-bg-dark);
 }
 
 .search-box::placeholder {
-  color: #888;
+  color: var(--page-bg-dark);
+}
+
+.ver-mais-link {
+  color: #3b82f6;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
 }
 
 .btn-add {

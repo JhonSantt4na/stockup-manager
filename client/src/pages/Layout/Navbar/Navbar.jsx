@@ -28,26 +28,28 @@ const Navbar = () => {
     if (user?.isAdmin) {
       return [
         { id: 'dashboard', label: 'Dashboard', path: '/dashboard', icon: <MdOutlineInsights /> },
-        { id: 'users', label: 'Usuarios', path: '/users', icon: <FaUsersCog /> },
+        { id: 'users', label: 'Usuários', path: '/users', icon: <FaUsersCog /> },
         { id: 'roles', label: 'Roles', path: '/roles', icon: <PiUsersFourFill /> },
-        { id: 'permisisons', label: 'Permissions', path: '/permissions', icon: <GrShieldSecurity /> },
+        { id: 'permissions', label: 'Permissões', path: '/permissions', icon: <GrShieldSecurity /> },
         { id: 'modules', label: 'Vendas', path: '/modules', icon: <FaShoppingCart /> },
         { id: 'stock', label: 'Estoque', path: '/stock', icon: <FaBox /> },
         { id: 'clients', label: 'Clientes', path: '/clients', icon: <FaUsers /> },
-        { id: 'rodactos', label: 'Relatorios', path: '/rodactos', icon: <FaChartBar /> },
+        { id: 'reports', label: 'Relatórios', path: '/reports', icon: <FaChartBar /> },
         { id: 'settings', label: 'Configurações', path: '/settings', icon: <FaCog /> }
       ];
     }
+
     if (user?.roles?.some(role => ["PRO"].includes(role))) {
       return [
         { id: 'dashboard', label: 'Dashboard', path: '/dashboard', icon: <MdOutlineInsights /> },
         { id: 'modules', label: 'Vendas', path: '/modules', icon: <FaShoppingCart /> },
         { id: 'stock', label: 'Estoque', path: '/stock', icon: <FaBox /> },
         { id: 'clients', label: 'Clientes', path: '/clients', icon: <FaUsers /> },
-        { id: 'rodactos', label: 'Relatorios', path: '/rodactos', icon: <FaChartBar /> },
+        { id: 'reports', label: 'Relatórios', path: '/reports', icon: <FaChartBar /> },
         { id: 'settings', label: 'Configurações', path: '/settings', icon: <FaCog /> }
       ];
     }
+
     return [
       { id: 'dashboard', label: 'Dashboard', path: '/dashboard', icon: <MdOutlineInsights /> },
       { id: 'modules', label: 'Vendas', path: '/modules', icon: <FaShoppingCart /> },
@@ -64,8 +66,8 @@ const Navbar = () => {
   const getActiveItem = () => {
     const currentPath = location.pathname;
     const items = menuItems();
-    const activeItem = items.find(item => currentPath.includes(item.id));
-    return activeItem ? activeItem.id : 'dashboard';
+    const activeItem = items.find(item => currentPath.startsWith(item.path));
+    return activeItem ? activeItem.id : '';
   };
 
   const items = menuItems();
@@ -75,7 +77,7 @@ const Navbar = () => {
       <div className="navbar-header">
         <div className="header-content">
           <FaBars className="logo-icon" />
-          {!isCollapsed && <p>Olá, <span className="username">{user?.name || 'Usuario'}</span>!</p>}
+          {!isCollapsed && <p>Olá, <span className="username">{user?.name || 'Usuário'}</span>!</p>}
         </div>
         <button 
           className="collapse-toggle"

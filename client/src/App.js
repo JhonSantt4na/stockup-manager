@@ -133,7 +133,7 @@ function AppContent() {
             </AdminRoute>
           } 
         />
-        <Route 
+        <Route
           path="/roles" 
           element={
             <AdminRoute>

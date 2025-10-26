@@ -115,22 +115,8 @@
 }
 
 .search-icon {
-  color: #1E1E1E;
   font-size: 0.9rem;
   margin-right: 6px;
-}
-
-.search-input {
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #D1D1D1;
-  width: 100%;
-  font-size: 0.9rem;
-}
-
-.search-input::placeholder {
-  color: #D1D1D1;
 }
 
 .header-right {

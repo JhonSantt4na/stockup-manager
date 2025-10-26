@@ -6,7 +6,7 @@ import RoleModal from "../../components/Modals/Roles/RoleModal";
 import ConfirmModal from "../../components/Modals/ConfirmModal";
 import SuccessModal from "../../components/Modals/SuccessModal";
 import PermissionsListModal from "../../components/Modals/Roles/PermissionsListModal";
-import PageStruct from "../../pages/Layout/PageStruct/PageStruct";
+import PageStruct from "../Layout/PageStruct/PageStruct";
 import "./Roles.css";
 
 const Roles = () => {
@@ -34,7 +34,8 @@ const Roles = () => {
       setPage(data.number || 0);
       setError("");
     } catch (err) {
-      setError("Erro ao carregar funções.", err);
+      console.error("Erro ao carregar funções:", err);
+      setError("Erro ao carregar funções.");
     } finally {
       setLoading(false);
     }
@@ -67,7 +68,8 @@ const Roles = () => {
       fetchRoles(page);
       setConfirmModalOpen(false);
       showSuccess("Função removida com sucesso!");
-    } catch {
+    } catch (err) {
+      console.error(err);
       alert("Erro ao deletar função.");
     }
   };
@@ -101,32 +103,42 @@ const Roles = () => {
   };
 
   const renderPermissions = (permissions, role) => {
-    if (!permissions?.length) return "-";
-    const sorted = [...permissions].sort();
+  if (!permissions?.length) return "-";
+  const sorted = [...permissions].sort();
 
-    return (
-      <div className="permissions-wrapper">
-        {sorted.slice(0, 3).map((perm) => (
+  const VISIBLE_COUNT = 2;
+  const visible = sorted.slice(0, VISIBLE_COUNT);
+  const remaining = sorted.length - visible.length;
+
+  return (
+    <div className="permissions-wrapper">
+      {visible.map((perm) => {
+        const color = getPermissionColor(perm); // ex: "#3b82f6"
+        return (
           <span
             key={perm}
             className="permission-tag"
             style={{
-              backgroundColor: `${getPermissionColor(perm)}20`,
-              color: getPermissionColor(perm),
+              backgroundColor: `${color}20`, 
+              color: color,                  
+              border: `1px solid ${color}`,  
             }}
+            title={perm}
           >
             {perm}
           </span>
-        ))}
-        {sorted.length > 3 && (
-          <span
-            className="ver-mais-link"
-            onClick={() => handleShowPermissions(role)}
-          >
-            +{sorted.length - 3} mais
-          </span>
-        )}
-      </div>
+        );
+      })}
+
+      {remaining > 0 && (
+        <span
+          className="ver-mais-link"
+          onClick={() => handleShowPermissions(role)}
+        >
+          +{remaining} mais
+        </span>
+      )}
+    </div>
     );
   };
 
@@ -134,13 +146,15 @@ const Roles = () => {
     <div className="roles-header">
       <h2>Administração de Funções</h2>
       <div className="controls-group">
-        <input
-          type="text"
-          placeholder="Buscar função..."
-          className="search-input search-box"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        <div className="search-box">
+          <input
+            type="text"
+            placeholder="Buscar função..."
+            className="search-input"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
         <button className="btn-add" onClick={handleAddRole}>
           <FaPlus /> Nova Função
         </button>
@@ -149,14 +163,14 @@ const Roles = () => {
   );
 
   const body = (
-    <>
+    <div className="table-container">
       {loading ? (
         <p className="loading">Carregando funções...</p>
       ) : error ? (
         <p className="error">{error}</p>
       ) : (
-        <div className="table-container">
-          <table className="roles-table">
+        <div className="table-wrapper">
+          <table className="table">
             <thead>
               <tr>
                 <th>Nome</th>
@@ -170,7 +184,7 @@ const Roles = () => {
                 roles.map((role) => (
                   <tr key={role.id}>
                     <td>{role.name}</td>
-                    <td>{renderPermissions(role.strings, role)}</td>
+                    <td className="td-permissions">{renderPermissions(role.strings, role)}</td>
                     <td>{role.users?.length || 0}</td>
                     <td className="actions-inline">
                       <button
@@ -199,16 +213,22 @@ const Roles = () => {
           </table>
         </div>
       )}
-    </>
+    </div>
   );
 
-  const footer = !loading && !error && (
-    <Pagination
-    currentPage={page}
-    totalPages={totalPages}
-    onPrev={handlePrevPage}
-    onNext={handleNextPage}
-    />
+  const footer = (
+    <div className="roles-footer">
+      {!loading && !error ? (
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPrev={handlePrevPage}
+          onNext={handleNextPage}
+        />
+      ) : (
+        <div className="footer-empty" />
+      )}
+    </div>
   );
 
   return (

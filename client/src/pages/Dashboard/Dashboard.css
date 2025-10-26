@@ -1,29 +1,43 @@
 .dashboard-header {
-  padding: 0px 30px 0px 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  background-color: #2C2C2C;
-  padding: 20px;
-  color: #D1D1D1;
   box-sizing: border-box;
-}
-
-.dashboard-body{
-  display: flex;
-  flex-direction: inline;
-  border-top: 2px solid #45C35B;
-  background-color: #fff;
-  border-radius: 0px 12px 12px 0px;
-  width: 100%;
-  height: auto;
 }
 
 .dashboard-title {
   font-size: 24px;
   font-weight: 600;
-  color: #ecf0f1;
+}
+
+.config-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background-color: var(--btn-primary);
+  color: #fff;
+}
+
+.dashboard-body {
+  border-top: var( --page-footer-border);
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+}
+
+.dashboard{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: 20px;
 }
 
 .insights-container {
@@ -33,21 +47,24 @@
   margin-bottom: 30px;
 }
 
-.dashboard-content {
+.actions-section {
   display: flex;
-  flex-direction: column;
-  gap: 25px;
+  justify-content: center;
+  flex-direction: row;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
 }
 
 .graphs-container {
-  border-radius: 8px;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
 .chart-section {
   align-items: center;
-  background-color: #2C2C2C;
+  background-color: var(--page-bg-dark);
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
@@ -58,7 +75,7 @@
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 15px;
-  color: #ecf0f1;
+  color: var(--page-header-color);
 }
 
 .chart-placeholder {
@@ -70,14 +87,6 @@
   justify-content: center;
   color: #7f8c8d;
   font-weight: 500;
-}
-
-.actions-section {
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-  gap: 15px;
-  flex-wrap: wrap;
 }
 
 .insight-card {
@@ -95,15 +104,6 @@
   animation: fadeIn 0.5s ease-in-out;
 }
 
-.footer-empty {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  background-color: #2C2C2C;
-  color: #2C2C2C;
-}
-
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -115,7 +115,7 @@
   }
   
   .graphs-container {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
 
   .actions-section {

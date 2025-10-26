@@ -5,13 +5,14 @@
   text-align: center;
   color: #D1D1D1;
   font-family: 'Inter', sans-serif;
+  border-top: var( --page-footer-border);
 }
 
 .footer-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.8rem;
+  gap: 0.9rem;
 }
 
 .footer-links {

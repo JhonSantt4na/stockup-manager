@@ -34,7 +34,7 @@ function Header() {
 
   const getCurrentDateTime = () => {
     const now = new Date();
-    const date = now.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' });
+    const date = now.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' });
     const time = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     return { date, time };
   };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import UserService from "../../Services/UserService";
 import Pagination from "../../components/Pagination/Pagination";
-import { FaPlus, FaUserShield } from "react-icons/fa";
+import { FaPlus, FaUserShield, FaSearch } from "react-icons/fa";
 import UserModal from "../../components/Modals/Users/ModalRegisterUser";
 import ModalUpdateUser from "../../components/Modals/Users/ModalUpdateUser";
 import ModalManageRoles from "../../components/Modals/Users/ModalManageRoles";
@@ -141,7 +141,7 @@ const Users = () => {
         ))}
         {sortedRoles.length > 2 && (
           <span className="ver-mais-link" onClick={() => handleShowRoles(user)}>
-            +{sortedRoles.length - 3} mais
+            +{sortedRoles.length - 2} mais
           </span>
         )}
       </div>
@@ -161,13 +161,17 @@ const Users = () => {
           <option value="active">Usuários ativos</option>
           <option value="inactive">Usuários inativos</option>
         </select>
-        <input
+        <div className="search-box">
+          <input
           type="text"
           placeholder="Buscar por username ou email..."
-          className="search-input search-box"
+          className="search-input"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-        />
+          />
+        </div>
+        <FaSearch className="search-icon" />
+       
         <button className="btn-add" onClick={handleAddUser}>
           <FaPlus /> Novo Usuário
         </button>
@@ -184,7 +188,7 @@ const Users = () => {
       ) : (
         <div className="table-container">
           <div className="table-wrapper">
-            <table className="users-table">
+            <table className="table">
               <thead>
                 <tr>
                   <th>Usuário</th>
@@ -205,7 +209,7 @@ const Users = () => {
                       <td className="roles-column">
                         {user.roles ? renderRoles(user.roles, user) : "-"}
                       </td>
-                      <td>
+                      <td className="status-toggler">
                         <span
                           className={user.enabled ? "dot-green" : "dot-red"}
                         ></span>
@@ -221,7 +225,7 @@ const Users = () => {
                           {user.enabled ? "Desativar" : "Ativar"}
                         </button>
                         <button
-                          className="btn-roles"
+                          className="btn-manage"
                           onClick={() => handleUpdateUser(user)}
                         >
                           <FaUserShield /> Gerenciar
@@ -244,14 +248,21 @@ const Users = () => {
     </>
   );
 
-  const footer = !loading && !error && (
-    <Pagination
-    currentPage={page}
-    totalPages={totalPages}
-    onPrev={handlePrevPage}
-    onNext={handleNextPage}
-    />
+  const footer = (
+  <div className="users-footer">
+    {!loading && !error ? (
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPrev={handlePrevPage}
+        onNext={handleNextPage}
+      />
+    ) : (
+      <div className="footer-empty"></div>
+    )}
+  </div>
   );
+
 
   return (
     <PageStruct header={header} body={body} footer={footer}>

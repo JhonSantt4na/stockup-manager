@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
 import PermissionsService from "../../Services/PermissionsService";
+import Pagination from "../../components/Pagination/Pagination";
 import { FaPlus, FaPen, FaTrash } from "react-icons/fa";
 import PermissionModal from "../../components/Modals/Permissions/AddPermissionModal";
 import ConfirmModal from "../../components/Modals/ConfirmModal";
 import SuccessModal from "../../components/Modals/SuccessModal";
+import PageStruct from "../Layout/PageStruct/PageStruct";
 import "./Permissions.css";
 
 const Permissions = () => {
@@ -76,33 +78,43 @@ const Permissions = () => {
     setSuccessModalOpen(true);
   };
 
-  return (
-    <div className="permissions-container">
-      <header className="permissions-header">
-        <div className="header-controls">
-          <h2>Administração de Permissões</h2>
-          <div className="controls-group">
-            <input
-              type="text"
-              placeholder="Buscar permissão..."
-              className="search-box"
-              value={search}
-              onChange={handleSearch}
-            />
-            <button className="btn-add" onClick={handleAddPermission}>
-              <FaPlus /> Nova Permissão
-            </button>
-          </div>
-        </div>
-      </header>
+  const handleNextPage = () => {
+    if (page + 1 < totalPages) fetchPermissions(page + 1);
+  };
 
+  const handlePrevPage = () => {
+    if (page > 0) fetchPermissions(page - 1);
+  };
+
+  const header = (
+    <div className="permissions-header">
+      <h2>Administração de Permissões</h2>
+      <div className="controls-group">
+        <div className="search-box">
+          <input
+            type="text"
+            placeholder="Buscar permissão..."
+            className="search-input"
+            value={search}
+            onChange={handleSearch}
+          />
+        </div>
+        <button className="btn-add" onClick={handleAddPermission}>
+          <FaPlus /> Nova Permissão
+        </button>
+      </div>
+    </div>
+  );
+
+  const body = (
+    <div className="table-container">
       {loading ? (
         <p className="loading">Carregando permissões...</p>
       ) : error ? (
         <p className="error">{error}</p>
       ) : (
-        <div className="table-container">
-          <table className="permissions-table">
+        <div className="table-wrapper">
+          <table className="table">
             <thead>
               <tr>
                 <th>Nome</th>
@@ -118,7 +130,7 @@ const Permissions = () => {
                     <td>{permission.description || "-"}</td>
                     <td className="actions-inline">
                       <button
-                        className="btn-edit"
+                        className="btn-manage"
                         onClick={() => handleEditPermission(permission)}
                       >
                         <FaPen /> Editar
@@ -141,24 +153,28 @@ const Permissions = () => {
               )}
             </tbody>
           </table>
-
-          {totalPages > 1 && (
-            <div className="pagination">
-              <button onClick={() => fetchPermissions(page - 1)} disabled={page === 0}>
-                ◀ Anterior
-              </button>
-              <span>Página {page + 1} de {totalPages}</span>
-              <button
-                onClick={() => fetchPermissions(page + 1)}
-                disabled={page + 1 >= totalPages}
-              >
-                Próxima ▶
-              </button>
-            </div>
-          )}
         </div>
       )}
+    </div>
+  );
 
+  const footer = (
+    <div className="roles-footer">
+      {!loading && !error ? (
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPrev={handlePrevPage}
+          onNext={handleNextPage}
+        />
+      ) : (
+        <div className="footer-empty" />
+      )}
+    </div>
+  );
+
+  return (
+    <PageStruct header={header} body={body} footer={footer}>
       {modalOpen && (
         <PermissionModal
           permission={selectedPermission}
@@ -186,7 +202,7 @@ const Permissions = () => {
           onClose={() => setSuccessModalOpen(false)}
         />
       )}
-    </div>
+    </PageStruct>
   );
 };
 

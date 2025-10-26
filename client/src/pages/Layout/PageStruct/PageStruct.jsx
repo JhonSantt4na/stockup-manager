@@ -1,4 +1,3 @@
-// src/components/Layout/PageStruct.jsx
 import React from "react";
 import "./PageStruct.css";
 
