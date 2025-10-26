@@ -1,8 +1,8 @@
-import React, { useState } from "react"; // Added useState import
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext";
 import { FaBell, FaUserCircle, FaSearch, FaSignOutAlt } from "react-icons/fa";
-import ProfileModal from "../../components/Modals/Profile/ProfileModal"; // Importar o novo modal
+import ProfileModal from "../../../components/Modals/Profile/ProfileModal";
 import "./Header.css";
 
 function Header() {
@@ -60,8 +60,9 @@ function Header() {
             </div>
             {user && getRoleBadge()}
             <div className="date-time-container">
+              <div className="date-below">{date}</div> 
+              &nbsp;&nbsp;
               <div className="time-highlight">{time}</div>
-              <div className="date-below">{date}</div>
             </div>
           </div>
 
@@ -70,7 +71,7 @@ function Header() {
               <FaSearch className="search-icon" />
               <input
                 type="text"
-                placeholder="Pesquisar ..."
+                placeholder="Procure por..."
                 className="search-input"
               />
             </div>

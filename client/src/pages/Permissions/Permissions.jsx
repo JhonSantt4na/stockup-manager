@@ -1,231 +1,189 @@
-// Permissions.jsx
-import React, { useState, useEffect, useCallback } from 'react';
-import './Permissions.css';
-import PermissionService from '../../Services/PermissionsService';
-import AddPermissionModal from '../../components/Modals/Permissions/AddPermissionModal';
-import EditPermissionModal from '../../components/Modals/Permissions/EditPermissionModal';
-import DeleteConfirmModal from '../../components/Modals/Permissions/DeleteConfirmModal';
+import React, { useEffect, useState, useCallback } from "react";
+import PermissionsService from "../../Services/PermissionsService";
+import { FaPlus, FaPen, FaTrash } from "react-icons/fa";
+import PermissionModal from "../../components/Modals/Permissions/AddPermissionModal";
+import ConfirmModal from "../../components/Modals/ConfirmModal";
+import SuccessModal from "../../components/Modals/SuccessModal";
+import "./Permissions.css";
 
 const Permissions = () => {
   const [permissions, setPermissions] = useState([]);
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [error, setError] = useState("");
+  const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sort, setSort] = useState(['name', 'asc']);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const [selectedPermission, setSelectedPermission] = useState(null);
-  const [showActiveOnly, setShowActiveOnly] = useState(true);
-  const [expandedRows, setExpandedRows] = useState(new Set());
+  const [pendingAction, setPendingAction] = useState(null);
 
-  const pageSize = 10;
-
-  const fetchPermissions = useCallback(async () => {
+  const fetchPermissions = useCallback(async (pageNumber = 0) => {
     setLoading(true);
     try {
-      const response = showActiveOnly
-        ? await PermissionService.getAllActivePermissions(currentPage, pageSize, sort)
-        : await PermissionService.getAllPermissions(currentPage, pageSize, sort);
-      setPermissions(response.content || []);
-      setTotalPages(response.totalPages || 0);
+      const data = await PermissionsService.getAll(pageNumber, 10, search);
+      setPermissions(data.content || []);
+      setTotalPages(data.totalPages || 0);
+      setPage(data.number || 0);
+      setError("");
     } catch (err) {
-      setError('Failed to load permissions');
+      console.error(err);
+      setError("Erro ao carregar permissões.");
     } finally {
       setLoading(false);
     }
-  }, [currentPage, sort, showActiveOnly]);
+  }, [search]);
 
   useEffect(() => {
     fetchPermissions();
   }, [fetchPermissions]);
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
+  const handleSearch = (e) => setSearch(e.target.value);
+
+  const handleAddPermission = () => {
+    setSelectedPermission(null);
+    setModalOpen(true);
   };
 
-  const filteredPermissions = permissions.filter(perm =>
-    perm.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    perm.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const handleSort = (column) => {
-    setCurrentPage(0);
-    setSort(prev => {
-      const newDir = prev[0] === column && prev[1] === 'asc' ? 'desc' : 'asc';
-      return [column, newDir];
-    });
+  const handleEditPermission = (permission) => {
+    setSelectedPermission(permission);
+    setModalOpen(true);
   };
 
-  const handleAddPermission = async (data) => {
+  const handleDeleteClick = (permission) => {
+    setSelectedPermission(permission);
+    setPendingAction("deletar");
+    setConfirmModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedPermission) return;
     try {
-      await PermissionService.createPermission(data);
-      setShowAddModal(false);
-      fetchPermissions();
-    } catch (err) {
-      console.error('Error adding permission', err);
+      await PermissionsService.deletePermission(selectedPermission.name);
+      fetchPermissions(page);
+      setConfirmModalOpen(false);
+      showSuccess("Permissão removida com sucesso!");
+    } catch {
+      alert("Erro ao deletar permissão.");
     }
   };
 
-  const handleEditPermission = async (data) => {
-    try {
-      await PermissionService.updatePermission(data);
-      setShowEditModal(false);
-      fetchPermissions();
-    } catch (err) {
-      console.error('Error updating permission', err);
-    }
+  const showSuccess = (message) => {
+    setSuccessMessage(message);
+    setSuccessModalOpen(true);
   };
-
-  const handleDeletePermission = async () => {
-    try {
-      await PermissionService.deletePermission(selectedPermission.name);
-      setShowDeleteModal(false);
-      fetchPermissions();
-    } catch (err) {
-      console.error('Error deleting permission', err);
-    }
-  };
-
-  const openEditModal = (perm) => {
-    setSelectedPermission(perm);
-    setShowEditModal(true);
-  };
-
-  const openDeleteModal = (perm) => {
-    setSelectedPermission(perm);
-    setShowDeleteModal(true);
-  };
-
-  const toggleActiveOnly = () => {
-    setShowActiveOnly(!showActiveOnly);
-    setCurrentPage(0);
-  };
-
-  const toggleExpandRow = (id) => {
-    setExpandedRows(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-      } else {
-        newSet.add(id);
-      }
-      return newSet;
-    });
-  };
-
-  const nextPage = () => {
-    if (currentPage < totalPages - 1) setCurrentPage(currentPage + 1);
-  };
-
-  const prevPage = () => {
-    if (currentPage > 0) setCurrentPage(currentPage - 1);
-  };
-
-  if (loading) return <div className="loading">Loading...</div>;
-  if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="permissions-container">
-      <div className="permissions-header">
-        <h2>Permissions Management</h2>
-      </div>
-      <div className="header-controls">
-        <div className="controls-group">
-          <input
-            type="text"
-            placeholder="Search permissions..."
-            value={searchTerm}
-            onChange={handleSearch}
-            className="search-box"
-          />
-          <button onClick={toggleActiveOnly} className="btn-add">
-            {showActiveOnly ? 'Show All' : 'Show Active Only'}
-          </button>
+      <header className="permissions-header">
+        <div className="header-controls">
+          <h2>Administração de Permissões</h2>
+          <div className="controls-group">
+            <input
+              type="text"
+              placeholder="Buscar permissão..."
+              className="search-box"
+              value={search}
+              onChange={handleSearch}
+            />
+            <button className="btn-add" onClick={handleAddPermission}>
+              <FaPlus /> Nova Permissão
+            </button>
+          </div>
         </div>
-        <button onClick={() => setShowAddModal(true)} className="btn-add">
-          Add Permission
-        </button>
-      </div>
-      <div className="table-container">
-        <table className="permissions-table">
-          <thead>
-            <tr>
-              <th onClick={() => handleSort('name')} className="sortable">Name</th>
-              <th onClick={() => handleSort('description')} className="sortable">Description</th>
-              <th onClick={() => handleSort('enabled')} className="sortable">Status</th>
-              <th>Roles</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredPermissions.map(perm => (
-              <tr key={perm.id}>
-                <td>{perm.name}</td>
-                <td>{perm.description}</td>
-                <td>{perm.enabled ? 'Active' : 'Inactive'}</td>
-                <td className="roles-column">
-                  <div className="roles-wrapper">
-                    {perm.roles.map((role, index) => {
-                      if (!expandedRows.has(perm.id) && index >= 3) return null;
-                      return (
-                        <span key={role.id} className="role-tag">
-                          {role.name}
-                        </span>
-                      );
-                    })}
-                    {perm.roles.length > 3 && (
-                      <button
-                        type="button"
-                        className="ver-mais-link"
-                        onClick={() => toggleExpandRow(perm.id)}
-                      >
-                        {expandedRows.has(perm.id) ? 'Show less' : `+${perm.roles.length - 3} more`}
-                      </button>
-                    )}
-                  </div>
-                </td>
-                <td>
-                  <div className="actions-inline">
-                    <button onClick={() => openEditModal(perm)} className="btn-manage">
-                      Edit
-                    </button>
-                    <button onClick={() => openDeleteModal(perm)} className="btn-delete">
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="pagination">
-        <button onClick={prevPage} disabled={currentPage === 0}>Previous</button>
-        <span>Page {currentPage + 1} of {totalPages}</span>
-        <button onClick={nextPage} disabled={currentPage === totalPages - 1}>Next</button>
-      </div>
+      </header>
 
-      {showAddModal && (
-        <AddPermissionModal
-          onClose={() => setShowAddModal(false)}
-          onSubmit={handleAddPermission}
-        />
+      {loading ? (
+        <p className="loading">Carregando permissões...</p>
+      ) : error ? (
+        <p className="error">{error}</p>
+      ) : (
+        <div className="table-container">
+          <table className="permissions-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {permissions.length ? (
+                permissions.map((permission) => (
+                  <tr key={permission.id}>
+                    <td>{permission.name}</td>
+                    <td>{permission.description || "-"}</td>
+                    <td className="actions-inline">
+                      <button
+                        className="btn-edit"
+                        onClick={() => handleEditPermission(permission)}
+                      >
+                        <FaPen /> Editar
+                      </button>
+                      <button
+                        className="btn-delete"
+                        onClick={() => handleDeleteClick(permission)}
+                      >
+                        <FaTrash /> Remover
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="3" className="no-data">
+                    Nenhuma permissão encontrada.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button onClick={() => fetchPermissions(page - 1)} disabled={page === 0}>
+                ◀ Anterior
+              </button>
+              <span>Página {page + 1} de {totalPages}</span>
+              <button
+                onClick={() => fetchPermissions(page + 1)}
+                disabled={page + 1 >= totalPages}
+              >
+                Próxima ▶
+              </button>
+            </div>
+          )}
+        </div>
       )}
-      {showEditModal && selectedPermission && (
-        <EditPermissionModal
+
+      {modalOpen && (
+        <PermissionModal
           permission={selectedPermission}
-          onClose={() => setShowEditModal(false)}
-          onSubmit={handleEditPermission}
+          onClose={() => {
+            setModalOpen(false);
+            fetchPermissions(page);
+          }}
+          onSuccess={showSuccess}
         />
       )}
-      {showDeleteModal && selectedPermission && (
-        <DeleteConfirmModal
-          itemName={selectedPermission.name}
-          onClose={() => setShowDeleteModal(false)}
-          onConfirm={handleDeletePermission}
+
+      {confirmModalOpen && (
+        <ConfirmModal
+          item={selectedPermission}
+          itemType="permission"
+          actionType={pendingAction}
+          onClose={() => setConfirmModalOpen(false)}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
+
+      {successModalOpen && (
+        <SuccessModal
+          message={successMessage}
+          onClose={() => setSuccessModalOpen(false)}
         />
       )}
     </div>

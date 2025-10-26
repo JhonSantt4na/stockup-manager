@@ -31,17 +31,58 @@ body {
   background-color: #f5f6fa;
 }
 
-.dashboard-layout {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+.search-box {
+  background-color: #1a1a1a;
+  border: 1px solid #444;
+  color: #D1D1D1;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
 }
 
-.dashboard-body {
-  display: flex;
-  flex: 1;
-  min-height: calc(100vh - 260px);
+.search-icon{
+  color: white;
 }
+
+.search-box::placeholder {
+  color: #888;
+}
+
+.btn-add {
+  font-size: 0.85rem;
+  border: 1px solid #333;
+  background-color: #45C35B;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  min-width: 140px;
+  justify-content: center;
+  transition: background-color 0.25s ease;
+}
+.btn-add:hover { background-color: #3ca54f; }
+
+.btn-manage, .btn-delete {
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background-color 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 100px;
+  justify-content: center;
+  color: #fff;
+}
+
+.btn-manage { background-color: #3b82f6; color: #fff;  }
+.btn-manage:hover { background-color: #2563eb; }
+.btn-delete { background-color: #ef4444; color: #fff;  }
+.btn-delete:hover { background-color: #dc2626; }
 
 .main-content {
   flex: 1;

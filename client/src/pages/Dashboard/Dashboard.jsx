@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import InsightCard from '../../components/InshightCard/InsightCard'; // Ajuste o path conforme necessário
 import Button from '../../components/Button/Button'; // Ajuste o path conforme necessário
-import { FaShoppingCart, FaEdit, FaPlus, FaUserPlus } from 'react-icons/fa';
+import { FaShoppingCart, FaEdit,FaCog, FaPlus, FaUserPlus } from 'react-icons/fa';
+import PageStruct from "../../pages/Layout/PageStruct/PageStruct";
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -96,6 +97,12 @@ const Dashboard = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentInsights, setCurrentInsights] = useState(allInsights.slice(0, 3));
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const handleEditConfig = () => {
+  
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -109,10 +116,17 @@ const Dashboard = () => {
     return () => clearInterval(interval);
   }, []);
 
-  return (
-    <div className="dashboard-container">
-      <h1 className="dashboard-title">Dashboard Overview</h1>
-      
+  const header = (
+    <div className="dashboard-header">
+        <h2 className="dashboard-title">Jhon Tec LTDA - CNPJ: 785.421.556-22</h2>
+        <button className="logout-btn" onClick={handleEditConfig}>
+            <FaCog /> Configurações da Loja
+        </button>
+    </div>
+  );
+
+  const body = (
+    <div className="dashboard-body">
       <div className="insights-container">
         {currentInsights.map((insight, index) => (
           <InsightCard key={index} {...insight} />
@@ -142,6 +156,7 @@ const Dashboard = () => {
             <FaUserPlus style={{ marginRight: '8px' }} /> CADASTRAR CLIENTE
           </Button>
         </div>
+
         <div className="graphs-container">
           <div className="chart-section">
             <h2 className="section-title">VENDAS DO DIA</h2>
@@ -158,6 +173,14 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
+  );
+
+  const footer = (
+    <div className="footer-empty">s</div>
+  );
+
+  return (
+    <PageStruct header={header} body={body} footer={footer}/>
   );
 };
 

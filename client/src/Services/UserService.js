@@ -1,151 +1,164 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = '/users';
+// URL base da API (ajuste se necessário)
+const API_URL = "http://localhost:8080/users";
 
-const getAuthHeader = () => {
-  const token = localStorage.getItem('token');
-  return { Authorization: `Bearer ${token}` };
+// Cliente axios com interceptors para token
+const api = axios.create({
+  baseURL: API_URL,
+  headers: { "Content-Type": "application/json" },
+});
+
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+const handleError = (error) => {
+  console.error("Erro no UserService:", error.response || error.message);
+  throw error.response?.data || error;
 };
 
+// ====================== USUÁRIOS ======================
+
+export const getUsers = async (page = 0, size = 10, search = "", filter = "all", sort = ["username", "asc"]) => {
+  try {
+    let enabled;
+    if (filter === "active") enabled = true;
+    else if (filter === "inactive") enabled = false;
+
+    const response = await api.get("/list", {
+      params: {
+        page,
+        size,
+        search: search || undefined,
+        enabled: enabled !== undefined ? enabled : undefined,
+        sort,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const getUserByUsername = async (username) => {
+  try {
+    const response = await api.get(`/find/${username}`);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const createUser = async (userData) => {
+  try {
+    const response = await api.post("/register", userData);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const updateUser = async (username, userData) => {
+  try {
+    const response = await api.put(`/update/${username}`, userData);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const deleteUser = async (username) => {
+  try {
+    const response = await api.delete(`/delete/${username}`);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const toggleUser = async (username) => {
+  try {
+    const response = await api.put(`/toggle/${username}`);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+// ====================== ROLES ======================
+
+export const getRoles = async (username) => {
+  try {
+    const response = await api.get(`/${username}/roles`);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const assignRole = async (username, roles) => {
+  try {
+    // roles: array de strings
+    const rolesArray = Array.isArray(roles) ? roles : [roles];
+    const response = await api.post(`/${username}/roles/assign`, rolesArray);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const removeRole = async (username, roles) => {
+  try {
+    const rolesArray = Array.isArray(roles) ? roles : [roles];
+    const response = await api.post(`/${username}/roles/remove`, rolesArray);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+// ====================== SENHA ======================
+
+export const changePassword = async (passwordData) => {
+  try {
+    const response = await api.put("/change-password", passwordData);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+// ====================== BUSCA ======================
+
+export const searchUsers = async (query) => {
+  try {
+    const response = await api.get("/list", { params: { search: query } });
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+// ====================== EXPORT DEFAULT ======================
+
 const UserService = {
-  // GET /users - Ajustado para mapear filter para enabled e adicionar search
-  getUsers: async (page = 0, size = 10, search = '', filter = 'all') => {
-    let enabled = null;
-    if (filter === 'active') enabled = true;
-    if (filter === 'inactive') enabled = false;
-
-    try {
-      const response = await axios.get(
-        `${API_URL}?page=${page}&size=${size}${search ? `&search=${search}` : ''}${enabled !== null ? `&enabled=${enabled}` : ''}`,
-        { headers: getAuthHeader() }
-      );
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      throw error;
-    }
-  },
-
-  // GET /users/{username}/roles
-  getRoles: async (username) => {
-    try {
-      const response = await axios.get(`${API_URL}/${username}/roles`, { headers: getAuthHeader() });
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching roles:', error);
-      throw error;
-    }
-  },
-
-  // GET /users/me
-  getMe: async () => {
-    try {
-      const response = await axios.get(`${API_URL}/me`, { headers: getAuthHeader() });
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching current user:', error);
-      throw error;
-    }
-  },
-
-  // GET /users/find/{username}
-  findUser: async (username) => {
-    try {
-      const response = await axios.get(`${API_URL}/find/${username}`, { headers: getAuthHeader() });
-      return response.data;
-    } catch (error) {
-      console.error('Error finding user:', error);
-      throw error;
-    }
-  },
-
-  // POST /users/register
-  register: async (userData) => {
-    try {
-      const response = await axios.post(`${API_URL}/register`, userData, { headers: getAuthHeader() });
-      return response.data;
-    } catch (error) {
-      console.error('Error registering user:', error);
-      throw error;
-    }
-  },
-
-  // PUT /users/update
-  updateSelf: async (updateData) => {
-    try {
-      const response = await axios.put(`${API_URL}/update`, updateData, { headers: getAuthHeader() });
-      return response.data;
-    } catch (error) {
-      console.error('Error updating self:', error);
-      throw error;
-    }
-  },
-
-  // PUT /users/update/{username}
-  updateUser: async (username, updateData) => {
-    try {
-      const response = await axios.put(`${API_URL}/update/${username}`, updateData, { headers: getAuthHeader() });
-      return response.data;
-    } catch (error) {
-      console.error('Error updating user:', error);
-      throw error;
-    }
-  },
-
-  // PUT /users/toggle/{username}
-  toggleUser: async (username) => {
-    try {
-      const response = await axios.put(`${API_URL}/toggle/${username}`, {}, { headers: getAuthHeader() });
-      return response.data;
-    } catch (error) {
-      console.error('Error toggling user:', error);
-      throw error;
-    }
-  },
-
-  // PUT /users/change-password
-  changePassword: async (passwordData) => {
-    try {
-      const response = await axios.put(`${API_URL}/change-password`, passwordData, { headers: getAuthHeader() });
-      return response.data;
-    } catch (error) {
-      console.error('Error changing password:', error);
-      throw error;
-    }
-  },
-
-  // POST /users/{username}/roles/assign
-  assignRole: async (username, role) => {
-    try {
-      const response = await axios.post(`${API_URL}/${username}/roles/assign`, { role }, { headers: getAuthHeader() });
-      return response.data;
-    } catch (error) {
-      console.error('Error assigning role:', error);
-      throw error;
-    }
-  },
-
-  // POST /users/{username}/roles/remove
-  removeRole: async (username, role) => {
-    try {
-      const response = await axios.post(`${API_URL}/${username}/roles/remove`, { role }, { headers: getAuthHeader() });
-      return response.data;
-    } catch (error) {
-      console.error('Error removing role:', error);
-      throw error;
-    }
-  },
-
-  // DELETE /users/delete/{username}
-  deleteUser: async (username) => {
-    try {
-      const response = await axios.delete(`${API_URL}/delete/${username}`, { headers: getAuthHeader() });
-      return response.data;
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      throw error;
-    }
-  },
+  getUsers,
+  getUserByUsername,
+  createUser,
+  updateUser,
+  deleteUser,
+  toggleUser,
+  getRoles,
+  assignRole,
+  removeRole,
+  changePassword,
+  searchUsers,
 };
 
 export default UserService;

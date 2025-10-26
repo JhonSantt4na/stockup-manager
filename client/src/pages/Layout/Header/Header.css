@@ -72,21 +72,21 @@
 
 .date-time-container {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: inline;
+  align-items: center;
   margin-left: 12px;
   line-height: 1.2;
 }
 
 .time-highlight {
   color: #45C35B;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 600;
 }
 
 .date-below {
-  color: #888;
-  font-size: 0.75rem;
+  color: white;
+  font-size: 0.80rem;
 }
 
 .header-center {

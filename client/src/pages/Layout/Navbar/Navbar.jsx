@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/AuthContext';
 import { MdOutlineInsights } from "react-icons/md";
 import { PiUsersFourFill } from "react-icons/pi";
 import { GrShieldSecurity } from "react-icons/gr";

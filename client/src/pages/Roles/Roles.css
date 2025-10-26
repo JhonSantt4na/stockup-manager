@@ -13,8 +13,9 @@
 }
 
 .roles-header {
+  padding: 0px 30px 0px 30px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   background-color: #2C2C2C;
@@ -30,6 +31,7 @@
 }
 
 .header-controls {
+  padding: 0px 30px 0px 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -39,48 +41,9 @@
 
 .controls-group {
   display: flex;
-  gap: 15px;
-  align-items: center;
+  gap: 12px;
 }
 
-.search-box {
-  background-color: #1a1a1a;
-  border: 1px solid #444;
-  color: #D1D1D1;
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-size: 0.9rem;
-}
-
-.search-box::placeholder {
-  color: #888;
-}
-
-.btn-add {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.85rem;
-  padding: 8px 16px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  background-color: #45C35B;
-  color: #fff;
-  transition: background-color 0.25s ease;
-  min-width: 140px;
-  justify-content: center;
-}
-.btn-add:hover { background-color: #3ca54f; }
-
-/* Table Container */
-.table-container {
-  background-color: #fff;
-  padding: 0;
-  flex-grow: 1;
-}
-
-/* Table */
 .roles-table {
   width: 100%;
   border-collapse: collapse;
@@ -107,7 +70,6 @@
   background-color: #f8f9fa;
 }
 
-/* Permissions tags */
 .permission-tag {
   padding: 4px 8px;
   margin-right: 6px;
@@ -119,18 +81,6 @@
   display: inline-block;
 }
 
-.permissions-column {
-  min-width: 200px;
-}
-
-.permissions-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  align-items: center;
-}
-
-/* Ver mais link */
 .ver-mais-link {
   color: #3b82f6;
   font-size: 0.8rem;
@@ -146,73 +96,10 @@
   color: #2563eb;
 }
 
-/* Actions inline */
 .actions-inline {
   display: flex;
   gap: 8px;
   align-items: center;
-}
-
-/* Botões da tabela */
-.btn-manage, .btn-delete {
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  font-size: 0.8rem;
-  transition: background-color 0.25s ease;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  min-width: 100px;
-  justify-content: center;
-}
-
-.btn-manage { 
-  background-color: #3b82f6; 
-  color: #fff; 
-}
-.btn-manage:hover { 
-  background-color: #2563eb; 
-}
-
-.btn-delete { 
-  background-color: #ef4444; 
-  color: #fff; 
-}
-.btn-delete:hover { 
-  background-color: #dc2626; 
-}
-
-/* Pagination */
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  margin-top: 20px;
-  padding: 20px;
-  background-color: #fff;
-}
-
-.pagination button {
-  background-color: #45C35B;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.25s ease;
-  min-width: 100px;
-}
-.pagination button:hover:not(:disabled) { background-color: #3ca54f; }
-.pagination button:disabled { 
-  opacity: 0.6; 
-  cursor: not-allowed; 
-}
-.pagination span { 
-  color: #333; 
-  font-weight: 500; 
 }
 
 /* Messages */
@@ -260,4 +147,16 @@
   .roles-table th, .roles-table td {
     padding: 8px 12px;
   }
+}
+
+/* Ver dps */
+.permissions-column {
+  min-width: 200px;
+}
+
+.permissions-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
 }

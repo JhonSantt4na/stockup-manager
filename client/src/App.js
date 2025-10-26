@@ -1,10 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
-import Footer from "./pages/Footer/Footer";
+import Footer from "./pages/Layout/Footer/Footer";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
-import Header from "./pages/Header/Header";
-import Navbar from "./components/Navbar/Navbar";
+import Header from "./pages/Layout/Header/Header";
+import Navbar from "./pages/Layout/Navbar/Navbar";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Settings from "./pages/settings/settings";
 import Users from "./pages/Users/Users";
