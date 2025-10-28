@@ -1,8 +1,8 @@
-import React, { useState } from "react"; // Added useState import
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext";
 import { FaBell, FaUserCircle, FaSearch, FaSignOutAlt } from "react-icons/fa";
-import ProfileModal from "../../components/Modals/Profile/ProfileModal"; // Importar o novo modal
+import ProfileModal from "../../../components/Modals/Profile/ProfileModal";
 import "./Header.css";
 
 function Header() {
@@ -34,7 +34,7 @@ function Header() {
 
   const getCurrentDateTime = () => {
     const now = new Date();
-    const date = now.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' });
+    const date = now.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' });
     const time = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     return { date, time };
   };
@@ -60,8 +60,9 @@ function Header() {
             </div>
             {user && getRoleBadge()}
             <div className="date-time-container">
+              <div className="date-below">{date}</div> 
+              &nbsp;&nbsp;
               <div className="time-highlight">{time}</div>
-              <div className="date-below">{date}</div>
             </div>
           </div>
 
@@ -70,7 +71,7 @@ function Header() {
               <FaSearch className="search-icon" />
               <input
                 type="text"
-                placeholder="Pesquisar ..."
+                placeholder="Procure por..."
                 className="search-input"
               />
             </div>

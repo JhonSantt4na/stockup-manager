@@ -1,0 +1,154 @@
+/* src/components/Users/UserModal.css */
+
+/* Fundo translúcido */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(30, 30, 30, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Caixa principal */
+.modal-box {
+  background-color: #fff;
+  border-radius: 14px;
+  width: 520px;
+  max-width: 95%;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  animation: slideIn 0.25s ease-out;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.modal-header {
+  background-color: #1e1e1e;
+  color: #f9f9f9;
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: #f87171;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.close-btn:hover {
+  transform: scale(1.15);
+}
+
+/* Corpo */
+.modal-body {
+  padding: 24px;
+}
+
+/* Layout do controle de roles */
+.role-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.role-control select {
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+}
+
+.btn-add {
+  background-color: #45c35b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.25s ease, transform 0.15s ease;
+}
+
+.btn-add:hover {
+  background-color: #3ca54f;
+  transform: translateY(-1px);
+}
+
+/* Lista de roles */
+.roles-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid #ddd;
+  padding-top: 12px;
+}
+
+.role-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+
+.btn-remove {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.btn-remove:hover {
+  background-color: #dc2626;
+}
+
+.empty {
+  text-align: center;
+  color: #777;
+  padding: 12px;
+  font-size: 0.9rem;
+}
+
+/* Animação */
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsivo */
+@media (max-width: 480px) {
+  .modal-box {
+    width: 90%;
+  }
+}

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import "./settings.css";
+import PageStruct from "../Layout/PageStruct/PageStruct";
+import { FaChevronLeft, FaChevronRight, FaBars, FaCog, FaPalette, FaPhone, FaDollarSign, FaPencilAlt, FaTrash, FaSave, FaPlus, FaTimes, FaWrench } from 'react-icons/fa';
 
 const defaultConfigs = [
   { id: 1, key: "nome_sistema", label: "Nome do Sistema", value: "StockUp Manager", category: "geral", type: "text" },
@@ -10,13 +12,17 @@ const defaultConfigs = [
   { id: 6, key: "idioma_sistema", label: "Idioma do Sistema", value: "Português", category: "geral", type: "select", options: ["Português", "Inglês", "Espanhol"] },
   { id: 7, key: "moeda_padrao", label: "Moeda Padrão", value: "BRL", category: "financeiro", type: "select", options: ["BRL", "USD", "EUR"] },
   { id: 8, key: "timezone", label: "Fuso Horário", value: "America/Sao_Paulo", category: "geral", type: "text" },
+  { id: 9, key: "versao_sistema", label: "Versão do Sistema", value: "1.0.0", category: "geral", type: "text" },
+  { id: 10, key: "cor_primaria", label: "Cor Primária", value: "#45C35B", category: "aparencia", type: "select", options: ["#45C35B", "#6554C0", "#FF6B6B", "#FFA500"] },
+  { id: 11, key: "endereco_suporte", label: "Endereço de Suporte", value: "Rua Exemplo, 123 - São Paulo, SP", category: "contato", type: "text" },
+  { id: 12, key: "taxa_imposto", label: "Taxa de Imposto Padrão", value: "0.18", category: "financeiro", type: "number" },
 ];
 
 const categories = [
-  { id: "geral", name: "Configurações Gerais", icon: "⚙️", color: "#45C35B" },
-  { id: "aparencia", name: "Aparência", icon: "🎨", color: "#6554C0" },
-  { id: "contato", name: "Contato & Suporte", icon: "📞", color: "#FF6B6B" },
-  { id: "financeiro", name: "Financeiro", icon: "💰", color: "#FFA500" },
+  { id: "geral", name: "Configurações Gerais", icon: <FaCog />, color: "#45C35B" },
+  { id: "aparencia", name: "Aparência", icon: <FaPalette />, color: "#6554C0" },
+  { id: "contato", name: "Contato & Suporte", icon: <FaPhone />, color: "#FF6B6B" },
+  { id: "financeiro", name: "Financeiro", icon: <FaDollarSign />, color: "#FFA500" },
 ];
 
 export default function Config() {
@@ -25,9 +31,10 @@ export default function Config() {
   const [form, setForm] = useState({ label: "", value: "", category: "geral", type: "text" });
   const [activeCategory, setActiveCategory] = useState("geral");
   const [searchTerm, setSearchTerm] = useState("");
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const filteredConfigs = configs.filter(cfg => 
-    cfg.category === activeCategory && 
+    (activeCategory !== "geral" ? cfg.category === activeCategory : true) &&
     cfg.label.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -95,131 +102,164 @@ export default function Config() {
     return <span className="config-value">{config.value}</span>;
   };
 
-  return (
-    <div className="config-page">
-      <div className="config-header">
-        <h1>⚙️ Configurações do Sistema</h1>
-        <p>Gerencie as configurações do StockUp Manager</p>
+  const headerContent = (
+    <div className="config-header">
+      <h1>Configurações do Sistema</h1>
+    </div>
+  );
+
+  const sidebarContent = (
+    <div className={`config-sidebar ${isCollapsed ? 'collapsed' : ''}`}>
+      <div className="sidebar-header">
+        <div className="header-content">
+          <FaBars className="logo-icon" />
+          {!isCollapsed && <p>Categorias</p>}
+        </div>
+        <button 
+          className="collapse-toggle"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        >
+          {isCollapsed ? <FaChevronLeft /> : <FaChevronRight />}
+        </button>
       </div>
 
-      <div className="config-layout">
-        {/* Sidebar de Categorias */}
-        <div className="config-sidebar">
-          <div className="search-box">
-            <input
-              type="text"
-              placeholder="🔍 Buscar configuração..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
-            />
-          </div>
-          
-          <div className="categories-list">
-            {categories.map(category => (
-              <button
-                key={category.id}
-                className={`category-btn ${activeCategory === category.id ? 'active' : ''}`}
-                onClick={() => setActiveCategory(category.id)}
-                style={{ '--category-color': category.color }}
-              >
-                <span className="category-icon">{category.icon}</span>
-                <span className="category-name">{category.name}</span>
+      {!isCollapsed && (
+        <div className="search-box">
+          <input
+            type="text"
+            placeholder="🔍 Buscar configuração..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
+        </div>
+      )}
+      
+      <nav className="sidebar-menu">
+        <ul>
+          {categories.map(category => (
+            <li
+              key={category.id}
+              className={activeCategory === category.id ? 'active' : ''}
+              onClick={() => setActiveCategory(category.id)}
+            >
+              <span className="menu-icon">{category.icon}</span>
+              {!isCollapsed && <span className="menu-item-label">{category.name}</span>}
+              {!isCollapsed && (
                 <span className="config-count">
                   {configs.filter(cfg => cfg.category === category.id).length}
                 </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      {!isCollapsed && (
+        <div className="add-config-section">
+          <h3>Adicionar Configuração</h3>
+          <form onSubmit={saveConfig} className="config-form">
+            <input
+              type="text"
+              placeholder="Nome da configuração"
+              value={form.label}
+              onChange={(e) => setForm({...form, label: e.target.value})}
+              className="form-input"
+              required
+            />
+            <input
+              type="text"
+              placeholder="Valor"
+              value={form.value}
+              onChange={(e) => setForm({...form, value: e.target.value})}
+              className="form-input"
+              required
+            />
+            <select
+              value={form.category}
+              onChange={(e) => setForm({...form, category: e.target.value})}
+              className="form-input"
+            >
+              {categories.map(cat => (
+                <option key={cat.id} value={cat.id}>{cat.name}</option>
+              ))}
+            </select>
+            
+            <div className="form-actions">
+              <button type="submit" className="btn-primary">
+                {editingId ? <FaSave /> : <FaPlus />}
               </button>
-            ))}
-          </div>
-
-          {/* Formulário para nova configuração */}
-          <div className="add-config-section">
-            <h3>Adicionar Configuração</h3>
-            <form onSubmit={saveConfig} className="config-form">
-              <input
-                type="text"
-                placeholder="Nome da configuração"
-                value={form.label}
-                onChange={(e) => setForm({...form, label: e.target.value})}
-                className="form-input"
-                required
-              />
-              <input
-                type="text"
-                placeholder="Valor"
-                value={form.value}
-                onChange={(e) => setForm({...form, value: e.target.value})}
-                className="form-input"
-                required
-              />
-              <select
-                value={form.category}
-                onChange={(e) => setForm({...form, category: e.target.value})}
-                className="form-input"
-              >
-                {categories.map(cat => (
-                  <option key={cat.id} value={cat.id}>{cat.name}</option>
-                ))}
-              </select>
-              
-              <div className="form-actions">
-                <button type="submit" className="btn-primary">
-                  {editingId ? "💾 Salvar" : "➕ Adicionar"}
+              {editingId && (
+                <button type="button" onClick={cancelEdit} className="btn-cancel">
+                  <FaTimes />
                 </button>
-                {editingId && (
-                  <button type="button" onClick={cancelEdit} className="btn-cancel">
-                    ❌ Cancelar
-                  </button>
-                )}
-              </div>
-            </form>
-          </div>
-        </div>
-
-        {/* Lista de Configurações */}
-        <div className="config-content">
-          <div className="configs-grid">
-            {filteredConfigs.map(config => (
-              <div key={config.id} className="config-card">
-                <div className="config-header-card">
-                  <h3>{config.label}</h3>
-                  <div className="config-actions">
-                    <button 
-                      onClick={() => startEdit(config)}
-                      className="btn-edit"
-                    >
-                      ✏️
-                    </button>
-                    <button 
-                      onClick={() => deleteConfig(config.id)}
-                      className="btn-delete"
-                    >
-                      🗑️
-                    </button>
-                  </div>
-                </div>
-                
-                <div className="config-body">
-                  {renderInputField(config)}
-                </div>
-                
-                <div className="config-footer">
-                  <span className="config-key">Chave: {config.key}</span>
-                  <span className="config-type">{config.type}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {filteredConfigs.length === 0 && (
-            <div className="empty-state">
-              <div className="empty-icon">🔧</div>
-              <h3>Nenhuma configuração encontrada</h3>
-              <p>Adicione uma nova configuração ou tente outra categoria</p>
+              )}
             </div>
-          )}
+          </form>
         </div>
-      </div>
+      )}
     </div>
+  );
+
+  const bodyContent = (
+    <div className="config-layout">
+      {/* Lista de Configurações */}
+      <div className="config-content">
+        <div className="configs-grid">
+          {filteredConfigs.map(config => (
+            <div key={config.id} className="config-card">
+              <div className="config-header-card">
+                <h3>{config.label}</h3>
+                <div className="config-actions">
+                  <button 
+                    onClick={() => startEdit(config)}
+                    className="btn-edit"
+                  >
+                    <FaPencilAlt />
+                  </button>
+                  <button 
+                    onClick={() => deleteConfig(config.id)}
+                    className="btn-delete"
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
+              </div>
+              
+              <div className="config-body">
+                {renderInputField(config)}
+              </div>
+              
+              <div className="config-footer">
+                <span className="config-key">Chave: {config.key}</span>
+                <span className="config-type">{config.type}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {filteredConfigs.length === 0 && (
+          <div className="empty-state">
+            <div className="empty-icon"><FaWrench /></div>
+            <h3>Nenhuma configuração encontrada</h3>
+            <p>Adicione uma nova configuração ou tente outra categoria</p>
+          </div>
+        )}
+      </div>
+
+      {sidebarContent}
+    </div>
+  );
+
+  const footer = (
+    <div className="footer-empty"></div>
+  );
+
+  return (
+    <PageStruct
+      header={headerContent}
+      body={bodyContent}
+      footer={footer}
+    />
   );
 }
