@@ -1,5 +1,3 @@
-Ajusra a Dashboard para exibir da forma correta com espaço para publicidade
-User Ajustar adicionar e Remover Roles Ajusta o conteuno no espaço. Ajustar os modals 
 Roles Ajusta o Nome de Exibição ou inves da Description. Ajustar os modals 
 Permissions ajustar a exibição na tela, e ajustar os modals e adicionar uma cor nas Roles
 Adicionar a paginação no Users e Roles

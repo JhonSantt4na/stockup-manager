@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import PermissionsService from "../../Services/PermissionsService";
 import Pagination from "../../components/Pagination/Pagination";
 import { FaPlus, FaPen, FaTrash } from "react-icons/fa";
-import PermissionModal from "../../components/Modals/Permissions/AddPermissionModal";
+import AddPermissionModal from "../../components/Modals/Permissions/AddPermissionModal";
 import ConfirmModal from "../../components/Modals/ConfirmModal";
 import SuccessModal from "../../components/Modals/SuccessModal";
 import PageStruct from "../Layout/PageStruct/PageStruct";
@@ -23,21 +23,24 @@ const Permissions = () => {
   const [selectedPermission, setSelectedPermission] = useState(null);
   const [pendingAction, setPendingAction] = useState(null);
 
-  const fetchPermissions = useCallback(async (pageNumber = 0) => {
-    setLoading(true);
-    try {
-      const data = await PermissionsService.getAll(pageNumber, 10, search);
-      setPermissions(data.content || []);
-      setTotalPages(data.totalPages || 0);
-      setPage(data.number || 0);
-      setError("");
-    } catch (err) {
-      console.error(err);
-      setError("Erro ao carregar permissões.");
-    } finally {
-      setLoading(false);
-    }
-  }, [search]);
+  const fetchPermissions = useCallback(
+    async (pageNumber = 0) => {
+      setLoading(true);
+      try {
+        const data = await PermissionsService.getAllPermissions(pageNumber, 10);
+        setPermissions(data.content || []);
+        setTotalPages(data.totalPages || 0);
+        setPage(data.number || 0);
+        setError("");
+      } catch (err) {
+        console.error(err);
+        setError("Erro ao carregar permissões.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     fetchPermissions();
@@ -64,7 +67,7 @@ const Permissions = () => {
   const handleConfirmDelete = async () => {
     if (!selectedPermission) return;
     try {
-      await PermissionsService.deletePermission(selectedPermission.name);
+      await PermissionsService.deletePermission(selectedPermission.description);
       fetchPermissions(page);
       setConfirmModalOpen(false);
       showSuccess("Permissão removida com sucesso!");
@@ -85,6 +88,10 @@ const Permissions = () => {
   const handlePrevPage = () => {
     if (page > 0) fetchPermissions(page - 1);
   };
+
+  const filteredPermissions = permissions.filter((p) =>
+    p.description.toLowerCase().includes(search.toLowerCase())
+  );
 
   const header = (
     <div className="permissions-header">
@@ -117,17 +124,23 @@ const Permissions = () => {
           <table className="table">
             <thead>
               <tr>
-                <th>Nome</th>
                 <th>Descrição</th>
+                <th>Status</th>
                 <th>Ações</th>
               </tr>
             </thead>
             <tbody>
-              {permissions.length ? (
-                permissions.map((permission) => (
+              {filteredPermissions.length ? (
+                filteredPermissions.map((permission) => (
                   <tr key={permission.id}>
-                    <td>{permission.name}</td>
-                    <td>{permission.description || "-"}</td>
+                    <td>{permission.description}</td>
+                    <td>
+                      {permission.enabled ? (
+                        <span className="enabled">Ativa</span>
+                      ) : (
+                        <span className="disabled">Inativa</span>
+                      )}
+                    </td>
                     <td className="actions-inline">
                       <button
                         className="btn-manage"
@@ -176,7 +189,7 @@ const Permissions = () => {
   return (
     <PageStruct header={header} body={body} footer={footer}>
       {modalOpen && (
-        <PermissionModal
+        <AddPermissionModal
           permission={selectedPermission}
           onClose={() => {
             setModalOpen(false);

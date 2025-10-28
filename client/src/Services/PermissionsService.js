@@ -1,36 +1,39 @@
-// PermissionService.js
-import axios from 'axios'; // Assuming axios is used for API calls. Install if needed: npm install axios
+import Api from "../Api";
 
-const API_BASE_URL = '/permissions'; // Adjust base URL if needed, e.g., 'http://localhost:8080/permissions'
-
-const PermissionService = {
+const PermissionsService = {
   createPermission: async (data) => {
-    return axios.post(`${API_BASE_URL}/create`, data);
+    const response = await Api.post("/permissions/create", data);
+    return response.data;
   },
 
   updatePermission: async (data) => {
-    return axios.put(`${API_BASE_URL}/update`, data);
+    const response = await Api.put("/permissions/update", data);
+    return response.data;
   },
 
-  deletePermission: async (name) => {
-    return axios.delete(`${API_BASE_URL}/delete/${name}`);
+  deletePermission: async (description) => {
+    const response = await Api.delete(`/permissions/delete/${description}`);
+    return response.data;
   },
 
-  getPermissionByName: async (name) => {
-    return axios.get(`${API_BASE_URL}/${name}`);
+  getPermissionByDescription: async (description) => {
+    const response = await Api.get(`/permissions/${description}`);
+    return response.data;
   },
 
-  getAllPermissions: async (page = 0, size = 10, sort = ['name', 'asc']) => {
-    return axios.get(`${API_BASE_URL}/list`, {
-      params: { page, size, sort: sort.join(',') }
-    }).then(res => res.data);
+  getAllPermissions: async (page = 0, size = 10, sort = ["description", "asc"]) => {
+    const response = await Api.get("/permissions/list", {
+      params: { page, size, sort: sort.join(",") },
+    });
+    return response.data;
   },
 
-  getAllActivePermissions: async (page = 0, size = 10, sort = ['name', 'asc']) => {
-    return axios.get(`${API_BASE_URL}/listActive`, {
-      params: { page, size, sort: sort.join(',') }
-    }).then(res => res.data);
-  }
+  getAllActivePermissions: async (page = 0, size = 10, sort = ["description", "asc"]) => {
+    const response = await Api.get("/permissions/listActive", {
+      params: { page, size, sort: sort.join(",") },
+    });
+    return response.data;
+  },
 };
 
-export default PermissionService;
+export default PermissionsService;

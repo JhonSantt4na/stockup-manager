@@ -1,14 +1,6 @@
-import axios from "axios";
+import api from "../Api";
 
-// URL base da API (ajuste se necessário)
-const API_URL = "http://localhost:8080/users";
-
-// Cliente axios com interceptors para token
-const api = axios.create({
-  baseURL: API_URL,
-  headers: { "Content-Type": "application/json" },
-});
-
+const API_URL = "/users";
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -18,20 +10,18 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-const handleError = (error) => {
-  console.error("Erro no UserService:", error.response || error.message);
+const handleError = (error, context = "UserService") => {
+  console.error(`Erro em ${context}:`, error.response || error.message);
   throw error.response?.data || error;
 };
 
-// ====================== USUÁRIOS ======================
-
-export const getUsers = async (page = 0, size = 10, search = "", filter = "all", sort = ["username", "asc"]) => {
+const getUsers = async (page = 0, size = 10, search = "", filter = "all", sort = ["username", "asc"]) => {
   try {
     let enabled;
     if (filter === "active") enabled = true;
     else if (filter === "inactive") enabled = false;
 
-    const response = await api.get("/list", {
+    const response = await api.get(`${API_URL}/list`, {
       params: {
         page,
         size,
@@ -42,110 +32,101 @@ export const getUsers = async (page = 0, size = 10, search = "", filter = "all",
     });
     return response.data;
   } catch (error) {
-    handleError(error);
+    handleError(error, "getUsers");
   }
 };
 
-export const getUserByUsername = async (username) => {
+const getUserByUsername = async (username) => {
   try {
-    const response = await api.get(`/find/${username}`);
+    const response = await api.get(`${API_URL}/find/${username}`);
     return response.data;
   } catch (error) {
-    handleError(error);
+    handleError(error, "getUserByUsername");
   }
 };
 
-export const createUser = async (userData) => {
+const createUser = async (userData) => {
   try {
-    const response = await api.post("/register", userData);
+    const response = await api.post(`${API_URL}/register`, userData);
     return response.data;
   } catch (error) {
-    handleError(error);
+    handleError(error, "createUser");
   }
 };
 
-export const updateUser = async (username, userData) => {
+const updateUser = async (username, userData) => {
   try {
-    const response = await api.put(`/update/${username}`, userData);
+    const response = await api.put(`${API_URL}/update/${username}`, userData);
     return response.data;
   } catch (error) {
-    handleError(error);
+    handleError(error, "updateUser");
   }
 };
 
-export const deleteUser = async (username) => {
+const deleteUser = async (username) => {
   try {
-    const response = await api.delete(`/delete/${username}`);
+    const response = await api.delete(`${API_URL}/delete/${username}`);
     return response.data;
   } catch (error) {
-    handleError(error);
+    handleError(error, "deleteUser");
   }
 };
 
-export const toggleUser = async (username) => {
+const toggleUser = async (username) => {
   try {
-    const response = await api.put(`/toggle/${username}`);
+    const response = await api.put(`${API_URL}/toggle/${username}`);
     return response.data;
   } catch (error) {
-    handleError(error);
+    handleError(error, "toggleUser");
   }
 };
 
-// ====================== ROLES ======================
-
-export const getRoles = async (username) => {
+const getRoles = async (username) => {
   try {
-    const response = await api.get(`/${username}/roles`);
+    const response = await api.get(`${API_URL}/${username}/roles`);
     return response.data;
   } catch (error) {
-    handleError(error);
+    handleError(error, "getRoles");
   }
 };
 
-export const assignRole = async (username, roles) => {
-  try {
-    // roles: array de strings
-    const rolesArray = Array.isArray(roles) ? roles : [roles];
-    const response = await api.post(`/${username}/roles/assign`, rolesArray);
-    return response.data;
-  } catch (error) {
-    handleError(error);
-  }
-};
-
-export const removeRole = async (username, roles) => {
+const assignRole = async (username, roles) => {
   try {
     const rolesArray = Array.isArray(roles) ? roles : [roles];
-    const response = await api.post(`/${username}/roles/remove`, rolesArray);
+    const response = await api.post(`${API_URL}/${username}/roles/assign`, rolesArray);
     return response.data;
   } catch (error) {
-    handleError(error);
+    handleError(error, "assignRole");
   }
 };
 
-// ====================== SENHA ======================
-
-export const changePassword = async (passwordData) => {
+const removeRole = async (username, roles) => {
   try {
-    const response = await api.put("/change-password", passwordData);
+    const rolesArray = Array.isArray(roles) ? roles : [roles];
+    const response = await api.post(`${API_URL}/${username}/roles/remove`, rolesArray);
     return response.data;
   } catch (error) {
-    handleError(error);
+    handleError(error, "removeRole");
   }
 };
 
-// ====================== BUSCA ======================
-
-export const searchUsers = async (query) => {
+const changePassword = async (passwordData) => {
   try {
-    const response = await api.get("/list", { params: { search: query } });
+    const response = await api.put(`${API_URL}/change-password`, passwordData);
     return response.data;
   } catch (error) {
-    handleError(error);
+    handleError(error, "changePassword");
   }
 };
 
-// ====================== EXPORT DEFAULT ======================
+const searchUsers = async (query) => {
+  try {
+    const response = await api.get(`${API_URL}/list`, { params: { search: query } });
+    return response.data;
+  } catch (error) {
+    handleError(error, "searchUsers");
+  }
+};
 
 const UserService = {
   getUsers,
