@@ -1,23 +1,26 @@
-import React from 'react';
-import { FaTimes } from 'react-icons/fa';
-import './CustomModal.css';
+import React from "react";
+import { createPortal } from "react-dom";
+import { FaTimes } from "react-icons/fa";
+import "./CustomModal.css";
 
 const CustomModal = ({
   isOpen,
   onClose,
   title,
   children,
-  size = 'medium', // 'small', 'medium', 'large'
+  size = "medium", // 'small', 'medium', 'large'
   showFooter = true,
   onCancel,
   onConfirm,
-  cancelText = 'Cancelar',
-  confirmText = 'Confirmar',
-  footerContent
+  cancelText = "Cancelar",
+  confirmText = "Confirmar",
+  footerContent,
 }) => {
   if (!isOpen) return null;
 
-  return (
+  console.log(`Modal "${title}" está aberto:`, isOpen); // Depuração
+
+  return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div
         className={`modal-container ${size}`}
@@ -29,20 +32,20 @@ const CustomModal = ({
             <FaTimes />
           </button>
         </div>
-        <div className="modal-body">
-          {children}
-        </div>
+
+        <div className="modal-body">{children}</div>
+
         {showFooter && (
           <div className="modal-footer">
             {footerContent ? (
               footerContent
             ) : (
               <>
-                <button className="btn-manage" onClick={onCancel || onClose}>
+                <button className="btn-cancel" onClick={onCancel || onClose}>
                   {cancelText}
                 </button>
                 {onConfirm && (
-                  <button className="btn-add" onClick={onConfirm}>
+                  <button className="btn-confirm" onClick={onConfirm}>
                     {confirmText}
                   </button>
                 )}
@@ -51,7 +54,8 @@ const CustomModal = ({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.getElementById('modal-root') // Use o container dedicado
   );
 };
 

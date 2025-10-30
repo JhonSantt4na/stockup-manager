@@ -2,10 +2,11 @@ import React, { useEffect, useState, useCallback } from "react";
 import PermissionsService from "../../Services/PermissionsService";
 import Pagination from "../../components/Pagination/Pagination";
 import { FaPlus, FaPen, FaTrash } from "react-icons/fa";
-import AddPermissionModal from "../../components/Modals/Permissions/AddPermissionModal";
-import ConfirmModal from "../../components/Modals/ConfirmModal";
-import SuccessModal from "../../components/Modals/SuccessModal";
 import PageStruct from "../Layout/PageStruct/PageStruct";
+import AddPermissionModal from "../../components/Modals/Permissions/AddPermissionModal";
+import EditPermissionModal from "../../components/Modals/Permissions/EditPermissionModal";
+import DeleteConfirmModal from "../../components/Modals/Permissions/DeleteConfirmModal";
+import CustomModal from "../../components/Custom/CustomModal";
 import "./Permissions.css";
 
 const Permissions = () => {
@@ -16,31 +17,28 @@ const Permissions = () => {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-  const [successModalOpen, setSuccessModalOpen] = useState(false);
+  const [modalAddOpen, setModalAddOpen] = useState(false);
+  const [modalEditOpen, setModalEditOpen] = useState(false);
+  const [modalConfirmOpen, setModalConfirmOpen] = useState(false);
+  const [modalSuccessOpen, setModalSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [selectedPermission, setSelectedPermission] = useState(null);
-  const [pendingAction, setPendingAction] = useState(null);
 
-  const fetchPermissions = useCallback(
-    async (pageNumber = 0) => {
-      setLoading(true);
-      try {
-        const data = await PermissionsService.getAllPermissions(pageNumber, 10);
-        setPermissions(data.content || []);
-        setTotalPages(data.totalPages || 0);
-        setPage(data.number || 0);
-        setError("");
-      } catch (err) {
-        console.error(err);
-        setError("Erro ao carregar permissões.");
-      } finally {
-        setLoading(false);
-      }
-    },
-    []
-  );
+  const fetchPermissions = useCallback(async (pageNumber = 0) => {
+    setLoading(true);
+    try {
+      const data = await PermissionsService.getAllPermissions(pageNumber, 10);
+      setPermissions(data.content || []);
+      setTotalPages(data.totalPages || 0);
+      setPage(data.number || 0);
+      setError("");
+    } catch (err) {
+      console.error(err);
+      setError("Erro ao carregar permissões.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     fetchPermissions();
@@ -49,49 +47,93 @@ const Permissions = () => {
   const handleSearch = (e) => setSearch(e.target.value);
 
   const handleAddPermission = () => {
-    setSelectedPermission(null);
-    setModalOpen(true);
+    console.log('Abrindo modal de adição');
+    setModalAddOpen(true);
   };
 
   const handleEditPermission = (permission) => {
+    console.log('Abrindo modal de edição', permission);
     setSelectedPermission(permission);
-    setModalOpen(true);
+    setModalEditOpen(true);
   };
 
   const handleDeleteClick = (permission) => {
+    console.log('Abrindo modal de deleção', permission);
     setSelectedPermission(permission);
-    setPendingAction("deletar");
-    setConfirmModalOpen(true);
+    setModalConfirmOpen(true);
   };
 
   const handleConfirmDelete = async () => {
     if (!selectedPermission) return;
     try {
       await PermissionsService.deletePermission(selectedPermission.description);
-      fetchPermissions(page);
-      setConfirmModalOpen(false);
+      setModalConfirmOpen(false);
       showSuccess("Permissão removida com sucesso!");
-    } catch {
+      fetchPermissions(page);
+    } catch (error) {
+      console.error(error);
       alert("Erro ao deletar permissão.");
+    }
+  };
+
+  const handleCreatePermission = async (form) => {
+    try {
+      await PermissionsService.createPermission({ description: form.description, enabled: true });
+      showSuccess("Permissão criada com sucesso!");
+      setModalAddOpen(false);
+      fetchPermissions(page);
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao criar permissão.");
+    }
+  };
+
+  const handleUpdatePermission = async (form) => {
+    try {
+      await PermissionsService.updatePermission(form.oldDescription, {
+        description: form.newDescription,
+        enabled: form.enabled,
+      });
+      showSuccess("Permissão atualizada com sucesso!");
+      setModalEditOpen(false);
+      fetchPermissions(page);
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao atualizar permissão.");
     }
   };
 
   const showSuccess = (message) => {
     setSuccessMessage(message);
-    setSuccessModalOpen(true);
+    setModalSuccessOpen(true);
   };
 
   const handleNextPage = () => {
     if (page + 1 < totalPages) fetchPermissions(page + 1);
   };
-
   const handlePrevPage = () => {
     if (page > 0) fetchPermissions(page - 1);
   };
 
   const filteredPermissions = permissions.filter((p) =>
-    p.description.toLowerCase().includes(search.toLowerCase())
+    (p.description || '').toLowerCase().includes(search.toLowerCase())
   );
+
+  useEffect(() => {
+    console.log('Modal Add Open:', modalAddOpen);
+  }, [modalAddOpen]);
+
+  useEffect(() => {
+    console.log('Modal Edit Open:', modalEditOpen);
+  }, [modalEditOpen]);
+
+  useEffect(() => {
+    console.log('Modal Confirm Open:', modalConfirmOpen);
+  }, [modalConfirmOpen]);
+
+  useEffect(() => {
+    console.log('Modal Success Open:', modalSuccessOpen);
+  }, [modalSuccessOpen]);
 
   const header = (
     <div className="permissions-header">
@@ -132,8 +174,8 @@ const Permissions = () => {
             <tbody>
               {filteredPermissions.length ? (
                 filteredPermissions.map((permission) => (
-                  <tr key={permission.id}>
-                    <td>{permission.description}</td>
+                  <tr key={permission.id || permission.description}>
+                    <td>{permission.description || 'N/A'}</td>
                     <td>
                       {permission.enabled ? (
                         <span className="enabled">Ativa</span>
@@ -188,33 +230,34 @@ const Permissions = () => {
 
   return (
     <PageStruct header={header} body={body} footer={footer}>
-      {modalOpen && (
-        <AddPermissionModal
-          permission={selectedPermission}
-          onClose={() => {
-            setModalOpen(false);
-            fetchPermissions(page);
-          }}
-          onSuccess={showSuccess}
-        />
-      )}
+      <AddPermissionModal
+        isOpen={modalAddOpen}
+        onClose={() => setModalAddOpen(false)}
+        onSubmit={handleCreatePermission}
+      />
 
-      {confirmModalOpen && (
-        <ConfirmModal
-          item={selectedPermission}
-          itemType="permission"
-          actionType={pendingAction}
-          onClose={() => setConfirmModalOpen(false)}
-          onConfirm={handleConfirmDelete}
-        />
-      )}
+      <EditPermissionModal
+        isOpen={modalEditOpen}
+        onClose={() => setModalEditOpen(false)}
+        permission={selectedPermission}
+        onSubmit={handleUpdatePermission}
+      />
 
-      {successModalOpen && (
-        <SuccessModal
-          message={successMessage}
-          onClose={() => setSuccessModalOpen(false)}
-        />
-      )}
+      <DeleteConfirmModal
+        isOpen={modalConfirmOpen}
+        onClose={() => setModalConfirmOpen(false)}
+        itemName={selectedPermission?.description || 'Desconhecido'}
+        onConfirm={handleConfirmDelete}
+      />
+
+      <CustomModal
+        isOpen={modalSuccessOpen}
+        onClose={() => setModalSuccessOpen(false)}
+        title="Sucesso"
+        showFooter={false}
+      >
+        <p>{successMessage}</p>
+      </CustomModal>
     </PageStruct>
   );
 };

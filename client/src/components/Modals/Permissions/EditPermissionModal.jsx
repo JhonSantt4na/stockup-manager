@@ -1,68 +1,70 @@
-// EditPermissionModal.jsx
-import React, { useState, useEffect } from 'react';
-import './Modal.css'; // Shared modal CSS
+import React, { useEffect, useState } from "react";
+import CustomModal from "../../Custom/CustomModal";
+import "./Modal.css";
 
-const EditPermissionModal = ({ permission, onClose, onSubmit }) => {
-  const [oldName, setOldName] = useState('');
-  const [newName, setNewName] = useState('');
-  const [newDescription, setNewDescription] = useState('');
-  const [enabled, setEnabled] = useState(true);
+const EditPermissionModal = ({ isOpen, onClose, permission, onSubmit }) => {
+  const [form, setForm] = useState({
+    oldDescription: "",
+    newDescription: "",
+    enabled: true,
+  });
 
   useEffect(() => {
     if (permission) {
-      setOldName(permission.name);
-      setNewName(permission.name);
-      setNewDescription(permission.description);
-      setEnabled(permission.enabled);
+      setForm({
+        oldDescription: permission.description || '',
+        newDescription: permission.description || '',
+        enabled: permission.enabled ?? true,
+      });
     }
   }, [permission]);
 
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleCheckbox = (e) =>
+    setForm({ ...form, enabled: e.target.checked });
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ oldName, newName, newDescription, enabled });
+    onSubmit(form);
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <h2>Edit Permission</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Old Name</label>
-            <input type="text" value={oldName} readOnly />
-          </div>
-          <div className="form-group">
-            <label>New Name</label>
-            <input
-              type="text"
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>New Description</label>
-            <textarea
-              value={newDescription}
-              onChange={(e) => setNewDescription(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Enabled</label>
-            <input
-              type="checkbox"
-              checked={enabled}
-              onChange={(e) => setEnabled(e.target.checked)}
-            />
-          </div>
-          <div className="modal-actions">
-            <button type="button" onClick={onClose} className="btn-cancel">Cancel</button>
-            <button type="submit" className="btn-submit">Update</button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <CustomModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Editar Permissão"
+      onConfirm={handleSubmit}
+      confirmText="Salvar Alterações"
+    >
+      <form className="modal-form" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label>Descrição Atual</label>
+          <input type="text" value={form.oldDescription} readOnly />
+        </div>
+
+        <div className="form-group">
+          <label>Nova Descrição</label>
+          <input
+            type="text"
+            name="newDescription"
+            value={form.newDescription}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="checkbox-group">
+          <input
+            type="checkbox"
+            checked={form.enabled}
+            onChange={handleCheckbox}
+          />
+          <label>Permissão Ativa</label>
+        </div>
+      </form>
+    </CustomModal>
   );
 };
 

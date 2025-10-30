@@ -1,28 +1,31 @@
+/* Fundo escuro que cobre a tela */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 0, 0, 0.8) !important; /* Vermelho para teste de visibilidade */
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 1000;
+  justify-content: center;
+  z-index: 10000 !important; /* Aumentado para evitar sobreposições */
+  opacity: 1 !important; /* Força visibilidade */
+  /* animation: fadeIn 0.2s ease-in-out; */ /* Comentado para teste */
 }
 
+/* Container do modal */
 .modal-container {
-  background: var(--page-header-color);
-  border-radius: var(--card-radius);
+  background-color: #2b2b2b;
+  color: #f5f5f5;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   overflow: hidden;
-  box-shadow: var(--card-shadow); 
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
+  /* animation: slideIn 0.25s ease-out; */ /* Comentado para teste */
 }
 
 .modal-container.small {
-  width: 300px;
+  width: 320px;
 }
 
 .modal-container.medium {
@@ -34,53 +37,120 @@
 }
 
 .modal-header {
-  background: var(--page-bg-dark);
-  color: var(--page-header-color);
-  padding: var(--page-header-padding);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: var(--page-footer-border);
+  background-color: #1e1e1e;
+  padding: 14px 18px;
+  border-bottom: 1px solid #333;
 }
 
 .modal-title {
   margin: 0;
   font-size: 1.2rem;
-  font-weight: 600;
+  color: #fff;
 }
 
 .modal-close {
   background: none;
   border: none;
-  color: var(--page-header-color);
+  color: #ccc;
+  font-size: 1.1rem;
   cursor: pointer;
-  font-size: 1.2rem;
-  display: flex;
-  align-items: center;
+  transition: color 0.2s;
+}
+
+.modal-close:hover {
+  color: #fff;
 }
 
 .modal-body {
-  background: var(--page-header-color);
-  color: var(--page-bg-dark);
-  padding: var(--page-body-padding);
-  flex: 1;
-  overflow-y: auto;
+  padding: 20px;
+  background-color: #2b2b2b;
 }
 
 .modal-footer {
-  background: var(--page-bg-dark);
-  color: var(--page-header-color);
-  padding: var(--page-footer-padding);
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  border-top: var(--page-footer-border);
+  gap: 10px;
+  background-color: #1e1e1e;
+  padding: 14px 18px;
+  border-top: 1px solid #333;
 }
 
-@media (max-width: 768px) {
-  .modal-container.small,
-  .modal-container.medium,
-  .modal-container.large {
-    width: 90%;
+/* Botões */
+.btn-cancel {
+  background-color: #444;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-cancel:hover {
+  background-color: #555;
+}
+
+.btn-confirm {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-confirm:hover {
+  background-color: #0069d9;
+}
+
+/* Comentado para teste */
+/* @keyframes fadeIn {
+  from {
+    opacity: 0;
   }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-15px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+} */
+
+/* Ajustes para o formulário interno */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-form label {
+  font-weight: 500;
+  color: #ddd;
+}
+
+.modal-form input,
+.modal-form select {
+  background-color: #1e1e1e;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 8px 10px;
+  outline: none;
+}
+
+.modal-form input:focus,
+.modal-form select:focus {
+  border-color: #007bff;
 }
