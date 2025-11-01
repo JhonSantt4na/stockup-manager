@@ -174,6 +174,20 @@ body {
   cursor: pointer;
 }
 
+.btn-confirm {
+  background-color: #45C35B;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-confirm:hover {
+  background-color: #3ca54f;
+}
+
 .btn-add {
   font-size: 0.85rem;
   border: 1px solid #333;
@@ -189,7 +203,7 @@ body {
   justify-content: center;
   transition: background-color 0.25s ease;
 }
-.btn-add:hover { background-color: #3ca54f; }
+.btn-add:hover.btn-confirm:hover { background-color: #3ca54f; }
 
 .btn-manage, .btn-delete {
   padding: 6px 12px;
