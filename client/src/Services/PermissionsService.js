@@ -6,8 +6,8 @@ const PermissionsService = {
     return response.data;
   },
 
-  updatePermission: async (data) => {
-    const response = await Api.put("/permissions/update", data);
+  updatePermission: async (updateData) => {
+    const response = await Api.put("/permissions/update", updateData);
     return response.data;
   },
 

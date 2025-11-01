@@ -5,23 +5,20 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(255, 0, 0, 0.8) !important; /* Vermelho para teste de visibilidade */
+  background-color: rgba(255, 0, 0, 0.8) !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10000 !important; /* Aumentado para evitar sobreposições */
-  opacity: 1 !important; /* Força visibilidade */
-  /* animation: fadeIn 0.2s ease-in-out; */ /* Comentado para teste */
+  z-index: 10000 !important; 
+  opacity: 1 !important;
 }
 
-/* Container do modal */
 .modal-container {
   background-color: #2b2b2b;
   color: #f5f5f5;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   overflow: hidden;
-  /* animation: slideIn 0.25s ease-out; */ /* Comentado para teste */
 }
 
 .modal-container.small {
@@ -78,57 +75,6 @@
   border-top: 1px solid #333;
 }
 
-/* Botões */
-.btn-cancel {
-  background-color: #444;
-  color: #fff;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.btn-cancel:hover {
-  background-color: #555;
-}
-
-.btn-confirm {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.btn-confirm:hover {
-  background-color: #0069d9;
-}
-
-/* Comentado para teste */
-/* @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateY(-15px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-} */
-
-/* Ajustes para o formulário interno */
 .modal-form {
   display: flex;
   flex-direction: column;
@@ -138,19 +84,4 @@
 .modal-form label {
   font-weight: 500;
   color: #ddd;
-}
-
-.modal-form input,
-.modal-form select {
-  background-color: #1e1e1e;
-  color: #fff;
-  border: 1px solid #444;
-  border-radius: 6px;
-  padding: 8px 10px;
-  outline: none;
-}
-
-.modal-form input:focus,
-.modal-form select:focus {
-  border-color: #007bff;
 }

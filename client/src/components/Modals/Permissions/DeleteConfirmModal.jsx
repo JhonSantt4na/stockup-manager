@@ -4,7 +4,7 @@ import CustomModal from "../../Custom/CustomModal";
 import "./Modal.css";
 
 const DeleteConfirmModal = ({ isOpen, onClose, itemName, onConfirm }) => {
-  const message = `Tem certeza que deseja excluir "${itemName}"? Essa ação não pode ser desfeita.`;
+  const message = `Tem certeza que deseja excluir "${itemName}"?`;
 
   return (
     <CustomModal
@@ -16,13 +16,15 @@ const DeleteConfirmModal = ({ isOpen, onClose, itemName, onConfirm }) => {
       <div className="modal-icon">
         <FaExclamationTriangle />
       </div>
-      <p className="modal-message">{message}</p>
+      <p className="modal-message">{message}
+        <br/> Essa ação não pode ser desfeita.
+      </p>
 
       <div className="modal-actions-inline">
-        <button className="btn-manage" onClick={onClose}>
+        <button className="btn-cancel" onClick={onClose}>
           Cancelar
         </button>
-        <button className="btn-delete" onClick={onConfirm}>
+        <button className="btn-confirm" onClick={onConfirm}>
           Excluir
         </button>
       </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import PermissionsService from "../../Services/PermissionsService";
 import Pagination from "../../components/Pagination/Pagination";
-import { FaPlus, FaPen, FaTrash } from "react-icons/fa";
+import { FaPlus, FaPen, FaTrash, FaCheckCircle } from "react-icons/fa";  // Adicionado FaCheckCircle para ícone de sucesso
 import PageStruct from "../Layout/PageStruct/PageStruct";
 import AddPermissionModal from "../../components/Modals/Permissions/AddPermissionModal";
 import EditPermissionModal from "../../components/Modals/Permissions/EditPermissionModal";
@@ -90,8 +90,9 @@ const Permissions = () => {
 
   const handleUpdatePermission = async (form) => {
     try {
-      await PermissionsService.updatePermission(form.oldDescription, {
-        description: form.newDescription,
+      await PermissionsService.updatePermission({
+        oldDescription: form.oldDescription,
+        newDescription: form.newDescription,
         enabled: form.enabled,
       });
       showSuccess("Permissão atualizada com sucesso!");
@@ -256,7 +257,10 @@ const Permissions = () => {
         title="Sucesso"
         showFooter={false}
       >
-        <p>{successMessage}</p>
+        <div className="modal-icon success">
+          <FaCheckCircle />
+        </div>
+        <p className="modal-message success">{successMessage}</p>
       </CustomModal>
     </PageStruct>
   );
