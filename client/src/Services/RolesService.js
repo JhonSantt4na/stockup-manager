@@ -9,11 +9,7 @@ const RolesService = {
   getRolesWithUsers: async (page = 0, size = 10, search = "") => {
     try {
       const response = await api.get("/roles/list-with-users", {
-        params: {
-          page,
-          size,
-          search: search || undefined,
-        },
+        params: { page, size, search: search || undefined },
       });
       return response.data;
     } catch (error) {
@@ -85,6 +81,15 @@ const RolesService = {
     try {
       const response = await api.get("/permissions/listActive");
       return response.data?.content?.map((perm) => perm.description) || [];
+    } catch (error) {
+      handleError(error);
+    }
+  },
+
+  toggleActiveStatus: async (roleName, active) => {
+    try {
+      const response = await api.put(`/roles/toggle/${roleName}`, { active });
+      return response.data;
     } catch (error) {
       handleError(error);
     }

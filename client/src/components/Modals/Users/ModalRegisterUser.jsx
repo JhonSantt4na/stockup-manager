@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { FaTimes } from "react-icons/fa";
-import "./ModalUser.css";
+import CustomModal from "../../Custom/CustomModal";
+import "../Modal.css"; // ou ModalUser.css se preferir
 
 const ModalRegisterUser = ({ user, onClose, onSuccess }) => {
   const [form, setForm] = useState({
@@ -75,92 +75,86 @@ const ModalRegisterUser = ({ user, onClose, onSuccess }) => {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-box">
-        <div className="modal-header">
-          <h3>{user ? "Editar Usuário" : "Novo Usuário"}</h3>
-          <button className="close-btn" onClick={onClose}>
-            <FaTimes />
-          </button>
+    <CustomModal
+      isOpen={true}
+      onClose={onClose}
+      title={user ? "Editar Usuário" : "Novo Usuário"}
+      size="medium"
+      onConfirm={handleSubmit}
+      confirmText={loading ? "Salvando..." : user ? "Atualizar" : "Cadastrar"}
+      cancelText="Cancelar"
+      onCancel={onClose}
+    >
+      <form className="modal-form">
+        {!user && (
+          <div className="form-group">
+            <label>Usuário</label>
+            <input
+              type="text"
+              name="username"
+              placeholder="Usuário"
+              value={form.username}
+              onChange={handleChange}
+              className="search-boxU"
+              required
+              disabled={loading}
+            />
+          </div>
+        )}
+        <div className="form-group">
+          <label>Nome Completo</label>
+          <input
+            type="text"
+            name="fullName"
+            placeholder="Nome completo"
+            value={form.fullName}
+            className="search-boxU"
+            onChange={handleChange}
+            required
+            disabled={loading}
+          />
         </div>
-
-        <div className="modal-body">
-          <form onSubmit={handleSubmit} className="form-grid">
-            {!user && (
-              <div className="form-group">
-                <label>Usuário</label>
-                <input
-                  type="text"
-                  name="username"
-                  placeholder="Usuário"
-                  value={form.username}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            )}
-            <div className="form-group">
-              <label>Nome Completo</label>
-              <input
-                type="text"
-                name="fullName"
-                placeholder="Nome completo"
-                value={form.fullName}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Email</label>
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={form.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>{user ? "Nova Senha" : "Senha"}</label>
-              <input
-                type="password"
-                name="password"
-                placeholder={user ? "Nova senha (opcional)" : "Senha"}
-                value={form.password}
-                onChange={handleChange}
-                required={!user}
-              />
-            </div>
-            <div className="form-group">
-              <label>Confirmar Senha</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                placeholder="Confirmar senha"
-                value={form.confirmPassword}
-                onChange={handleChange}
-                required={!user}
-              />
-            </div>
-
-            <div className="modal-actions">
-              <button type="submit" className="btn-save" disabled={loading}>
-                {loading ? "Salvando..." : user ? "Atualizar" : "Cadastrar"}
-              </button>
-              <button
-                type="button"
-                className="btn-cancel"
-                onClick={onClose}
-                disabled={loading}
-              >
-                Cancelar
-              </button>
-            </div>
-          </form>
+        <div className="form-group">
+          <label>Email</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            className="search-boxU"
+            required
+            disabled={loading}
+          />
         </div>
-      </div>
-    </div>
+        <div className="form-group">
+          <label>{user ? "Nova Senha" : "Senha"}</label>
+          <input
+            type="password"
+            name="password"
+            placeholder={user ? "Nova senha (opcional)" : "Senha"}
+            value={form.password}
+            onChange={handleChange}
+            className="search-boxU"
+            required={!user}
+            disabled={loading}
+          />
+        </div>
+        <div className="form-group">
+          <label>Confirmar Senha</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirmar senha"
+            value={form.confirmPassword}
+            onChange={handleChange}
+            className="search-boxU"
+            required={!user}
+            disabled={loading}
+          />
+        </div>
+      </form>
+    </CustomModal>
   );
 };
 

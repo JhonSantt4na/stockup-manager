@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useCallback } from "react";
 import PermissionsService from "../../Services/PermissionsService";
 import Pagination from "../../components/Pagination/Pagination";
-import { FaPlus, FaPen, FaTrash, FaCheckCircle } from "react-icons/fa";  // Adicionado FaCheckCircle para ícone de sucesso
+import { FaPlus, FaPen, FaTrash, FaSearch} from "react-icons/fa";
 import PageStruct from "../Layout/PageStruct/PageStruct";
 import AddPermissionModal from "../../components/Modals/Permissions/AddPermissionModal";
 import EditPermissionModal from "../../components/Modals/Permissions/EditPermissionModal";
-import DeleteConfirmModal from "../../components/Modals/ConfirmModal";
-import CustomModal from "../../components/Custom/CustomModal";
+import ConfirmModal from "../../components/Modals/ConfirmModal";
+import SuccessModal from "../../components/Modals/SuccessModal";
 import "./Permissions.css";
 
 const Permissions = () => {
@@ -23,6 +23,7 @@ const Permissions = () => {
   const [modalSuccessOpen, setModalSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [selectedPermission, setSelectedPermission] = useState(null);
+  const [pendingAction, setPendingAction] = useState(null);
 
   const fetchPermissions = useCallback(async (pageNumber = 0) => {
     setLoading(true);
@@ -45,21 +46,16 @@ const Permissions = () => {
   }, [fetchPermissions]);
 
   const handleSearch = (e) => setSearch(e.target.value);
-
-  const handleAddPermission = () => {
-    console.log('Abrindo modal de adição');
-    setModalAddOpen(true);
-  };
+  const handleAddPermission = () => setModalAddOpen(true);
 
   const handleEditPermission = (permission) => {
-    console.log('Abrindo modal de edição', permission);
     setSelectedPermission(permission);
     setModalEditOpen(true);
   };
 
   const handleDeleteClick = (permission) => {
-    console.log('Abrindo modal de deleção', permission);
     setSelectedPermission(permission);
+    setPendingAction("delete");
     setModalConfirmOpen(true);
   };
 
@@ -78,7 +74,10 @@ const Permissions = () => {
 
   const handleCreatePermission = async (form) => {
     try {
-      await PermissionsService.createPermission({ description: form.description, enabled: true });
+      await PermissionsService.createPermission({
+        description: form.description,
+        enabled: true,
+      });
       showSuccess("Permissão criada com sucesso!");
       setModalAddOpen(false);
       fetchPermissions(page);
@@ -112,35 +111,21 @@ const Permissions = () => {
   const handleNextPage = () => {
     if (page + 1 < totalPages) fetchPermissions(page + 1);
   };
+
   const handlePrevPage = () => {
     if (page > 0) fetchPermissions(page - 1);
   };
 
   const filteredPermissions = permissions.filter((p) =>
-    (p.description || '').toLowerCase().includes(search.toLowerCase())
+    (p.description || "").toLowerCase().includes(search.toLowerCase())
   );
-
-  useEffect(() => {
-    console.log('Modal Add Open:', modalAddOpen);
-  }, [modalAddOpen]);
-
-  useEffect(() => {
-    console.log('Modal Edit Open:', modalEditOpen);
-  }, [modalEditOpen]);
-
-  useEffect(() => {
-    console.log('Modal Confirm Open:', modalConfirmOpen);
-  }, [modalConfirmOpen]);
-
-  useEffect(() => {
-    console.log('Modal Success Open:', modalSuccessOpen);
-  }, [modalSuccessOpen]);
 
   const header = (
     <div className="permissions-header">
       <h2>Administração de Permissões</h2>
       <div className="controls-group">
         <div className="search-box">
+          <FaSearch className="search-icon" />
           <input
             type="text"
             placeholder="Buscar permissão..."
@@ -168,6 +153,7 @@ const Permissions = () => {
             <thead>
               <tr>
                 <th>Descrição</th>
+                <th>Roles</th>
                 <th>Status</th>
                 <th>Ações</th>
               </tr>
@@ -176,14 +162,18 @@ const Permissions = () => {
               {filteredPermissions.length ? (
                 filteredPermissions.map((permission) => (
                   <tr key={permission.id || permission.description}>
-                    <td>{permission.description || 'N/A'}</td>
-                    <td>
-                      {permission.enabled ? (
-                        <span className="enabled">Ativa</span>
-                      ) : (
-                        <span className="disabled">Inativa</span>
-                      )}
+                    <td>{permission.description || "N/A"}</td>
+                    <td>{permission.roles?.length || 0}</td>
+                
+                    <td className="status-toggler">
+                      <span
+                        className={
+                          permission.enabled ? "dot-green" : "dot-red"
+                        }
+                      ></span>
+                      {permission.enabled ? "Ativa" : "Inativa"}
                     </td>
+
                     <td className="actions-inline">
                       <button
                         className="btn-manage"
@@ -202,7 +192,7 @@ const Permissions = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="3" className="no-data">
+                  <td colSpan="4" className="no-data">
                     Nenhuma permissão encontrada.
                   </td>
                 </tr>
@@ -244,24 +234,20 @@ const Permissions = () => {
         onSubmit={handleUpdatePermission}
       />
 
-      <DeleteConfirmModal
+      <ConfirmModal
         isOpen={modalConfirmOpen}
         onClose={() => setModalConfirmOpen(false)}
-        itemName={selectedPermission?.description || 'Desconhecido'}
+        item={selectedPermission}
+        itemType="permission"
+        actionType={pendingAction}
         onConfirm={handleConfirmDelete}
       />
 
-      <CustomModal
+      <SuccessModal
         isOpen={modalSuccessOpen}
+        message={successMessage}
         onClose={() => setModalSuccessOpen(false)}
-        title="Sucesso"
-        showFooter={false}
-      >
-        <div className="modal-icon success">
-          <FaCheckCircle />
-        </div>
-        <p className="modal-message success">{successMessage}</p>
-      </CustomModal>
+      />
     </PageStruct>
   );
 };

@@ -70,28 +70,6 @@
   margin-top: 20px;
 }
 
-.status-toggler {
-  text-align: left;
-}
-
-.dot-green {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: #45C35B;
-  display: inline-block;
-  margin-right: 6px;
-}
-
-.dot-red {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: #ef4444;
-  display: inline-block;
-  margin-right: 6px;
-}
-
 /* Responsividade simplificada */
 @media (max-width: 768px) {
   .controls-group {

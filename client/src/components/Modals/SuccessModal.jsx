@@ -11,10 +11,12 @@ const SuccessModal = ({ isOpen, onClose, message }) => {
       title="Sucesso"
       showFooter={false}
     >
-      <div className="modal-icon success">
-        <FaCheckCircle />
+      <div className="modal-content">
+        <div className="modal-icon success">
+          <FaCheckCircle />
+        </div>
+        <p className="modal-message success">{message}</p>
       </div>
-      <p className="modal-message success">{message}</p>
     </CustomModal>
   );
 };

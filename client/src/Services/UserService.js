@@ -128,6 +128,33 @@ const searchUsers = async (query) => {
   }
 };
 
+const getAllAvailableRoles = async () => {
+  try {
+    const response = await api.get(`${API_URL}/roles/available`);
+    return response.data;
+  } catch (error) {
+    handleError(error, "getAllAvailableRoles");
+  }
+};
+
+const getAllRoles = async () => {
+  try {
+    const response = await api.get(`${API_URL}/roles/all`);
+    return response.data;
+  } catch (error) {
+    handleError(error, "getAllRoles");
+  }
+};
+
+const updateUserAsAdmin = async (username, userData) => {
+  try {
+    const response = await api.put(`${API_URL}/update/${username}`, userData);
+    return response.data;
+  } catch (error) {
+    handleError(error, "updateUserAsAdmin");
+  }
+};
+
 const UserService = {
   getUsers,
   getUserByUsername,
@@ -140,6 +167,9 @@ const UserService = {
   removeRole,
   changePassword,
   searchUsers,
+  getAllRoles,
+  getAllAvailableRoles,
+  updateUserAsAdmin,
 };
 
 export default UserService;

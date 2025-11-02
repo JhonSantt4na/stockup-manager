@@ -106,14 +106,6 @@
   transition: border 0.2s ease;
 }
 
-.search-box:hover {
-  border: 1px solid #45C35B;
-}
-
-.search-box:focus-within {
-  border: 1px solid #45C35B;
-}
-
 .search-icon {
   font-size: 0.9rem;
   margin-right: 6px;
@@ -247,6 +239,6 @@
   }
 
   .date-time-container {
-    display: none; /* Esconder em telas muito pequenas para economizar espaço */
+    display: none;
   }
 }

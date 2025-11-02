@@ -4,7 +4,6 @@ import Pagination from "../../components/Pagination/Pagination";
 import { FaPlus, FaUserShield, FaSearch } from "react-icons/fa";
 import UserModal from "../../components/Modals/Users/ModalRegisterUser";
 import ModalUpdateUser from "../../components/Modals/Users/ModalUpdateUser";
-import ModalManageRoles from "../../components/Modals/Users/ModalManageRoles";
 import RolesListModal from "../../components/Modals/Users/RolesListModal";
 import ConfirmModal from "../../components/Modals/ConfirmModal";
 import SuccessModal from "../../components/Modals/SuccessModal";
@@ -22,7 +21,6 @@ const Users = () => {
 
   const [userModalOpen, setUserModalOpen] = useState(false);
   const [updateUserModalOpen, setUpdateUserModalOpen] = useState(false);
-  const [manageRolesModalOpen, setManageRolesModalOpen] = useState(false);
   const [rolesListModalOpen, setRolesListModalOpen] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
@@ -63,11 +61,6 @@ const Users = () => {
     setUpdateUserModalOpen(true);
   };
 
-  const handleManageRoles = (user) => {
-    setSelectedUser(user);
-    setManageRolesModalOpen(true);
-  };
-
   const handleShowRoles = (user) => {
     setSelectedUser(user);
     setRolesListModalOpen(true);
@@ -80,7 +73,7 @@ const Users = () => {
 
   const handleToggleClick = (user) => {
     setSelectedUser(user);
-    setPendingAction(user.enabled ? "desativar" : "ativar");
+    setPendingAction("toggle");
     setConfirmModalOpen(true);
   };
 
@@ -90,9 +83,10 @@ const Users = () => {
       await UserService.toggleUser(selectedUser.username);
       fetchUsers(page);
       setConfirmModalOpen(false);
-      showSuccess(`Usuário ${pendingAction}do com sucesso!`);
+      showSuccess(`Usuário ${selectedUser.enabled === false ? 'ativado' : 'desativado'} com sucesso!`);
     } catch (err) {
-      alert(`Erro ao ${pendingAction} usuário.`);
+      console.error("Erro ao alternar status do usuário:", err);
+      alert(`Erro ao ${selectedUser.enabled === false ? 'ativar' : 'desativar'} usuário.`);
     }
   };
 
@@ -140,7 +134,11 @@ const Users = () => {
           </span>
         ))}
         {sortedRoles.length > 2 && (
-          <span className="ver-mais-link" onClick={() => handleShowRoles(user)}>
+          <span 
+            className="ver-mais-link" 
+            onClick={() => handleShowRoles(user)}
+            style={{ cursor: 'pointer' }}
+          >
             +{sortedRoles.length - 2} mais
           </span>
         )}
@@ -162,16 +160,15 @@ const Users = () => {
           <option value="inactive">Usuários inativos</option>
         </select>
         <div className="search-box">
+          <FaSearch className="search-icon" />
           <input
-          type="text"
-          placeholder="Buscar por username ou email..."
-          className="search-input"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+            type="text"
+            placeholder="Buscar por username ou email..."
+            className="search-input"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <FaSearch className="search-icon" />
-       
         <button className="btn-add" onClick={handleAddUser}>
           <FaPlus /> Novo Usuário
         </button>
@@ -249,20 +246,19 @@ const Users = () => {
   );
 
   const footer = (
-  <div className="users-footer">
-    {!loading && !error ? (
-      <Pagination
-        currentPage={page}
-        totalPages={totalPages}
-        onPrev={handlePrevPage}
-        onNext={handleNextPage}
-      />
-    ) : (
-      <div className="footer-empty"></div>
-    )}
-  </div>
+    <div className="users-footer">
+      {!loading && !error ? (
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPrev={handlePrevPage}
+          onNext={handleNextPage}
+        />
+      ) : (
+        <div className="footer-empty"></div>
+      )}
+    </div>
   );
-
 
   return (
     <PageStruct header={header} body={body} footer={footer}>
@@ -284,21 +280,6 @@ const Users = () => {
             setUpdateUserModalOpen(false);
             fetchUsers(page);
           }}
-          onManageRoles={() => {
-            setUpdateUserModalOpen(false);
-            setManageRolesModalOpen(true);
-          }}
-          onSuccess={showSuccess}
-        />
-      )}
-
-      {manageRolesModalOpen && (
-        <ModalManageRoles
-          user={selectedUser}
-          onClose={() => {
-            setManageRolesModalOpen(false);
-            fetchUsers(page);
-          }}
           onSuccess={showSuccess}
         />
       )}
@@ -306,21 +287,25 @@ const Users = () => {
       {rolesListModalOpen && (
         <RolesListModal
           user={selectedUser}
+          isOpen={rolesListModalOpen}
           onClose={() => setRolesListModalOpen(false)}
         />
       )}
 
       {confirmModalOpen && (
         <ConfirmModal
-          user={selectedUser}
-          actionType={pendingAction}
+          isOpen={confirmModalOpen}
           onClose={() => setConfirmModalOpen(false)}
+          item={selectedUser}
+          itemType="user"
+          actionType={pendingAction}
           onConfirm={handleConfirmToggle}
         />
       )}
 
       {successModalOpen && (
         <SuccessModal
+          isOpen={successModalOpen}
           message={successMessage}
           onClose={() => setSuccessModalOpen(false)}
         />

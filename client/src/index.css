@@ -133,13 +133,43 @@ body {
 }
 
 /*Components*/
-.search-box {
+.status-toggler {
+  text-align: center;
+}
+
+.dot-green {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #45C35B;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.dot-red {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ef4444;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.search-box, .search-boxU {
   border: 1px solid #d1d1d1;
   background-color: #fff;
   color: var(--page-bg-dark);
   border-radius: 6px;
   padding: 8px 12px;
   font-size: 0.9rem;
+}
+
+.search-box:hover {
+  border: 1px solid #45C35B;
+}
+
+.search-box:focus-within {
+  border: 1px solid #45C35B;
 }
 
 .search-input {

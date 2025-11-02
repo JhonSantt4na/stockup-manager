@@ -62,12 +62,6 @@
   flex-direction: column;
 }
 
-.form-group label {
-  font-weight: 500;
-  font-size: 0.9rem;
-  color: var(--page-bg-dark);
-}
-
 .checkbox-group {
   display: flex;
   align-items: center;
@@ -123,7 +117,7 @@
 }
 
 .modal-close:hover {
-  color: #dc2626;
+  color: #ed7979 !important;
 }
 
 .permissions-controls {
@@ -153,6 +147,13 @@
 
 .permissions-list-container h4 {
   margin-bottom: 16px;
+}
+
+.modal-container input:focus,
+.modal-container textarea:focus,
+.modal-container select:focus {
+  outline: none;
+  border-color: #339c45;
 }
 
 @keyframes fadeIn {

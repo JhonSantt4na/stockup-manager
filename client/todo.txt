@@ -1,11 +1,17 @@
-Roles Ajusta o Nome de Exibição ou inves da Description. Ajustar os modals 
-Permissions ajustar a exibição na tela, e ajustar os modals e adicionar uma cor nas Roles
-Adicionar a paginação no Users e Roles
-Separar os modals por pastas 
-Separar as pages por ADMIN / USERS
+Tempo para sumir o Modal de Confirmação
+Ajustar as Paginações
 
-CONFIG > Ajustar a Pagina e Adicionar o CSS
+Adicionar os Modals de Users
+Adicionar um Modal pedindo pra ir pra o Login quando o Token estiver invalido;
+O btn de config da dashboard leva pra as config da navbar
 
+
+Ajustar > "o item"? na deleção de permission
+
+
+A senha definida pelo admin deve ser temporária e o sistema deve incentivar o usuário a alterá-la.
+Todas as ações do admin devem ser registradas em log para auditoria.
+pedir a senha para altear o usuario;
 
 | Função / Elemento                       | Cor                                                             | Hexadecimal |
 | --------------------------------------- | --------------------------------------------------------------- | ----------- |
@@ -22,9 +28,3 @@ CONFIG > Ajustar a Pagina e Adicionar o CSS
 | **Cor de erro (vermelho)**              | ![#E74C3C](https://via.placeholder.com/20/E74C3C/000000?text=+) | `#E74C3C`   |
 | **Cor de bordas suaves / divisórias**   | ![#E0E0E0](https://via.placeholder.com/20/E0E0E0/000000?text=+) | `#E0E0E0`   |
 | **Botão "Add New Order" (verde forte)** | ![#2ECC71](https://via.placeholder.com/20/2ECC71/000000?text=+) | `#2ECC71`   |
-
-
-
-
-
-
