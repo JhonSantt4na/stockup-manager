@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CustomModal from "../../Custom/CustomModal";
-import "./Modal.css";
+import "../Modal.css";
 
 const EditPermissionModal = ({ isOpen, onClose, permission, onSubmit }) => {
   const [form, setForm] = useState({
@@ -41,7 +41,7 @@ const EditPermissionModal = ({ isOpen, onClose, permission, onSubmit }) => {
       <form className="modal-form" onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Descrição Atual</label>
-          <input type="text" value={form.oldDescription} readOnly />
+          <input type="text" value={form.oldDescription} className="search-box" readOnly />
         </div>
 
         <div className="form-group">
@@ -50,6 +50,7 @@ const EditPermissionModal = ({ isOpen, onClose, permission, onSubmit }) => {
             type="text"
             name="newDescription"
             value={form.newDescription}
+            className="search-box"
             onChange={handleChange}
             required
           />

@@ -81,11 +81,10 @@ const RolesService = {
     }
   },
 
-
-  getAllPermissions: async () => {
+  getAllActivePermissions: async () => {
     try {
-      const response = await api.get("/permissions/list");
-      return response.data?.content?.map((perm) => perm.name) || [];
+      const response = await api.get("/permissions/listActive");
+      return response.data?.content?.map((perm) => perm.description) || [];
     } catch (error) {
       handleError(error);
     }

@@ -5,7 +5,7 @@ import { FaPlus, FaPen, FaTrash, FaCheckCircle } from "react-icons/fa";  // Adic
 import PageStruct from "../Layout/PageStruct/PageStruct";
 import AddPermissionModal from "../../components/Modals/Permissions/AddPermissionModal";
 import EditPermissionModal from "../../components/Modals/Permissions/EditPermissionModal";
-import DeleteConfirmModal from "../../components/Modals/Permissions/DeleteConfirmModal";
+import DeleteConfirmModal from "../../components/Modals/ConfirmModal";
 import CustomModal from "../../components/Custom/CustomModal";
 import "./Permissions.css";
 

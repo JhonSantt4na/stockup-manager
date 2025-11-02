@@ -163,10 +163,6 @@ body {
   color: var(--page-bg-dark);
 }
 
-.search-box::placeholder {
-  color: var(--page-bg-dark);
-}
-
 .ver-mais-link {
   color: #3b82f6;
   font-size: 0.8rem;

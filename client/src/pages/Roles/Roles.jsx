@@ -253,18 +253,23 @@ const Roles = () => {
 
       {confirmModalOpen && (
         <ConfirmModal
+          isOpen={confirmModalOpen}
+          onClose={() => setConfirmModalOpen(false)}
           item={selectedRole}
           itemType="role"
           actionType={pendingAction}
-          onClose={() => setConfirmModalOpen(false)}
           onConfirm={handleConfirmDelete}
         />
       )}
 
       {successModalOpen && (
         <SuccessModal
+          isOpen={successModalOpen}
+          onClose={() => {
+            setSuccessModalOpen(false);
+            fetchRoles(page);
+          }}
           message={successMessage}
-          onClose={() => setSuccessModalOpen(false)}
         />
       )}
     </PageStruct>

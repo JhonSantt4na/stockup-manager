@@ -1,5 +1,5 @@
 import React from "react";
-import { FaTimes } from "react-icons/fa";
+import CustomModal from "../../Custom/CustomModal";
 import "../Modal.css";
 
 const PermissionsListModal = ({ role, onClose }) => {
@@ -14,37 +14,31 @@ const PermissionsListModal = ({ role, onClose }) => {
   };
 
   return (
-    <div className="modal-backdrop">
-      <div className="modal-content permissions-list-modal">
-        <div className="modal-header dark-header">
-          <h3 className="header-center">Permissões de {role.name}</h3>
-          <button className="btn-close red-close" onClick={onClose}>
-            <FaTimes />
-          </button>
-        </div>
-        
-        <div className="modal-body white-body">
-          <div className="permissions-list-container">
-            <h4>Todas as Permissões Atribuídas</h4>
-            <div className="permissions-grid">
-              {role.strings && role.strings.length > 0 ? (
-                role.strings.map((perm) => (
-                  <span 
-                    key={perm} 
-                    className="permission-tag"
-                    style={{ backgroundColor: `${getPermissionColor(perm)}20`, color: getPermissionColor(perm) }}
-                  >
-                    {perm}
-                  </span>
-                ))
-              ) : (
-                <p className="no-permissions">Nenhuma permissão atribuída</p>
-              )}
-            </div>
-          </div>
+    <CustomModal
+      isOpen={true}
+      onClose={onClose}
+      title={`Permissões de ${role.name}`}
+      size="medium"
+      showFooter={false}
+    >
+      <div className="permissions-list-container">
+        <div className="permissions-grid">
+          {role.strings && role.strings.length > 0 ? (
+            role.strings.map((perm) => (
+              <span 
+                key={perm} 
+                className="permission-tag"
+                style={{ backgroundColor: `${getPermissionColor(perm)}20`, color: getPermissionColor(perm) }}
+              >
+                {perm}
+              </span>
+            ))
+          ) : (
+            <p className="no-permissions">Nenhuma permissão atribuída</p>
+          )}
         </div>
       </div>
-    </div>
+    </CustomModal>
   );
 };
 

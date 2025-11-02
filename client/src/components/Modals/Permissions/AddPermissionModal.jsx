@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CustomModal from "../../Custom/CustomModal";
-import "./Modal.css";
+import "../Modal.css";
 
 const AddPermissionModal = ({ isOpen, onClose, onSubmit }) => {
   const [form, setForm] = useState({ description: "" });
@@ -30,6 +30,7 @@ const AddPermissionModal = ({ isOpen, onClose, onSubmit }) => {
             value={form.description}
             onChange={handleChange}
             required
+            className="search-box"
             placeholder="Ex: USER_READ"
           />
         </div>

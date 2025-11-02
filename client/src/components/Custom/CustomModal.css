@@ -1,15 +1,14 @@
-/* Fundo escuro que cobre a tela */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(255, 0, 0, 0.8) !important;
+  background-color: transparent !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10000 !important; 
+  z-index: 10000 !important;
   opacity: 1 !important;
 }
 
@@ -61,11 +60,6 @@
   color: #fff;
 }
 
-.modal-body {
-  padding: 20px;
-  background-color: #2b2b2b;
-}
-
 .modal-footer {
   display: flex;
   justify-content: flex-end;
@@ -83,5 +77,5 @@
 
 .modal-form label {
   font-weight: 500;
-  color: #ddd;
+  color: var(--page-bg-dark);
 }
