@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import RolesService from "../../Services/RolesService";
 import Pagination from "../../components/Pagination/Pagination";
-import { FaPlus, FaUserShield, FaTrash } from "react-icons/fa";
+import { FaPlus, FaUserShield, FaTrash, FaSearch} from "react-icons/fa";
 import RoleModal from "../../components/Modals/Roles/RoleModal";
 import ConfirmModal from "../../components/Modals/ConfirmModal";
 import SuccessModal from "../../components/Modals/SuccessModal";
@@ -25,10 +25,10 @@ const Roles = () => {
   const [selectedRole, setSelectedRole] = useState(null);
   const [pendingAction, setPendingAction] = useState(null);
 
-  const fetchRoles = useCallback(async (pageNumber = 0) => {
+  const fetchRoles = useCallback(async (pageNumber = 0, searchTerm = search) => {
     setLoading(true);
     try {
-      const data = await RolesService.getRolesWithUsers(pageNumber, 10, search);
+      const data = await RolesService.getRolesWithUsers(pageNumber, 10, searchTerm);
       setRoles(data.content || []);
       setTotalPages(data.totalPages || 0);
       setPage(data.number || 0);
@@ -42,8 +42,15 @@ const Roles = () => {
   }, [search]);
 
   useEffect(() => {
-    fetchRoles();
-  }, [fetchRoles]);
+    fetchRoles(0, search);
+  }, [fetchRoles, search]);
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearch(value);
+    setPage(0);
+    fetchRoles(0, value);
+  };
 
   const handleAddRole = () => {
     setSelectedRole(null);
@@ -57,7 +64,7 @@ const Roles = () => {
 
   const handleDeleteClick = (role) => {
     setSelectedRole(role);
-    setPendingAction("deletar");
+    setPendingAction("delete");
     setConfirmModalOpen(true);
   };
 
@@ -65,9 +72,10 @@ const Roles = () => {
     if (!selectedRole) return;
     try {
       await RolesService.deleteRole(selectedRole.name);
-      fetchRoles(page);
       setConfirmModalOpen(false);
       showSuccess("Função removida com sucesso!");
+      setPage(0);
+      fetchRoles(0, search);
     } catch (err) {
       console.error(err);
       alert("Erro ao deletar função.");
@@ -85,11 +93,11 @@ const Roles = () => {
   };
 
   const handleNextPage = () => {
-    if (page + 1 < totalPages) fetchRoles(page + 1);
+    if (page + 1 < totalPages) fetchRoles(page + 1, search);
   };
 
   const handlePrevPage = () => {
-    if (page > 0) fetchRoles(page - 1);
+    if (page > 0) fetchRoles(page - 1, search);
   };
 
   const getPermissionColor = (permission) => {
@@ -103,42 +111,41 @@ const Roles = () => {
   };
 
   const renderPermissions = (permissions, role) => {
-  if (!permissions?.length) return "-";
-  const sorted = [...permissions].sort();
+    if (!permissions?.length) return "-";
+    const sorted = [...permissions].sort();
+    const VISIBLE_COUNT = 2;
+    const visible = sorted.slice(0, VISIBLE_COUNT);
+    const remaining = sorted.length - visible.length;
 
-  const VISIBLE_COUNT = 2;
-  const visible = sorted.slice(0, VISIBLE_COUNT);
-  const remaining = sorted.length - visible.length;
-
-  return (
-    <div className="permissions-wrapper">
-      {visible.map((perm) => {
-        const color = getPermissionColor(perm); // ex: "#3b82f6"
-        return (
+    return (
+      <div className="permissions-wrapper">
+        {visible.map((perm) => {
+          const color = getPermissionColor(perm);
+          return (
+            <span
+              key={perm}
+              className="permission-tag"
+              style={{
+                backgroundColor: `${color}20`,
+                color: color,
+                border: `1px solid ${color}`,
+              }}
+              title={perm}
+            >
+              {perm}
+            </span>
+          );
+        })}
+        {remaining > 0 && (
           <span
-            key={perm}
-            className="permission-tag"
-            style={{
-              backgroundColor: `${color}20`, 
-              color: color,                  
-              border: `1px solid ${color}`,  
-            }}
-            title={perm}
+            className="ver-mais-link"
+            onClick={() => handleShowPermissions(role)}
+            style={{ cursor: 'pointer' }}
           >
-            {perm}
+            +{remaining} mais
           </span>
-        );
-      })}
-
-      {remaining > 0 && (
-        <span
-          className="ver-mais-link"
-          onClick={() => handleShowPermissions(role)}
-        >
-          +{remaining} mais
-        </span>
-      )}
-    </div>
+        )}
+      </div>
     );
   };
 
@@ -147,12 +154,13 @@ const Roles = () => {
       <h2>Administração de Funções</h2>
       <div className="controls-group">
         <div className="search-box">
+          <FaSearch className="search-icon" />
           <input
             type="text"
             placeholder="Buscar função..."
             className="search-input"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={handleSearch}
           />
         </div>
         <button className="btn-add" onClick={handleAddRole}>
@@ -176,6 +184,7 @@ const Roles = () => {
                 <th>Nome</th>
                 <th>Permissões</th>
                 <th>Usuários</th>
+                <th>Status</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -186,17 +195,15 @@ const Roles = () => {
                     <td>{role.name}</td>
                     <td className="td-permissions">{renderPermissions(role.strings, role)}</td>
                     <td>{role.users?.length || 0}</td>
+                    <td className="status-toggler">
+                      <span className={role.enabled ? "dot-green" : "dot-red"}></span>
+                      {role.enabled ? "Ativa" : "Inativa"}
+                    </td>
                     <td className="actions-inline">
-                      <button
-                        className="btn-manage"
-                        onClick={() => handleManageRole(role)}
-                      >
+                      <button className="btn-manage" onClick={() => handleManageRole(role)}>
                         <FaUserShield /> Gerenciar
                       </button>
-                      <button
-                        className="btn-delete"
-                        onClick={() => handleDeleteClick(role)}
-                      >
+                      <button className="btn-delete" onClick={() => handleDeleteClick(role)}>
                         <FaTrash /> Remover
                       </button>
                     </td>
@@ -204,7 +211,7 @@ const Roles = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" className="no-data">
+                  <td colSpan="5" className="no-data">
                     Nenhuma função encontrada.
                   </td>
                 </tr>
@@ -238,7 +245,7 @@ const Roles = () => {
           role={selectedRole}
           onClose={() => {
             setRoleModalOpen(false);
-            fetchRoles(page);
+            fetchRoles(page, search);
           }}
           onSuccess={showSuccess}
         />
@@ -247,22 +254,25 @@ const Roles = () => {
       {permissionsListModalOpen && (
         <PermissionsListModal
           role={selectedRole}
+          isOpen={permissionsListModalOpen}
           onClose={() => setPermissionsListModalOpen(false)}
         />
       )}
 
       {confirmModalOpen && (
         <ConfirmModal
+          isOpen={confirmModalOpen}
+          onClose={() => setConfirmModalOpen(false)}
           item={selectedRole}
           itemType="role"
           actionType={pendingAction}
-          onClose={() => setConfirmModalOpen(false)}
           onConfirm={handleConfirmDelete}
         />
       )}
 
       {successModalOpen && (
         <SuccessModal
+          isOpen={successModalOpen}
           message={successMessage}
           onClose={() => setSuccessModalOpen(false)}
         />

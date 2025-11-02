@@ -1,6 +1,3 @@
-/* src/components/Users/UserModal.css */
-
-/* Fundo translúcido */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -132,6 +129,14 @@
   color: #777;
   padding: 12px;
   font-size: 0.9rem;
+}
+
+.search-boxU {
+  max-width: auto;
+}
+
+.password-toggle:hover {
+  background-color: transparent !important;
 }
 
 /* Animação */
