@@ -29,11 +29,11 @@ const RolesListModal = ({ user, isOpen, onClose }) => {
         <div className="roles-list-container">
           <h4>Funções Atribuídas:</h4>
           {user.roles && user.roles.length > 0 ? (
-            <div className="roles-grid">
+            <div className="roles-wrapper">
               {user.roles.map((role, index) => (
                 <div 
                   key={index} 
-                  className="role-item"
+                  className="role-tag"
                   style={{
                     backgroundColor: `${getRoleColor(role)}20`,
                     color: getRoleColor(role),
@@ -50,9 +50,6 @@ const RolesListModal = ({ user, isOpen, onClose }) => {
         </div>
         
         <div className="modal-actions-center">
-          <button className="btn-cancel" onClick={onClose}>
-            Fechar
-          </button>
         </div>
       </div>
     </CustomModal>

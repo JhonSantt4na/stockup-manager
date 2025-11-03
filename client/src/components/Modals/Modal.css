@@ -100,6 +100,10 @@
   color: #facc15;
 }
 
+.modal-icon.deactivate {
+  color: #facc15;
+}
+
 .modal-actions-inline {
   display: flex;
   justify-content: center;
@@ -154,6 +158,13 @@
 .modal-container select:focus {
   outline: none;
   border-color: #339c45;
+}
+
+.modal-warning-text {
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: -10px;
+  margin-bottom: 20px;
 }
 
 @keyframes fadeIn {

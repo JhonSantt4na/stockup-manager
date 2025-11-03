@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import UserService from "../../Services/UserService";
 import Pagination from "../../components/Pagination/Pagination";
-import { FaPlus, FaUserShield, FaSearch } from "react-icons/fa";
+import { FaPlus, FaUserShield, FaSearch, FaTrash } from "react-icons/fa";
 import UserModal from "../../components/Modals/Users/ModalRegisterUser";
 import ModalUpdateUser from "../../components/Modals/Users/ModalUpdateUser";
 import RolesListModal from "../../components/Modals/Users/RolesListModal";
@@ -57,11 +57,13 @@ const Users = () => {
   };
 
   const handleUpdateUser = (user) => {
+    if (!user) return;
     setSelectedUser(user);
     setUpdateUserModalOpen(true);
   };
 
   const handleShowRoles = (user) => {
+    if (!user) return;
     setSelectedUser(user);
     setRolesListModalOpen(true);
   };
@@ -72,13 +74,31 @@ const Users = () => {
   };
 
   const handleToggleClick = (user) => {
+    if (!user || !user.username || user.username.trim() === '') {
+      alert("Usuário inválido para alternar status. Username ausente ou inválido.");
+      return;
+    }
     setSelectedUser(user);
     setPendingAction("toggle");
     setConfirmModalOpen(true);
   };
 
+  const handleDeleteClick = (user) => {
+    if (!user || !user.username || user.username.trim() === '') {
+      alert("Usuário inválido para exclusão. Username ausente ou inválido.");
+      return;
+    }
+    setSelectedUser(user);
+    setPendingAction("delete");
+    setConfirmModalOpen(true);
+  };
+
   const handleConfirmToggle = async () => {
-    if (!selectedUser) return;
+    if (!selectedUser || !selectedUser.username || selectedUser.username.trim() === '') {
+      alert("Usuário inválido.");
+      setConfirmModalOpen(false);
+      return;
+    }
     try {
       await UserService.toggleUser(selectedUser.username);
       fetchUsers(page);
@@ -87,6 +107,23 @@ const Users = () => {
     } catch (err) {
       console.error("Erro ao alternar status do usuário:", err);
       alert(`Erro ao ${selectedUser.enabled === false ? 'ativar' : 'desativar'} usuário.`);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedUser || !selectedUser.username || selectedUser.username.trim() === '') {
+      alert("Usuário inválido.");
+      setConfirmModalOpen(false);
+      return;
+    }
+    try {
+      await UserService.deleteUser(selectedUser.username);
+      fetchUsers(page);
+      setConfirmModalOpen(false);
+      showSuccess(`Usuário deletado com sucesso!`);
+    } catch (err) {
+      console.error("Erro ao deletar usuário:", err);
+      alert(`Erro ao deletar usuário.`);
     }
   };
 
@@ -227,6 +264,12 @@ const Users = () => {
                         >
                           <FaUserShield /> Gerenciar
                         </button>
+                        <button
+                          className="btn-trash-small"
+                          onClick={() => handleDeleteClick(user)}
+                        >
+                          <FaTrash />
+                        </button>
                       </td>
                     </tr>
                   ))
@@ -292,24 +335,20 @@ const Users = () => {
         />
       )}
 
-      {confirmModalOpen && (
-        <ConfirmModal
-          isOpen={confirmModalOpen}
-          onClose={() => setConfirmModalOpen(false)}
-          item={selectedUser}
-          itemType="user"
-          actionType={pendingAction}
-          onConfirm={handleConfirmToggle}
-        />
-      )}
+      <ConfirmModal
+        isOpen={confirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        item={selectedUser}
+        itemType="user"
+        actionType={pendingAction || 'toggle'}
+        onConfirm={pendingAction === 'delete' ? handleConfirmDelete : handleConfirmToggle}
+      />
 
-      {successModalOpen && (
-        <SuccessModal
-          isOpen={successModalOpen}
-          message={successMessage}
-          onClose={() => setSuccessModalOpen(false)}
-        />
-      )}
+      <SuccessModal
+        isOpen={successModalOpen}
+        message={successMessage}
+        onClose={() => setSuccessModalOpen(false)}
+      />
     </PageStruct>
   );
 };

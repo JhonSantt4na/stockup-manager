@@ -19,7 +19,13 @@ function Header() {
   };
 
   const handleProfileClick = () => {
+    console.log("Abrindo modal de perfil");
     setProfileModalOpen(true);
+  };
+
+  const handleCloseProfileModal = () => {
+    console.log("Fechando modal de perfil");
+    setProfileModalOpen(false);
   };
 
   const handleHelpClick = () => {
@@ -103,13 +109,13 @@ function Header() {
         </>
       )}
 
-      {/* Modal de Perfil */}
-      {profileModalOpen && (
-        <ProfileModal 
-          user={user} 
-          onClose={() => setProfileModalOpen(false)} 
-        />
-      )}
+      {/* Modal de Perfil - CORRIGIDO */}
+      <ProfileModal 
+        isOpen={profileModalOpen}
+        onClose={handleCloseProfileModal}
+        user={user}
+        size="medium"
+      />
     </header>
   );
 }

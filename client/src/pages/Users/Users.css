@@ -41,6 +41,23 @@
   display: inline-block;
 }
 
+.btn-trash-small {
+  background-color: transparent;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+  margin-right: 30px;
+}
+
+.btn-trash-small:hover {
+  background-color: #ef444420;
+  color: #dc2626;
+}
+
 .btn-toggle {
   padding: 6px 12px;
   border-radius: 6px;
