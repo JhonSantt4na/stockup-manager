@@ -74,7 +74,7 @@ const deleteUser = async (username) => {
 
 const toggleUser = async (username) => {
   try {
-    const response = await api.put(`${API_URL}/toggle/${username}`);
+    const response = await api.put(`${API_URL}/${username}/toggle`);
     return response.data;
   } catch (error) {
     handleError(error, "toggleUser");

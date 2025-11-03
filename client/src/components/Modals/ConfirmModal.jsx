@@ -1,5 +1,5 @@
 import React from "react";
-import { FaExclamationTriangle, FaToggleOn, FaToggleOff, FaTrash, FaUserSlash, FaUserCheck } from "react-icons/fa";
+import { FaExclamationTriangle, FaTrash, FaUserCheck } from "react-icons/fa";
 import CustomModal from "../../components/Custom/CustomModal";
 import "./Modal.css";
 
@@ -13,7 +13,9 @@ const ConfirmModal = ({
   customMessage,
   customTitle 
 }) => {
-  // Mapeia ações para textos, ícones e cores
+
+  const effectiveActionType = actionType ?? 'delete';
+
   const actionConfigs = {
     delete: { 
       title: "Confirmar Exclusão", 
@@ -32,7 +34,7 @@ const ConfirmModal = ({
     deactivate: { 
       title: "Confirmar Desativação", 
       verb: "desativar",
-      icon: <FaUserSlash />,
+      icon: <FaExclamationTriangle />,
       btnClass: "deactivate",
       warning: false
     },
@@ -46,22 +48,20 @@ const ConfirmModal = ({
     toggle: {
       title: "Confirmar Alteração de Status",
       verb: "alterar o status de",
-      icon: <FaToggleOn />,
+      icon: <FaTrash />,
       btnClass: "toggle",
       warning: false
     }
   };
 
-  // Obtém a configuração da ação ou usa valores padrão
-  const currentAction = actionConfigs[actionType] || { 
+  const currentAction = actionConfigs[effectiveActionType] || { 
     title: customTitle || "Confirmar Ação", 
-    verb: actionType,
+    verb: effectiveActionType || "confirmar",
     icon: <FaExclamationTriangle />,
-    btnClass: actionType,
+    btnClass: effectiveActionType || "default",
     warning: true
   };
 
-  // Obtém o nome do item baseado no tipo
   const getItemName = () => {
     if (!item) return "este item";
     
@@ -94,11 +94,10 @@ const ConfirmModal = ({
     }
   };
 
-  // Obtém o texto adicional baseado no tipo de ação
   const getWarningText = () => {
     if (customMessage) return customMessage;
     
-    switch (actionType) {
+    switch (effectiveActionType) {
       case 'delete':
       case 'remove':
         return "Esta ação não pode ser desfeita.";
@@ -114,41 +113,46 @@ const ConfirmModal = ({
     }
   };
 
-  // Mensagem principal
   const getMainMessage = () => {
     if (customMessage) return customMessage;
     
     const itemName = getItemName();
     
-    switch (actionType) {
+    switch (effectiveActionType) {
       case 'toggle':
         const newStatus = item?.enabled === false ? "ativar" : "desativar";
         return `Tem certeza que deseja ${newStatus} ${itemName}?`;
       default:
-        return `Tem certeza que deseja ${currentAction.verb} ${itemName}?`;
+        return `Tem certeza que deseja ${currentAction.verb || "executar"} ${itemName}?`;
     }
   };
 
-  // Texto do botão de confirmação
   const getConfirmButtonText = () => {
-    switch (actionType) {
-      case 'toggle':
-        return item?.enabled === false ? "Ativar" : "Desativar";
-      default:
-        return currentAction.verb.charAt(0).toUpperCase() + currentAction.verb.slice(1);
+    if (effectiveActionType === 'toggle') {
+      return item?.enabled === false ? "Ativar" : "Desativar";
     }
+    
+    let verb = currentAction.verb || "confirmar";
+    if (typeof verb !== 'string' || verb.trim() === '') {
+      return "Confirmar"; 
+    }
+    
+    return verb.charAt(0).toUpperCase() + verb.slice(1);
   };
 
-  // Ícone baseado no tipo de ação
   const getActionIcon = () => {
-    if (actionType === 'toggle') {
-      return item?.enabled === false ? <FaToggleOn /> : <FaToggleOff />;
+    if (effectiveActionType === 'toggle') {
+      return item?.enabled === false ? <FaUserCheck /> : <FaExclamationTriangle />;
     }
     return currentAction.icon;
   };
 
   const warningText = getWarningText();
   const mainMessage = getMainMessage();
+
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <CustomModal

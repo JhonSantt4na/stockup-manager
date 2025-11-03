@@ -1,4 +1,10 @@
-.profile-modal-backdrop {
+/* ProfileModal.css */
+:root {
+  --page-bg-dark: #2C2C2C;
+  --page-body-bg: #ffffff;
+}
+
+.modal-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.8);
@@ -8,39 +14,50 @@
   z-index: 1000;
 }
 
-.profile-modal-content {
-  background: #2C2C2C;
+.modal-container {
+  background: var(--page-bg-dark);
   border-radius: 12px;
-  width: 400px;
-  max-width: 95%;
   max-height: 80vh;
   overflow: hidden;
   border: 1px solid #444;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
-/* Header escuro */
-.profile-modal-header {
+.modal-container.small {
+  width: 400px;
+  max-width: 95%;
+}
+
+.modal-container.medium {
+  width: 500px;
+  max-width: 95%;
+}
+
+.modal-container.large {
+  width: 600px;
+  max-width: 95%;
+}
+
+.modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
   border-bottom: 1px solid #444;
-  background-color: #2C2C2C;
+  background-color: var(--page-bg-dark);
   position: relative;
 }
 
-.profile-modal-header h3 {
+.modal-title {
   margin: 0;
-  color: #D1D1D1;
+  color: var(--page-body-bg);
   font-size: 1.1rem;
   font-weight: 600;
   width: 100%;
   text-align: center;
 }
 
-/* Botão X vermelho */
-.profile-btn-close {
+.modal-close {
   background: none;
   border: none;
   color: #ef4444;
@@ -56,23 +73,27 @@
   right: 20px;
 }
 
-.profile-btn-close:hover {
+.modal-close:hover {
   background-color: rgba(239, 68, 68, 0.1);
 }
 
-/* Body branco */
-.profile-modal-body {
+/* Body com fundo escuro */
+.profile-modal-body-dark {
   padding: 20px;
-  background-color: #fff;
-  color: #333;
-  text-align: center;
+  background-color: var(--page-bg-dark);
+  color: var(--page-body-bg);
+  max-height: calc(80vh - 120px);
+  overflow-y: auto;
 }
 
+/* Profile User Info */
 .profile-user-info {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  text-align: center;
+  position: relative;
 }
 
 .profile-avatar-container {
@@ -80,54 +101,271 @@
   height: 100px;
   border-radius: 50%;
   overflow: hidden;
-  margin-bottom: 10px;
-  border: 2px solid #45C35B;
+  margin-bottom: 15px;
+  border: 3px solid #45C35B;
+  position: relative;
 }
 
 .profile-avatar-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  background-color: #f0f0f0;
 }
 
-.profile-user-info h4 {
-  margin: 0 0 5px 0;
-  font-size: 1.2rem;
+.profile-change-image-btn {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: #45C35B;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background-color 0.25s ease;
+}
+
+.profile-change-image-btn:hover:not(:disabled) {
+  background: #3ca54f;
+}
+
+.profile-change-image-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.profile-user-name {
+  margin: 0 0 8px 0;
+  font-size: 1.3rem;
+  color: var(--page-body-bg);
+  font-weight: 600;
 }
 
 .profile-role {
-  color: #666;
+  color: #888;
   font-size: 0.9rem;
+  margin: 0;
 }
 
-.profile-details {
+/* Profile Details - Layout Inline */
+.profile-details-inline {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 12px;
 }
 
-.profile-detail-item {
+.profile-detail-item-inline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background-color: var(--page-bg-dark);
+  border-radius: 8px;
+  border: 1px solid #444;
+  transition: border-color 0.25s ease;
+}
+
+.profile-detail-item-inline:hover {
+  border-color: #45C35B;
+}
+
+.profile-field-group {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px;
-  background-color: #f8f9fa;
-  border-radius: 6px;
-  font-size: 0.9rem;
+  gap: 12px;
+  flex: 1;
 }
 
 .profile-detail-icon {
   color: #45C35B;
   font-size: 1.2rem;
+  flex-shrink: 0;
 }
 
-.profile-center-actions {
+.profile-field-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.profile-field-label {
+  font-size: 0.9rem;
+  color: var(--page-body-bg);
+  font-weight: 500;
+  min-width: 120px;
+}
+
+.profile-field-value {
+  color: var(--page-body-bg);
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.profile-edit-btn {
+  background: none;
+  border: none;
+  color: #45C35B;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-edit-btn:hover:not(:disabled) {
+  background-color: rgba(69, 195, 91, 0.1);
+}
+
+.profile-edit-btn:disabled {
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* Edit Mode Styles */
+.profile-edit-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.profile-edit-input-dark {
+  padding: 8px 12px;
+  background-color: #1a1a1a;
+  border: 1px solid #555;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  width: 100%;
+  color: var(--page-body-bg);
+}
+
+.profile-edit-input-dark:focus {
+  outline: none;
+  border-color: #45C35B;
+}
+
+.profile-edit-input-dark:disabled {
+  background-color: #333;
+  color: #888;
+}
+
+.profile-edit-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+}
+
+.profile-save-btn {
+  padding: 6px 12px;
+  background-color: #45C35B;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background-color 0.25s ease;
+  min-width: 60px;
+}
+
+.profile-save-btn:hover:not(:disabled) {
+  background-color: #3ca54f;
+}
+
+.profile-save-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.profile-cancel-btn {
+  padding: 6px 12px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background-color 0.25s ease;
+  min-width: 60px;
+}
+
+.profile-cancel-btn:hover:not(:disabled) {
+  background-color: #5a6268;
+}
+
+.profile-cancel-btn:disabled {
+  background-color: #495057;
+  cursor: not-allowed;
+}
+
+/* Password Form Styles para ChangePasswordModal */
+.password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  color: var(--page-body-bg);
+  font-weight: 500;
+}
+
+.form-input {
+  padding: 10px 12px;
+  background-color: #1a1a1a;
+  border: 1px solid #555;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: border-color 0.25s ease;
+  color: var(--page-body-bg);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #45C35B;
+}
+
+/* Estilos para o ChangePasswordModal */
+.modal-footer {
   display: flex;
   justify-content: center;
+  padding: 15px 20px;
+  border-top: 1px solid #444;
+  background-color: var(--page-bg-dark);
+  gap: 10px;
 }
 
-.profile-btn-close-action {
+.btn-cancel {
+  padding: 8px 16px;
+  background-color: #6c757d;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.btn-cancel:hover {
+  background-color: #5a6268;
+}
+
+.btn-confirm {
   padding: 8px 16px;
   background-color: #45C35B;
   color: #fff;
@@ -137,21 +375,29 @@
   transition: background-color 0.25s ease;
 }
 
-.profile-btn-close-action:hover {
+.btn-confirm:hover {
   background-color: #3ca54f;
+}
+
+/* Loading state */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
 }
 
 /* Responsive */
 @media (max-width: 480px) {
-  .profile-modal-content {
+  .modal-container.small,
+  .modal-container.medium,
+  .modal-container.large {
     width: 98%;
   }
   
-  .profile-modal-header h3 {
+  .modal-title {
     font-size: 1rem;
   }
   
-  .profile-modal-body {
+  .profile-modal-body-dark {
     padding: 15px;
   }
   
@@ -159,4 +405,37 @@
     width: 80px;
     height: 80px;
   }
+  
+  .profile-detail-item-inline {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  
+  .profile-field-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .profile-field-label {
+    min-width: auto;
+  }
+  
+  .profile-edit-actions {
+    justify-content: center;
+  }
+}
+
+.profile-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: var(--page-body-bg);
+}
+
+.profile-loading p {
+  margin: 0;
+  font-size: 1rem;
 }
