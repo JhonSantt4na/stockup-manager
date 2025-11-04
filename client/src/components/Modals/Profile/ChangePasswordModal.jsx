@@ -4,29 +4,20 @@ import { FaTimes, FaLock } from "react-icons/fa";
 import ProfileService from "../../../Services/ProfileService";
 import "./ProfileModal.css";
 
-const ChangePasswordModal = ({
-  isOpen,
-  onClose,
-  user
-}) => {
+const ChangePasswordModal = ({ isOpen, onClose }) => {
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleInputChange = (field, value) => {
-    setPasswordData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
+  const handleChange = (field, value) =>
+    setPasswordData((prev) => ({ ...prev, [field]: value }));
 
   const handleSavePassword = async () => {
-    // Validar senhas
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       alert("As senhas não coincidem!");
       return;
@@ -41,18 +32,15 @@ const ChangePasswordModal = ({
     try {
       await ProfileService.changePassword({
         currentPassword: passwordData.currentPassword,
-        newPassword: passwordData.newPassword
+        newPassword: passwordData.newPassword,
       });
       alert("Senha alterada com sucesso!");
-      setPasswordData({
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: ""
-      });
       onClose();
     } catch (error) {
-      console.error("Erro ao alterar senha:", error);
-      alert(error.response?.data?.message || "Erro ao alterar senha. Verifique a senha atual e tente novamente.");
+      alert(
+        error.response?.data?.message ||
+          "Erro ao alterar senha. Verifique e tente novamente."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -61,7 +49,7 @@ const ChangePasswordModal = ({
   return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div
-        className="modal-container small"
+        className="modal-container small password-modal"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="modal-header">
@@ -71,57 +59,63 @@ const ChangePasswordModal = ({
           </button>
         </div>
 
-        <div className="modal-body profile-modal-body-dark">
-          <div className="password-form">
-            <div className="form-group">
-              <label>Senha Atual</label>
-              <input
-                type="password"
-                value={passwordData.currentPassword}
-                onChange={(e) => handleInputChange('currentPassword', e.target.value)}
-                placeholder="Digite sua senha atual"
-                className="form-input"
-                disabled={isLoading}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Nova Senha</label>
-              <input
-                type="password"
-                value={passwordData.newPassword}
-                onChange={(e) => handleInputChange('newPassword', e.target.value)}
-                placeholder="Digite a nova senha"
-                className="form-input"
-                disabled={isLoading}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Confirmar Nova Senha</label>
-              <input
-                type="password"
-                value={passwordData.confirmPassword}
-                onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                placeholder="Confirme a nova senha"
-                className="form-input"
-                disabled={isLoading}
-              />
-            </div>
+        <div className="modal-body password-body">
+          <div className="form-group">
+            <label>
+              <FaLock /> Senha Atual
+            </label>
+            <input
+              type="password"
+              value={passwordData.currentPassword}
+              onChange={(e) =>
+                handleChange("currentPassword", e.target.value)
+              }
+              className="form-input"
+              placeholder="Digite sua senha atual"
+            />
           </div>
-        </div>
 
-        <div className="modal-footer">
-          <button className="btn-cancel" onClick={onClose} disabled={isLoading}>
-            Cancelar
-          </button>
-          <button className="btn-confirm" onClick={handleSavePassword} disabled={isLoading}>
-            {isLoading ? "Salvando..." : "Salvar Senha"}
-          </button>
+          <div className="form-group">
+            <label>
+              <FaLock /> Nova Senha
+            </label>
+            <input
+              type="password"
+              value={passwordData.newPassword}
+              onChange={(e) => handleChange("newPassword", e.target.value)}
+              className="form-input"
+              placeholder="Digite a nova senha"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>
+              <FaLock /> Confirmar Nova Senha
+            </label>
+            <input
+              type="password"
+              value={passwordData.confirmPassword}
+              onChange={(e) =>
+                handleChange("confirmPassword", e.target.value)
+              }
+              className="form-input"
+              placeholder="Confirme a nova senha"
+            />
+          </div>
+
+          <div className="single-action-btn">
+            <button
+              className="btn-confirm"
+              onClick={handleSavePassword}
+              disabled={isLoading}
+            >
+              {isLoading ? "Salvando..." : "Confirmar"}
+            </button>
+          </div>
         </div>
       </div>
     </div>,
-    document.getElementById('modal-root')
+    document.getElementById("modal-root")
   );
 };
 

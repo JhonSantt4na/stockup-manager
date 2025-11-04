@@ -1,105 +1,45 @@
-// Dashboard.jsx
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import InsightCard from '../../components/InshightCard/InsightCard';
-import Button from '../../components/Button/Button'; 
+import Button from '../../components/Button/Button';
 import { FaShoppingCart, FaEdit, FaCog, FaPlus, FaUserPlus } from 'react-icons/fa';
 import PageStruct from "../../pages/Layout/PageStruct/PageStruct";
 import './Dashboard.css';
 
+const getConfigValue = (key) => {
+  const saved = localStorage.getItem('systemConfigs');
+  if (!saved) return null;
+  const configs = JSON.parse(saved);
+  const config = configs.find(c => c.key === key);
+  return config ? config.value : null;
+};
+
 const Dashboard = () => {
-  // Lista de 12 insights para ciclar
+  const navigate = useNavigate();
+
   const allInsights = [
-    {
-      title: 'Total Sales',
-      value: 'R$ 200,00',
-      trend: true,
-      trendValue: '+12% last month',
-      trendType: 'up',
-    },
-    {
-      title: 'New Orders',
-      value: '150.000.00',
-      trend: true,
-      trendValue: '+0% last month',
-      trendType: 'up',
-    },
-    {
-      title: 'Active Customers',
-      value: '320',
-      trend: true,
-      trendValue: '+5% last month',
-      trendType: 'up',
-    },
-    {
-      title: 'Revenue Growth',
-      value: '18%',
-      trend: true,
-      trendValue: '+3% this quarter',
-      trendType: 'up',
-    },
-    {
-      title: 'Average Order Value',
-      value: 'R$ 300,00',
-      trend: true,
-      trendValue: '-2% last month',
-      trendType: 'down',
-    },
-    {
-      title: 'Customer Retention',
-      value: '85%',
-      trend: true,
-      trendValue: '+4% last month',
-      trendType: 'up',
-    },
-    {
-      title: 'Top Product Sales',
-      value: 'R$ 500,00',
-      trend: true,
-      trendValue: '+8% last month',
-      trendType: 'up',
-    },
-    {
-      title: 'New Users',
-      value: '45',
-      trend: true,
-      trendValue: '+10% last month',
-      trendType: 'up',
-    },
-    {
-      title: 'Return Rate',
-      value: '5%',
-      trend: true,
-      trendValue: '-1% last month',
-      trendType: 'down',
-    },
-    {
-      title: 'Inventory Turnover',
-      value: '4.2',
-      trend: true,
-      trendValue: '+0.5 last month',
-      trendType: 'up',
-    },
-    {
-      title: 'Website Traffic',
-      value: '12.200',
-      trend: true,
-      trendValue: '+15% last month',
-      trendType: 'up',
-    },
-    {
-      title: 'Conversion Rate',
-      value: '3.5%',
-      trend: true,
-      trendValue: '+0.2% last month',
-      trendType: 'up',
-    },
+    { title: 'Total Sales', value: 'R$ 200,00', trend: true, trendValue: '+12% last month', trendType: 'up' },
+    { title: 'New Orders', value: '150.000.00', trend: true, trendValue: '+0% last month', trendType: 'up' },
+    { title: 'Active Customers', value: '320', trend: true, trendValue: '+5% last month', trendType: 'up' },
+    { title: 'Revenue Growth', value: '18%', trend: true, trendValue: '+3% this quarter', trendType: 'up' },
+    { title: 'Average Order Value', value: 'R$ 300,00', trend: true, trendValue: '-2% last month', trendType: 'down' },
+    { title: 'Customer Retention', value: '85%', trend: true, trendValue: '+4% last month', trendType: 'up' },
+    { title: 'Top Product Sales', value: 'R$ 500,00', trend: true, trendValue: '+8% last month', trendType: 'up' },
+    { title: 'New Users', value: '45', trend: true, trendValue: '+10% last month', trendType: 'up' },
+    { title: 'Return Rate', value: '5%', trend: true, trendValue: '-1% last month', trendType: 'down' },
+    { title: 'Inventory Turnover', value: '4.2', trend: true, trendValue: '+0.5 last month', trendType: 'up' },
+    { title: 'Website Traffic', value: '12.200', trend: true, trendValue: '+15% last month', trendType: 'up' },
+    { title: 'Conversion Rate', value: '3.5%', trend: true, trendValue: '+0.2% last month', trendType: 'up' },
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentInsights, setCurrentInsights] = useState(allInsights.slice(0, 3));
+  const [razaoSocial, setRazaoSocial] = useState(getConfigValue('razao_social') || 'Jhon Tec LTDA');
+  const [cnpj, setCnpj] = useState(getConfigValue('cnpj') || '785.421.556-22');
 
+  // 👇 Redireciona para a rota de configurações da navbar
   const handleEditConfig = () => {
-    // Implementar lógica de configuração se necessário
+    navigate('/settings');
   };
 
   useEffect(() => {
@@ -109,14 +49,15 @@ const Dashboard = () => {
         setCurrentInsights(allInsights.slice(nextIndex, nextIndex + 3));
         return nextIndex;
       });
-    }, 8000); // Cicla a cada 8 segundos
-
+    }, 8000);
     return () => clearInterval(interval);
   }, []);
 
   const header = (
     <div className="dashboard-header">
-      <h2 className="dashboard-title">Jhon Tec LTDA - CNPJ: 785.421.556-22</h2>
+      <h2 className="dashboard-title">
+        {razaoSocial} - CNPJ: {cnpj}
+      </h2>
       <button className="logout-btn" onClick={handleEditConfig}>
         <FaCog /> Configurações da Loja
       </button>
@@ -130,16 +71,16 @@ const Dashboard = () => {
           {currentInsights.map((insight, index) => (
             <InsightCard key={index} {...insight} />
           ))}
-          <InsightCard 
-            title="STOCK LOW" 
-            value="15" 
-            trend={true}
+          <InsightCard
+            title="STOCK LOW"
+            value="15"
+            trend
             trendValue="Stock Low"
             trendType="down"
             className="warning"
           />
         </div>
-      
+
         <div className="actions-section">
           <Button variant="blue" size="medium">
             <FaShoppingCart style={{ marginRight: '8px' }} /> INICIAR VENDA RÁPIDO
@@ -156,7 +97,6 @@ const Dashboard = () => {
         </div>
 
         <div className="graphs-container">
-          {/* --- Gráfico do Dia --- */}
           <div className="chart-section">
             <h2 className="section-title">VENDAS DO DIA</h2>
             <div className="chart-placeholder">
@@ -168,7 +108,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* --- Gráfico do Mês --- */}
           <div className="chart-section">
             <h2 className="section-title">VENDAS DO MÊS</h2>
             <div className="chart-placeholder">
@@ -180,7 +119,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* --- Gráfico do Ano --- */}
           <div className="chart-section">
             <h2 className="section-title">VENDAS DO ANO</h2>
             <div className="chart-placeholder">
@@ -196,13 +134,9 @@ const Dashboard = () => {
     </div>
   );
 
-  const footer = (
-    <div className="footer-empty"></div>
-  );
+  const footer = <div className="footer-empty"></div>;
 
-  return (
-    <PageStruct header={header} body={body} footer={footer}/>
-  );
+  return <PageStruct header={header} body={body} footer={footer} />;
 };
 
 export default Dashboard;

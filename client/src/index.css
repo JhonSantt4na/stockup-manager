@@ -4,13 +4,17 @@
   --card-radius: 12px;
   --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
 
+  --first-color: #45C35B;
+  --text-color: white;
+  --text-color2: #2C2C2C;
+
   --page-bg-dark: #2C2C2C;
   --page-header-color: white;
   --page-header-padding: 20px;
 
   --page-body-bg: #ffffff;
   --page-body-padding: 20px;
-
+  
   --page-footer-bg: #1E1E1E;
   --page-footer-border: 2px solid #45C35B;
   --page-footer-padding: 12px 20px;
