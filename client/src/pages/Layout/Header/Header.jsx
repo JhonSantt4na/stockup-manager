@@ -19,33 +19,43 @@ function Header() {
   };
 
   const handleProfileClick = () => {
-    console.log("Abrindo modal de perfil");
     setProfileModalOpen(true);
   };
 
   const handleCloseProfileModal = () => {
-    console.log("Fechando modal de perfil");
     setProfileModalOpen(false);
   };
 
-  const handleHelpClick = () => {
-    navigate("/help");
-  };
-
   const getRoleBadge = () => {
-    if (user?.isAdmin) return <span className="role-badge admin-badge">ADMIN</span>;
-    if (user?.roles?.some(role => ["PRO", "ROLE_PRO"].includes(role))) return <span className="role-badge pro-badge">PRO</span>;
+    if (user?.isAdmin)
+      return <span className="role-badge admin-badge">ADMIN</span>;
+    if (user?.roles?.some((role) => ["PRO", "ROLE_PRO"].includes(role)))
+      return <span className="role-badge pro-badge">PRO</span>;
     return <span className="role-badge free-badge">FREE</span>;
   };
 
   const getCurrentDateTime = () => {
     const now = new Date();
-    const date = now.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' });
-    const time = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const date = now.toLocaleDateString("pt-BR", {
+      weekday: "long",
+      day: "2-digit",
+      month: "long",
+    });
+    const time = now.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
     return { date, time };
   };
 
   const { date, time } = getCurrentDateTime();
+
+  // --- 🔹 Ajuste: exibe o nome completo corretamente
+  const displayName =
+    user?.fullName?.trim() ||
+    user?.name?.trim() ||
+    user?.username?.trim() ||
+    "Usuário";
 
   return (
     <header className="app-header">
@@ -54,7 +64,7 @@ function Header() {
           <div className="logo-center">
             <img src="/Logo.png" alt="StockUp Manager" className="logo-img" />
           </div>
-          <button className="help-btn" onClick={handleHelpClick}>
+          <button className="help-btn" onClick={() => navigate("/help")}>
             Ajuda
           </button>
         </div>
@@ -66,7 +76,7 @@ function Header() {
             </div>
             {user && getRoleBadge()}
             <div className="date-time-container">
-              <div className="date-below">{date}</div> 
+              <div className="date-below">{date}</div>
               &nbsp;&nbsp;
               <div className="time-highlight">{time}</div>
             </div>
@@ -93,7 +103,7 @@ function Header() {
                 onClick={handleProfileClick}
                 title="Ver perfil"
               >
-                {user?.name ? user.name : "Usuário"}
+                {displayName}
               </button>
             </div>
 
@@ -109,8 +119,7 @@ function Header() {
         </>
       )}
 
-      {/* Modal de Perfil - CORRIGIDO */}
-      <ProfileModal 
+      <ProfileModal
         isOpen={profileModalOpen}
         onClose={handleCloseProfileModal}
         user={user}

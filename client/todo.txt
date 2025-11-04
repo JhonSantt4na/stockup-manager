@@ -1,14 +1,11 @@
 Tempo para sumir o Modal de Confirmação
-Apagar usuario / toggler de ativar e desativar
 Ajustar as Paginações
-
 Nomes nao pode comerça com "Simbolos ou numero"
 Adicionar um Modal pedindo pra ir pra o Login quando o Token estiver invalido;
-O btn de config da dashboard leva pra as config da navbar
-
 A senha definida pelo admin deve ser temporária e o sistema deve incentivar o usuário a alterá-la.
 Todas as ações do admin devem ser registradas em log para auditoria.
 pedir a senha para altear o usuario;
+
 
 | Função / Elemento                       | Cor                                                             | Hexadecimal |
 | --------------------------------------- | --------------------------------------------------------------- | ----------- |

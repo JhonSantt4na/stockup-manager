@@ -4,20 +4,22 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(44, 44, 44, 0.9) !important;
+  background-color: rgba(0, 0, 0, 0.7) !important;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10000 !important;
   opacity: 1 !important;
+  transition: opacity 0.2s ease-in-out;
 }
 
 .modal-container {
-  background-color: #2b2b2b;
-  color: #f5f5f5;
+  background-color: var(--bg-dark, #2b2b2b);
+  color: var(--text-light, #f5f5f5);
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
   overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .modal-container.small {
@@ -36,48 +38,89 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #1e1e1e;
+  background-color: var(--bg-light, #1e1e1e);
   padding: 14px 18px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border-dark, #333);
 }
 
 .modal-title {
   margin: 0;
   font-size: 1.2rem;
-  color: #fff;
+  font-weight: 600;
+  color: var(--text-light, #fff);
 }
 
 .modal-close {
   background: none;
   border: none;
-  color: #ccc;
+  color: var(--text-muted, #ccc);
   font-size: 1.1rem;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: color 0.2s ease;
 }
 
 .modal-close:hover {
-  color: #fff;
+  color: var(--text-light, #fff);
+}
+
+.modal-content {
+  padding: 20px;
+  background-color: var(--bg-dark, #2b2b2b);
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-form label {
+  font-weight: 500;
+  color: var(--text-muted, #bbb);
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.modal-form input,
+.modal-form select,
+.modal-form textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-dark, #333);
+  background-color: var(--bg-light, #1e1e1e);
+  color: var(--text-light, #f5f5f5);
+  outline: none;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal-form input:focus,
+.modal-form select:focus,
+.modal-form textarea:focus {
+  border-color: var(--primary, #45C35B);
+  box-shadow: 0 0 0 2px rgba(69, 195, 91, 0.2);
 }
 
 .modal-footer {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  background-color: #1e1e1e;
+  background-color: var(--bg-light, #1e1e1e);
   padding: 14px 18px;
-  border-top: 1px solid #333;
+  border-top: 1px solid var(--border-dark, #333);
 }
 
-.modal-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.modal-form label {
+.modal-footer button {
+  background-color: var(--primary, #45C35B);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  color: #fff;
   font-weight: 500;
-  color: var(--page-bg-dark);
-  font-size: 0.9rem;
-  margin-bottom: 2px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modal-footer button:hover {
+  background-color: var(--primary-hover, #3ca14e);
 }

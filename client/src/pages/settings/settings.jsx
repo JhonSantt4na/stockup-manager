@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// Config.jsx (updated with new defaults and localStorage persistence)
+import React, { useState, useEffect } from "react";
 import "./settings.css";
 import PageStruct from "../Layout/PageStruct/PageStruct";
 import { FaChevronLeft, FaChevronRight, FaBars, FaCog, FaPalette, FaPhone, FaDollarSign, FaPencilAlt, FaTrash, FaSave, FaPlus, FaTimes, FaWrench } from 'react-icons/fa';
@@ -16,6 +17,8 @@ const defaultConfigs = [
   { id: 10, key: "cor_primaria", label: "Cor Primária", value: "#45C35B", category: "aparencia", type: "select", options: ["#45C35B", "#6554C0", "#FF6B6B", "#FFA500"] },
   { id: 11, key: "endereco_suporte", label: "Endereço de Suporte", value: "Rua Exemplo, 123 - São Paulo, SP", category: "contato", type: "text" },
   { id: 12, key: "taxa_imposto", label: "Taxa de Imposto Padrão", value: "0.18", category: "financeiro", type: "number" },
+  { id: 13, key: "razao_social", label: "Razão Social", value: "Jhon Tec LTDA", category: "geral", type: "text" },
+  { id: 14, key: "cnpj", label: "CNPJ", value: "785.421.556-22", category: "geral", type: "text" },
 ];
 
 const categories = [
@@ -26,14 +29,21 @@ const categories = [
 ];
 
 export default function Config() {
-  const [configs, setConfigs] = useState(defaultConfigs);
+  const [configs, setConfigs] = useState(() => {
+    const saved = localStorage.getItem('systemConfigs');
+    return saved ? JSON.parse(saved) : defaultConfigs;
+  });
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({ label: "", value: "", category: "geral", type: "text" });
   const [activeCategory, setActiveCategory] = useState("geral");
   const [searchTerm, setSearchTerm] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const filteredConfigs = configs.filter(cfg => 
+  useEffect(() => {
+    localStorage.setItem('systemConfigs', JSON.stringify(configs));
+  }, [configs]);
+
+  const filteredConfigs = configs.filter(cfg =>
     (activeCategory !== "geral" ? cfg.category === activeCategory : true) &&
     cfg.label.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -51,9 +61,8 @@ export default function Config() {
   const saveConfig = (e) => {
     e.preventDefault();
     if (!form.label.trim()) return;
-
     if (editingId) {
-      setConfigs(configs.map(cfg => 
+      setConfigs(configs.map(cfg =>
         cfg.id === editingId ? { ...cfg, ...form } : cfg
       ));
     } else {
@@ -64,7 +73,6 @@ export default function Config() {
       };
       setConfigs([...configs, newConfig]);
     }
-    
     cancelEdit();
   };
 
@@ -78,7 +86,7 @@ export default function Config() {
     if (editingId === config.id) {
       if (config.type === "select" && config.options) {
         return (
-          <select 
+          <select
             value={form.value}
             onChange={(e) => setForm({...form, value: e.target.value})}
             className="config-input"
@@ -98,7 +106,6 @@ export default function Config() {
         />
       );
     }
-    
     return <span className="config-value">{config.value}</span>;
   };
 
@@ -115,14 +122,13 @@ export default function Config() {
           <FaBars className="logo-icon" />
           {!isCollapsed && <p>Categorias</p>}
         </div>
-        <button 
+        <button
           className="collapse-toggle"
           onClick={() => setIsCollapsed(!isCollapsed)}
         >
           {isCollapsed ? <FaChevronLeft /> : <FaChevronRight />}
         </button>
       </div>
-
       {!isCollapsed && (
         <div className="search-box">
           <input
@@ -134,7 +140,6 @@ export default function Config() {
           />
         </div>
       )}
-      
       <nav className="sidebar-menu">
         <ul>
           {categories.map(category => (
@@ -154,7 +159,6 @@ export default function Config() {
           ))}
         </ul>
       </nav>
-
       {!isCollapsed && (
         <div className="add-config-section">
           <h3>Adicionar Configuração</h3>
@@ -184,7 +188,6 @@ export default function Config() {
                 <option key={cat.id} value={cat.id}>{cat.name}</option>
               ))}
             </select>
-            
             <div className="form-actions">
               <button type="submit" className="btn-primary">
                 {editingId ? <FaSave /> : <FaPlus />}
@@ -211,13 +214,13 @@ export default function Config() {
               <div className="config-header-card">
                 <h3>{config.label}</h3>
                 <div className="config-actions">
-                  <button 
+                  <button
                     onClick={() => startEdit(config)}
                     className="btn-edit"
                   >
                     <FaPencilAlt />
                   </button>
-                  <button 
+                  <button
                     onClick={() => deleteConfig(config.id)}
                     className="btn-delete"
                   >
@@ -225,11 +228,9 @@ export default function Config() {
                   </button>
                 </div>
               </div>
-              
               <div className="config-body">
                 {renderInputField(config)}
               </div>
-              
               <div className="config-footer">
                 <span className="config-key">Chave: {config.key}</span>
                 <span className="config-type">{config.type}</span>
@@ -237,7 +238,6 @@ export default function Config() {
             </div>
           ))}
         </div>
-
         {filteredConfigs.length === 0 && (
           <div className="empty-state">
             <div className="empty-icon"><FaWrench /></div>
@@ -246,7 +246,6 @@ export default function Config() {
           </div>
         )}
       </div>
-
       {sidebarContent}
     </div>
   );
