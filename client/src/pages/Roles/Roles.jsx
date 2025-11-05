@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
 import RolesService from "../../Services/RolesService";
 import Pagination from "../../components/Pagination/Pagination";
-import { FaPlus, FaUserShield, FaTrash, FaSearch} from "react-icons/fa";
+import { FaPlus, FaUserShield, FaTrash, FaSearch } from "react-icons/fa";
 import RoleModal from "../../components/Modals/Roles/RoleModal";
 import ConfirmModal from "../../components/Modals/ConfirmModal";
 import SuccessModal from "../../components/Modals/SuccessModal";
+import ErroModal from "../../components/Modals/ErroModal";
 import PermissionsListModal from "../../components/Modals/Roles/PermissionsListModal";
 import PageStruct from "../Layout/PageStruct/PageStruct";
 import "./Roles.css";
@@ -17,14 +18,21 @@ const Roles = () => {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
+  // Modais
   const [roleModalOpen, setRoleModalOpen] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-  const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [permissionsListModalOpen, setPermissionsListModalOpen] = useState(false);
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+
   const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [selectedRole, setSelectedRole] = useState(null);
   const [pendingAction, setPendingAction] = useState(null);
 
+  // ===========================================
+  // 🔹 Buscar roles com paginação e busca
+  // ===========================================
   const fetchRoles = useCallback(async (pageNumber = 0, searchTerm = search) => {
     setLoading(true);
     try {
@@ -36,6 +44,7 @@ const Roles = () => {
     } catch (err) {
       console.error("Erro ao carregar funções:", err);
       setError("Erro ao carregar funções.");
+      showError("Falha ao carregar a lista de funções.");
     } finally {
       setLoading(false);
     }
@@ -45,6 +54,22 @@ const Roles = () => {
     fetchRoles(0, search);
   }, [fetchRoles, search]);
 
+  // ===========================================
+  // 🔹 Funções auxiliares de feedback
+  // ===========================================
+  const showSuccess = (message) => {
+    setSuccessMessage(message);
+    setSuccessModalOpen(true);
+  };
+
+  const showError = (message) => {
+    setErrorMessage(message);
+    setErrorModalOpen(true);
+  };
+
+  // ===========================================
+  // 🔹 Handlers principais
+  // ===========================================
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearch(value);
@@ -78,7 +103,7 @@ const Roles = () => {
       fetchRoles(0, search);
     } catch (err) {
       console.error(err);
-      alert("Erro ao deletar função.");
+      showError("Erro ao remover a função.");
     }
   };
 
@@ -87,11 +112,9 @@ const Roles = () => {
     setPermissionsListModalOpen(true);
   };
 
-  const showSuccess = (message) => {
-    setSuccessMessage(message);
-    setSuccessModalOpen(true);
-  };
-
+  // ===========================================
+  // 🔹 Paginação
+  // ===========================================
   const handleNextPage = () => {
     if (page + 1 < totalPages) fetchRoles(page + 1, search);
   };
@@ -100,6 +123,9 @@ const Roles = () => {
     if (page > 0) fetchRoles(page - 1, search);
   };
 
+  // ===========================================
+  // 🔹 Renderização das permissões
+  // ===========================================
   const getPermissionColor = (permission) => {
     const colors = {
       READ: "#3b82f6",
@@ -140,7 +166,7 @@ const Roles = () => {
           <span
             className="ver-mais-link"
             onClick={() => handleShowPermissions(role)}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
           >
             +{remaining} mais
           </span>
@@ -149,6 +175,9 @@ const Roles = () => {
     );
   };
 
+  // ===========================================
+  // 🔹 Estrutura visual
+  // ===========================================
   const header = (
     <div className="roles-header">
       <h2>Administração de Funções</h2>
@@ -193,17 +222,27 @@ const Roles = () => {
                 roles.map((role) => (
                   <tr key={role.id}>
                     <td>{role.name}</td>
-                    <td className="td-permissions">{renderPermissions(role.strings, role)}</td>
+                    <td className="td-permissions">
+                      {renderPermissions(role.strings, role)}
+                    </td>
                     <td>{role.users?.length || 0}</td>
                     <td className="status-toggler">
-                      <span className={role.enabled ? "dot-green" : "dot-red"}></span>
+                      <span
+                        className={role.enabled ? "dot-green" : "dot-red"}
+                      ></span>
                       {role.enabled ? "Ativa" : "Inativa"}
                     </td>
                     <td className="actions-inline">
-                      <button className="btn-manage" onClick={() => handleManageRole(role)}>
+                      <button
+                        className="btn-manage"
+                        onClick={() => handleManageRole(role)}
+                      >
                         <FaUserShield /> Gerenciar
                       </button>
-                      <button className="btn-delete" onClick={() => handleDeleteClick(role)}>
+                      <button
+                        className="btn-delete"
+                        onClick={() => handleDeleteClick(role)}
+                      >
                         <FaTrash /> Remover
                       </button>
                     </td>
@@ -238,6 +277,9 @@ const Roles = () => {
     </div>
   );
 
+  // ===========================================
+  // 🔹 Render final
+  // ===========================================
   return (
     <PageStruct header={header} body={body} footer={footer}>
       {roleModalOpen && (
@@ -248,6 +290,7 @@ const Roles = () => {
             fetchRoles(page, search);
           }}
           onSuccess={showSuccess}
+          onError={showError}
         />
       )}
 
@@ -275,6 +318,14 @@ const Roles = () => {
           isOpen={successModalOpen}
           message={successMessage}
           onClose={() => setSuccessModalOpen(false)}
+        />
+      )}
+
+      {errorModalOpen && (
+        <ErroModal
+          isOpen={errorModalOpen}
+          message={errorMessage}
+          onClose={() => setErrorModalOpen(false)}
         />
       )}
     </PageStruct>

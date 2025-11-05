@@ -1,6 +1,7 @@
 import api from "../Api";
 
 const API_URL = "/users";
+
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -20,7 +21,6 @@ const getUsers = async (page = 0, size = 10, search = "", filter = "all", sort =
     let enabled;
     if (filter === "active") enabled = true;
     else if (filter === "inactive") enabled = false;
-
     const response = await api.get(`${API_URL}/list`, {
       params: {
         page,
@@ -68,6 +68,9 @@ const deleteUser = async (username) => {
     const response = await api.delete(`${API_URL}/delete/${username}`);
     return response.data;
   } catch (error) {
+    if (error.response && error.response.status === 409) {
+      throw new Error(error.response.data || "Cannot delete active user. Deactivate first.");
+    }
     handleError(error, "deleteUser");
   }
 };

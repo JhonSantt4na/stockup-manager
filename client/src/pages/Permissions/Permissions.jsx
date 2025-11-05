@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react";
 import PermissionsService from "../../Services/PermissionsService";
 import Pagination from "../../components/Pagination/Pagination";
-import { FaPlus, FaPen, FaTrash, FaSearch} from "react-icons/fa";
+import { FaPlus, FaPen, FaTrash, FaSearch } from "react-icons/fa";
 import PageStruct from "../Layout/PageStruct/PageStruct";
 import AddPermissionModal from "../../components/Modals/Permissions/AddPermissionModal";
 import EditPermissionModal from "../../components/Modals/Permissions/EditPermissionModal";
 import ConfirmModal from "../../components/Modals/ConfirmModal";
 import SuccessModal from "../../components/Modals/SuccessModal";
+import ErroModal from "../../components/Modals/ErroModal";
 import "./Permissions.css";
 
 const Permissions = () => {
@@ -17,14 +18,21 @@ const Permissions = () => {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
+  // Modais
   const [modalAddOpen, setModalAddOpen] = useState(false);
   const [modalEditOpen, setModalEditOpen] = useState(false);
   const [modalConfirmOpen, setModalConfirmOpen] = useState(false);
   const [modalSuccessOpen, setModalSuccessOpen] = useState(false);
+  const [modalErrorOpen, setModalErrorOpen] = useState(false);
+
   const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [selectedPermission, setSelectedPermission] = useState(null);
   const [pendingAction, setPendingAction] = useState(null);
 
+  // =============================
+  // 🔹 Buscar permissões
+  // =============================
   const fetchPermissions = useCallback(async (pageNumber = 0) => {
     setLoading(true);
     try {
@@ -36,6 +44,7 @@ const Permissions = () => {
     } catch (err) {
       console.error(err);
       setError("Erro ao carregar permissões.");
+      showError("Falha ao carregar a lista de permissões.");
     } finally {
       setLoading(false);
     }
@@ -45,6 +54,22 @@ const Permissions = () => {
     fetchPermissions();
   }, [fetchPermissions]);
 
+  // =============================
+  // 🔹 Feedback Modals
+  // =============================
+  const showSuccess = (message) => {
+    setSuccessMessage(message);
+    setModalSuccessOpen(true);
+  };
+
+  const showError = (message) => {
+    setErrorMessage(message);
+    setModalErrorOpen(true);
+  };
+
+  // =============================
+  // 🔹 Ações principais
+  // =============================
   const handleSearch = (e) => setSearch(e.target.value);
   const handleAddPermission = () => setModalAddOpen(true);
 
@@ -68,7 +93,7 @@ const Permissions = () => {
       fetchPermissions(page);
     } catch (error) {
       console.error(error);
-      alert("Erro ao deletar permissão.");
+      showError("Erro ao remover a permissão.");
     }
   };
 
@@ -83,7 +108,7 @@ const Permissions = () => {
       fetchPermissions(page);
     } catch (error) {
       console.error(error);
-      alert("Erro ao criar permissão.");
+      showError("Erro ao criar a permissão.");
     }
   };
 
@@ -99,15 +124,13 @@ const Permissions = () => {
       fetchPermissions(page);
     } catch (error) {
       console.error(error);
-      alert("Erro ao atualizar permissão.");
+      showError("Erro ao atualizar a permissão.");
     }
   };
 
-  const showSuccess = (message) => {
-    setSuccessMessage(message);
-    setModalSuccessOpen(true);
-  };
-
+  // =============================
+  // 🔹 Paginação
+  // =============================
   const handleNextPage = () => {
     if (page + 1 < totalPages) fetchPermissions(page + 1);
   };
@@ -116,10 +139,16 @@ const Permissions = () => {
     if (page > 0) fetchPermissions(page - 1);
   };
 
+  // =============================
+  // 🔹 Filtro
+  // =============================
   const filteredPermissions = permissions.filter((p) =>
     (p.description || "").toLowerCase().includes(search.toLowerCase())
   );
 
+  // =============================
+  // 🔹 Estrutura visual
+  // =============================
   const header = (
     <div className="permissions-header">
       <h2>Administração de Permissões</h2>
@@ -164,7 +193,6 @@ const Permissions = () => {
                   <tr key={permission.id || permission.description}>
                     <td>{permission.description || "N/A"}</td>
                     <td>{permission.roles?.length || 0}</td>
-                
                     <td className="status-toggler">
                       <span
                         className={
@@ -219,14 +247,19 @@ const Permissions = () => {
     </div>
   );
 
+  // =============================
+  // 🔹 Renderização final
+  // =============================
   return (
     <PageStruct header={header} body={body} footer={footer}>
+      {/* Adicionar permissão */}
       <AddPermissionModal
         isOpen={modalAddOpen}
         onClose={() => setModalAddOpen(false)}
         onSubmit={handleCreatePermission}
       />
 
+      {/* Editar permissão */}
       <EditPermissionModal
         isOpen={modalEditOpen}
         onClose={() => setModalEditOpen(false)}
@@ -234,6 +267,7 @@ const Permissions = () => {
         onSubmit={handleUpdatePermission}
       />
 
+      {/* Confirmação */}
       <ConfirmModal
         isOpen={modalConfirmOpen}
         onClose={() => setModalConfirmOpen(false)}
@@ -243,10 +277,18 @@ const Permissions = () => {
         onConfirm={handleConfirmDelete}
       />
 
+      {/* Sucesso */}
       <SuccessModal
         isOpen={modalSuccessOpen}
         message={successMessage}
         onClose={() => setModalSuccessOpen(false)}
+      />
+
+      {/* Erro */}
+      <ErroModal
+        isOpen={modalErrorOpen}
+        message={errorMessage}
+        onClose={() => setModalErrorOpen(false)}
       />
     </PageStruct>
   );

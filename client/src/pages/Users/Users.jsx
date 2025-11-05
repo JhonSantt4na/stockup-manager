@@ -7,6 +7,7 @@ import ModalUpdateUser from "../../components/Modals/Users/ModalUpdateUser";
 import RolesListModal from "../../components/Modals/Users/RolesListModal";
 import ConfirmModal from "../../components/Modals/ConfirmModal";
 import SuccessModal from "../../components/Modals/SuccessModal";
+import ErroModal from "../../components/Modals/ErroModal";
 import PageStruct from "../../pages/Layout/PageStruct/PageStruct";
 import "./Users.css";
 
@@ -18,7 +19,6 @@ const Users = () => {
   const [error, setError] = useState("");
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-
   const [userModalOpen, setUserModalOpen] = useState(false);
   const [updateUserModalOpen, setUpdateUserModalOpen] = useState(false);
   const [rolesListModalOpen, setRolesListModalOpen] = useState(false);
@@ -27,6 +27,13 @@ const Users = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [pendingAction, setPendingAction] = useState(null);
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const showError = (message) => {
+    setErrorMessage(message);
+    setErrorModalOpen(true);
+  };
 
   const fetchUsers = useCallback(
     async (pageNumber = 0) => {
@@ -37,9 +44,14 @@ const Users = () => {
         setTotalPages(data.totalPages || 0);
         setPage(data.number || 0);
         setError("");
+        if (data.content.length === 0 && pageNumber > 0 && data.totalPages > 0) {
+          const newPage = pageNumber - 1;
+          setPage(newPage);
+          await fetchUsers(newPage);
+        }
       } catch (err) {
         console.error("Erro ao carregar usuários:", err);
-        setError("Erro ao carregar usuários.");
+        showError("Erro ao carregar usuários.");
       } finally {
         setLoading(false);
       }
@@ -75,7 +87,7 @@ const Users = () => {
 
   const handleToggleClick = (user) => {
     if (!user || !user.username || user.username.trim() === '') {
-      alert("Usuário inválido para alternar status. Username ausente ou inválido.");
+      showError("Usuário inválido para alternar status. Username ausente ou inválido.");
       return;
     }
     setSelectedUser(user);
@@ -85,7 +97,7 @@ const Users = () => {
 
   const handleDeleteClick = (user) => {
     if (!user || !user.username || user.username.trim() === '') {
-      alert("Usuário inválido para exclusão. Username ausente ou inválido.");
+      showError("Usuário inválido para exclusão. Username ausente ou inválido.");
       return;
     }
     setSelectedUser(user);
@@ -95,35 +107,39 @@ const Users = () => {
 
   const handleConfirmToggle = async () => {
     if (!selectedUser || !selectedUser.username || selectedUser.username.trim() === '') {
-      alert("Usuário inválido.");
+      showError("Usuário inválido.");
       setConfirmModalOpen(false);
       return;
     }
     try {
       await UserService.toggleUser(selectedUser.username);
-      fetchUsers(page);
+      await fetchUsers(page);
       setConfirmModalOpen(false);
       showSuccess(`Usuário ${selectedUser.enabled === false ? 'ativado' : 'desativado'} com sucesso!`);
     } catch (err) {
       console.error("Erro ao alternar status do usuário:", err);
-      alert(`Erro ao ${selectedUser.enabled === false ? 'ativar' : 'desativar'} usuário.`);
+      showError(`Erro ao ${selectedUser.enabled === false ? 'ativar' : 'desativar'} usuário.`);
     }
   };
 
   const handleConfirmDelete = async () => {
     if (!selectedUser || !selectedUser.username || selectedUser.username.trim() === '') {
-      alert("Usuário inválido.");
+      showError("Usuário inválido.");
       setConfirmModalOpen(false);
       return;
     }
     try {
       await UserService.deleteUser(selectedUser.username);
-      fetchUsers(page);
+      await fetchUsers(page);
       setConfirmModalOpen(false);
       showSuccess(`Usuário deletado com sucesso!`);
     } catch (err) {
       console.error("Erro ao deletar usuário:", err);
-      alert(`Erro ao deletar usuário.`);
+      if (err.message.includes("Cannot delete active user")) {
+        showError("Não é possível deletar usuário ativo. Desative primeiro.");
+      } else {
+        showError(`Erro ao deletar usuário: ${err.message || 'Erro desconhecido'}`);
+      }
     }
   };
 
@@ -149,13 +165,11 @@ const Users = () => {
 
   const renderRoles = (roles, user) => {
     if (!roles || roles.length === 0) return "-";
-
     const sortedRoles = [...roles].sort((a, b) => {
       if (a === "ADMIN") return -1;
       if (b === "ADMIN") return 1;
       return a.localeCompare(b);
     });
-
     return (
       <div className="roles-wrapper">
         {sortedRoles.slice(0, 2).map((role) => (
@@ -171,8 +185,8 @@ const Users = () => {
           </span>
         ))}
         {sortedRoles.length > 2 && (
-          <span 
-            className="ver-mais-link" 
+          <span
+            className="ver-mais-link"
             onClick={() => handleShowRoles(user)}
             style={{ cursor: 'pointer' }}
           >
@@ -267,6 +281,7 @@ const Users = () => {
                         <button
                           className="btn-trash-small"
                           onClick={() => handleDeleteClick(user)}
+                          disabled={user.enabled}
                         >
                           <FaTrash />
                         </button>
@@ -315,7 +330,6 @@ const Users = () => {
           onSuccess={showSuccess}
         />
       )}
-
       {updateUserModalOpen && (
         <ModalUpdateUser
           user={selectedUser}
@@ -326,7 +340,6 @@ const Users = () => {
           onSuccess={showSuccess}
         />
       )}
-
       {rolesListModalOpen && (
         <RolesListModal
           user={selectedUser}
@@ -334,7 +347,6 @@ const Users = () => {
           onClose={() => setRolesListModalOpen(false)}
         />
       )}
-
       <ConfirmModal
         isOpen={confirmModalOpen}
         onClose={() => setConfirmModalOpen(false)}
@@ -343,11 +355,15 @@ const Users = () => {
         actionType={pendingAction || 'toggle'}
         onConfirm={pendingAction === 'delete' ? handleConfirmDelete : handleConfirmToggle}
       />
-
       <SuccessModal
         isOpen={successModalOpen}
         message={successMessage}
         onClose={() => setSuccessModalOpen(false)}
+      />
+      <ErroModal
+        isOpen={errorModalOpen}
+        onClose={() => setErrorModalOpen(false)}
+        message={errorMessage}
       />
     </PageStruct>
   );
