@@ -10,6 +10,8 @@ import {
 } from "react-icons/fa";
 import ChangePasswordModal from "./ChangePasswordModal";
 import ProfileService from "../../../Services/ProfileService";
+import SuccessModal from "../SuccessModal";
+import ErroModal from "../ErroModal";
 import "./ProfileModal.css";
 
 const ProfileModal = ({ isOpen, onClose, user = null, size = "medium" }) => {
@@ -23,16 +25,28 @@ const ProfileModal = ({ isOpen, onClose, user = null, size = "medium" }) => {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const fileInputRef = useRef(null);
 
-  // Sempre busca fresh data ao abrir o modal (garante que não usemos dados stale)
+  const showSuccess = (message) => {
+    setSuccessMessage(message);
+    setSuccessModalOpen(true);
+  };
+
+  const showError = (message) => {
+    setErrorMessage(message);
+    setErrorModalOpen(true);
+  };
+
   useEffect(() => {
     const fetchProfileData = async () => {
       if (!isOpen) return;
       setIsFetching(true);
       try {
         const data = await ProfileService.getProfile();
-        // se o backend retornar o DTO corretamente, popula tudo
         setProfileData(data || null);
         setFormData({
           username: data?.username || "",
@@ -41,7 +55,7 @@ const ProfileModal = ({ isOpen, onClose, user = null, size = "medium" }) => {
         });
       } catch (error) {
         console.error("Erro ao buscar dados do perfil:", error);
-        // fallback para o user vindo do contexto (se tiver)
+        showError("Erro ao carregar perfil do usuário.");
         if (user) {
           setProfileData(user);
           setFormData({
@@ -50,7 +64,6 @@ const ProfileModal = ({ isOpen, onClose, user = null, size = "medium" }) => {
             email: user?.email || "",
           });
         } else {
-          // limpa para evitar undefined
           setProfileData(null);
           setFormData({ username: "", fullName: "", email: "" });
         }
@@ -60,8 +73,7 @@ const ProfileModal = ({ isOpen, onClose, user = null, size = "medium" }) => {
     };
 
     fetchProfileData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]); // deliberadamente só isOpen
+  }, [isOpen, user]);
 
   if (!isOpen) return null;
 
@@ -75,9 +87,10 @@ const ProfileModal = ({ isOpen, onClose, user = null, size = "medium" }) => {
 
       setProfileData((prev) => ({ ...(prev || {}), [field]: formData[field] }));
       setEditingField(null);
+      showSuccess(`Campo "${field}" atualizado com sucesso!`);
     } catch (error) {
       console.error(`Erro ao atualizar ${field}:`, error);
-      alert(error?.message || `Erro ao atualizar ${field}. Tente novamente.`);
+      showError(`Erro ao atualizar ${field}.`);
     } finally {
       setIsLoading(false);
     }
@@ -102,11 +115,14 @@ const ProfileModal = ({ isOpen, onClose, user = null, size = "medium" }) => {
     setIsLoading(true);
     try {
       const result = await ProfileService.uploadProfilePhoto(file);
-      setProfileData((prev) => ({ ...(prev || {}), profilePhotoUrl: result.profilePhotoUrl }));
-      alert("Imagem atualizada com sucesso!");
+      setProfileData((prev) => ({
+        ...(prev || {}),
+        profilePhotoUrl: result.profilePhotoUrl,
+      }));
+      showSuccess("Imagem de perfil atualizada com sucesso!");
     } catch (error) {
       console.error("Erro ao atualizar imagem:", error);
-      alert(error?.message || "Erro ao atualizar imagem. Tente novamente.");
+      showError("Erro ao atualizar imagem de perfil.");
     } finally {
       setIsLoading(false);
     }
@@ -114,32 +130,45 @@ const ProfileModal = ({ isOpen, onClose, user = null, size = "medium" }) => {
 
   const triggerFileInput = () => fileInputRef.current?.click();
 
-  // displayData é a fonte de verdade (profileData priorizado)
   const displayData = profileData || user || {};
 
   return createPortal(
     <>
       <div className="modal-overlay" onClick={onClose}>
-        <div className={`modal-container ${size}`} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={`modal-container ${size}`}
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="modal-header">
             <h3 className="modal-title">Perfil do Usuário</h3>
-            <button className="modal-close" onClick={onClose} aria-label="Fechar">
+            <button
+              className="modal-close"
+              onClick={onClose}
+              aria-label="Fechar"
+            >
               <FaTimes />
             </button>
           </div>
 
           <div className="modal-body profile-modal-body-dark">
             {isFetching ? (
-              <div className="profile-loading"><p>Carregando dados do perfil...</p></div>
+              <div className="profile-loading">
+                <p>Carregando dados do perfil...</p>
+              </div>
             ) : (
               <>
                 <div className="profile-user-info">
                   <div className="profile-avatar-container">
                     <img
-                      src={displayData?.profilePhotoUrl || "/images/default-avatar.png"}
+                      src={
+                        displayData?.profilePhotoUrl ||
+                        "/images/default-avatar.png"
+                      }
                       alt="Foto de perfil"
                       className="profile-avatar-img"
-                      onError={(e) => (e.target.src = "/images/default-avatar.png")}
+                      onError={(e) =>
+                        (e.target.src = "/images/default-avatar.png")
+                      }
                     />
                     <button
                       className="profile-change-image-btn-modern"
@@ -160,14 +189,21 @@ const ProfileModal = ({ isOpen, onClose, user = null, size = "medium" }) => {
                   </div>
 
                   <h4 className="profile-user-name">
-                    {displayData?.fullName || displayData?.username || "Usuário"}
+                    {displayData?.fullName ||
+                      displayData?.username ||
+                      "Usuário"}
                   </h4>
-                  <p className="profile-role">{displayData?.roles?.join(", ") || "Sem funções"}</p>
+                  <p className="profile-role">
+                    {displayData?.roles?.join(", ") || "Sem funções"}
+                  </p>
                 </div>
 
                 <div className="profile-details-inline">
                   {["username", "fullName", "email"].map((field) => (
-                    <div className="profile-detail-item-inline border-left-green" key={field}>
+                    <div
+                      className="profile-detail-item-inline border-left-green"
+                      key={field}
+                    >
                       <div className="profile-field-group">
                         {field === "email" ? (
                           <FaEnvelope className="profile-detail-icon" />
@@ -177,7 +213,11 @@ const ProfileModal = ({ isOpen, onClose, user = null, size = "medium" }) => {
 
                         <div className="profile-field-content">
                           <span className="profile-field-label">
-                            {field === "username" ? "Username:" : field === "fullName" ? "Nome completo:" : "Email:"}
+                            {field === "username"
+                              ? "Username:"
+                              : field === "fullName"
+                              ? "Nome completo:"
+                              : "Email:"}
                           </span>
 
                           {editingField === field ? (
@@ -185,35 +225,50 @@ const ProfileModal = ({ isOpen, onClose, user = null, size = "medium" }) => {
                               <input
                                 type={field === "email" ? "email" : "text"}
                                 value={formData[field]}
-                                onChange={(e) => handleInputChange(field, e.target.value)}
+                                onChange={(e) =>
+                                  handleInputChange(field, e.target.value)
+                                }
                                 className="profile-edit-input-dark"
                                 autoFocus
                                 disabled={isLoading}
                               />
-                              <button className="profile-save-btn" onClick={() => handleSave(field)} disabled={isLoading}>
+                              <button
+                                className="profile-save-btn"
+                                onClick={() => handleSave(field)}
+                                disabled={isLoading}
+                              >
                                 {isLoading ? "..." : "Salvar"}
                               </button>
-                              <button className="profile-cancel-btn" onClick={handleCancel} disabled={isLoading}>
+                              <button
+                                className="profile-cancel-btn"
+                                onClick={handleCancel}
+                                disabled={isLoading}
+                              >
                                 Cancelar
                               </button>
                             </div>
                           ) : (
                             <span className="profile-field-value">
-                              {formData[field]?.trim() !== "" ? formData[field] : "Não definido"}
+                              {formData[field]?.trim() !== ""
+                                ? formData[field]
+                                : "Não definido"}
                             </span>
                           )}
                         </div>
                       </div>
 
                       {editingField !== field && (
-                        <button className="profile-edit-btn" onClick={() => handleEditClick(field)} disabled={isLoading}>
+                        <button
+                          className="profile-edit-btn"
+                          onClick={() => handleEditClick(field)}
+                          disabled={isLoading}
+                        >
                           <FaEdit />
                         </button>
                       )}
                     </div>
                   ))}
 
-                  {/* Senha */}
                   <div className="profile-detail-item-inline border-left-green">
                     <div className="profile-field-group">
                       <FaLock className="profile-detail-icon" />
@@ -222,7 +277,10 @@ const ProfileModal = ({ isOpen, onClose, user = null, size = "medium" }) => {
                         <span className="profile-field-value">••••••••</span>
                       </div>
                     </div>
-                    <button className="profile-edit-btn" onClick={() => setIsPasswordModalOpen(true)}>
+                    <button
+                      className="profile-edit-btn"
+                      onClick={() => setIsPasswordModalOpen(true)}
+                    >
                       <FaEdit />
                     </button>
                   </div>
@@ -233,7 +291,22 @@ const ProfileModal = ({ isOpen, onClose, user = null, size = "medium" }) => {
         </div>
       </div>
 
-      <ChangePasswordModal isOpen={isPasswordModalOpen} onClose={() => setIsPasswordModalOpen(false)} />
+      <ChangePasswordModal
+        isOpen={isPasswordModalOpen}
+        onClose={() => setIsPasswordModalOpen(false)}
+      />
+
+      {/* Modais globais de feedback */}
+      <SuccessModal
+        isOpen={successModalOpen}
+        onClose={() => setSuccessModalOpen(false)}
+        message={successMessage}
+      />
+      <ErroModal
+        isOpen={errorModalOpen}
+        onClose={() => setErrorModalOpen(false)}
+        message={errorMessage}
+      />
     </>,
     document.getElementById("modal-root")
   );

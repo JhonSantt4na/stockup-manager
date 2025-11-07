@@ -144,7 +144,7 @@
   align-items: center;
   margin-bottom: 8px;
   padding: 8px;
-  border:  1px solid #2C2C2C;
+  border: 1px solid #2C2C2C;
   border-radius: 6px;
   background-color: #f8f9fa;
 }
@@ -165,6 +165,109 @@
   font-size: 0.9rem;
   margin-top: -10px;
   margin-bottom: 20px;
+}
+
+.error-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.error-icon {
+  color: #f44336; /* Vermelho para ícone de erro */
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.error-message {
+  font-size: 16px;
+  color: #333;
+  margin: 0;
+}
+
+.error-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.error-btn:hover {
+  background-color: #d32f2f;
+}
+
+.modal-footer-loading {
+  position: relative;
+  height: 4px;
+  background-color: #f0f0f0;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.modal-footer-loading-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background-color: #4caf50;
+  animation-name: progress-bar;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes progress-bar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.modal-footer {
+  position: relative; /* Necessário para posicionar a barra dentro */
+  overflow: hidden;
+}
+
+/* Container da barra */
+.modal-footer-loading {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: transparent;
+  overflow: hidden;
+}
+
+/* Barra animada */
+.modal-footer-loading-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #4caf50, #8bc34a);
+  animation-name: progress-bar;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  border-radius: 2px;
+}
+
+/* Animação da barra de progresso */
+@keyframes progress-bar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
 }
 
 @keyframes fadeIn {

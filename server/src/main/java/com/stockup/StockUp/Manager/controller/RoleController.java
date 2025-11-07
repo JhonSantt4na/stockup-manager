@@ -34,31 +34,22 @@ public class RoleController implements RoleControllerDocs {
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/create")
 	public ResponseEntity<Role> createRole(@Valid @RequestBody RoleDTO createDto) {
-		try {
-			Role role = roleService.createRole(createDto);
-			AuditLogger.log("ROLE_CREATE", getCurrentUser(), "SUCCESS", "Role created: " + createDto.getName());
-			return ResponseEntity.status(HttpStatus.CREATED).body(role);
-		} catch (Exception e) {
-			AuditLogger.log("ROLE_CREATE", getCurrentUser(), "FAILED", "Error creating role: " + e.getMessage());
-			throw new RuntimeException("Error creating role", e);
-		}
+		Role role = roleService.createRole(createDto);
+		AuditLogger.log("ROLE_CREATE", getCurrentUser(), "SUCCESS", "Role created: " + createDto.getName());
+		return ResponseEntity.status(HttpStatus.CREATED).body(role);
 	}
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/update")
 	public ResponseEntity<Role> updateRole(@Valid @RequestBody RoleUpdateDTO updateDto) {
-		try {
-			Role role = roleService.updateRole(updateDto);
-			AuditLogger.log("ROLE_UPDATE", getCurrentUser(), "SUCCESS",
-				"Role updated from [" + updateDto.getOldName() + "] to [" + updateDto.getNewName() + "]");
-			return ResponseEntity.ok(role);
-		} catch (Exception e) {
-			AuditLogger.log("ROLE_UPDATE", getCurrentUser(), "FAILED", "Error updating role: " + e.getMessage());
-			throw new RuntimeException("Error updating role", e);
-		}
+		Role role = roleService.updateRole(updateDto);
+		AuditLogger.log("ROLE_UPDATE", getCurrentUser(), "SUCCESS",
+			"Role updated from [" + updateDto.getOldName() + "] to [" + updateDto.getNewName() + "]");
+		return ResponseEntity.ok(role);
 	}
 	
+	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/id/{id}")
 	public ResponseEntity<Role> getRoleById(@PathVariable UUID id) {
@@ -78,30 +69,28 @@ public class RoleController implements RoleControllerDocs {
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/delete/{name}")
 	public ResponseEntity<Void> deleteRole(@PathVariable String name) {
-		try {
-			roleService.deleteRole(name);
-			AuditLogger.log("ROLE_DELETE", getCurrentUser(), "SUCCESS", "Role deleted: " + name);
-			return ResponseEntity.noContent().build();
-		} catch (Exception e) {
-			AuditLogger.log("ROLE_DELETE", getCurrentUser(), "FAILED", "Error deleting role: " + e.getMessage());
-			throw new RuntimeException("Error deleting role", e);
-		}
+		roleService.deleteRole(name);
+		AuditLogger.log("ROLE_DELETE", getCurrentUser(), "SUCCESS", "Role deleted: " + name);
+		return ResponseEntity.noContent().build();
 	}
 	
 	@Override
 	@GetMapping("/list")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Page<RoleDTO>> listRoles(Pageable pageable) {
-		Page<Role> rolesPage = roleService.getAllRoles(pageable);
-		Page<RoleDTO> dtoPage = rolesPage.map(roleMapper::toDTO);
+	public ResponseEntity<Page<RoleWithUsersDTO>> listRoles(
+		Pageable pageable,
+		@RequestParam(required = false) String search
+	) {
+		Page<Role> rolesPage = roleService.getAllRolesWithUsers(pageable, search);
+		Page<RoleWithUsersDTO> dtoPage = rolesPage.map(roleMapper::toWithUsersDTO);
 		return ResponseEntity.ok(dtoPage);
 	}
 	
 	@Override
 	@GetMapping("/list-with-users")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Page<RoleWithUsersDTO>> listRolesWithUsers(Pageable pageable) {
-		Page<Role> rolesPage = roleService.getAllRoles(pageable);
+	public ResponseEntity<Page<RoleWithUsersDTO>> listRolesWithUsers(Pageable pageable, String search) {
+		Page<Role> rolesPage = roleService.getAllRolesWithUsers(pageable, search);
 		Page<RoleWithUsersDTO> dtoPage = rolesPage.map(roleMapper::toWithUsersDTO);
 		return ResponseEntity.ok(dtoPage);
 	}

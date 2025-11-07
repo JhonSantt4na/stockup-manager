@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
-import { FaCheckCircle } from "react-icons/fa";
-import CustomModal from "../../components/Custom/CustomModal";
+import CustomModal from "../Custom/CustomModal";
+import { FaExclamationTriangle } from "react-icons/fa";
 import "./Modal.css";
 
-const SuccessModal = ({
+const ErroModal = ({
   isOpen,
   onClose,
+  title = "Erro",
   message,
+  size = "medium",
   autoCloseAfter = 5000,
 }) => {
   useEffect(() => {
@@ -18,11 +20,19 @@ const SuccessModal = ({
     }
   }, [isOpen, onClose, autoCloseAfter]);
 
+  const errorContent = (
+    <div className="error-content">
+      <FaExclamationTriangle className="error-icon" />
+      <p className="error-message">{message}</p>
+    </div>
+  );
+
   return (
     <CustomModal
       isOpen={isOpen}
       onClose={onClose}
-      title="Sucesso"
+      title={title}
+      size={size}
       showFooter={true}
       footerContent={
         <div className="modal-footer-loading">
@@ -33,14 +43,9 @@ const SuccessModal = ({
         </div>
       }
     >
-      <div className="modal-content">
-        <div className="modal-icon success">
-          <FaCheckCircle />
-        </div>
-        <p className="modal-message success">{message}</p>
-      </div>
+      {errorContent}
     </CustomModal>
   );
 };
 
-export default SuccessModal;
+export default ErroModal;

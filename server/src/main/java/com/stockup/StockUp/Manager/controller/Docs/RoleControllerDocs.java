@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.UUID;
@@ -52,7 +53,7 @@ public interface RoleControllerDocs {
 		description = "Retorna os dados de uma role com base no id informado. Acesso restrito a administradores.",
 		tags = {"Admin - Role"}
 	)
-	ResponseEntity<Role> getRoleById(UUID id);
+	ResponseEntity<Role> getRoleById(@Parameter(description = "ID da role") UUID id);
 	
 	@Operation(
 		summary = "Buscar role por nome",
@@ -70,15 +71,23 @@ public interface RoleControllerDocs {
 	
 	@Operation(
 		summary = "Listar todas as roles",
-		description = "Retorna uma lista paginada de todas as roles cadastradas. Acesso restrito a administradores."
+		description = "Retorna uma lista paginada de todas as roles cadastradas, com opção de busca por nome. Acesso restrito a administradores.",
+		tags = {"Admin - Role"}
 	)
-	ResponseEntity<Page<RoleDTO>> listRoles(Pageable pageable);
+	ResponseEntity<Page<RoleWithUsersDTO>> listRoles(
+		Pageable pageable,
+		@Parameter(description = "Texto para buscar no nome da role") @RequestParam(required = false) String search
+	);
 	
 	@Operation(
 		summary = "Listar roles com usuários",
-		description = "Retorna uma lista paginada de todas as roles junto com os usuários associados. Acesso restrito a administradores."
+		description = "Retorna uma lista paginada de todas as roles junto com os usuários associados, com opção de busca por nome. Acesso restrito a administradores.",
+		tags = {"Admin - Role"}
 	)
-	ResponseEntity<Page<RoleWithUsersDTO>> listRolesWithUsers(Pageable pageable);
+	ResponseEntity<Page<RoleWithUsersDTO>> listRolesWithUsers(
+		Pageable pageable,
+		@Parameter(description = "Texto para buscar no nome da role") @RequestParam(required = false) String search
+	);
 	
 	@Operation(
 		summary = "Atribuir permissions a uma role",

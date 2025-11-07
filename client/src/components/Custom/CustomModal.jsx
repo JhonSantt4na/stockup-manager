@@ -55,7 +55,7 @@ const CustomModal = ({
         )}
       </div>
     </div>,
-    document.getElementById('modal-root') // Use o container dedicado
+    document.getElementById('modal-root')
   );
 };
 
