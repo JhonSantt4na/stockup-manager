@@ -72,6 +72,10 @@ public class RoleService {
 				});
 		}
 		
+		if (updateDto.getEnabled() != null) {
+			role.setEnabled(updateDto.getEnabled());
+		}
+		
 		role.setName(updateDto.getNewName());
 		role.setUpdatedAt(LocalDateTime.now());
 		
@@ -102,17 +106,20 @@ public class RoleService {
 	public void deleteRole(String name) {
 		logger.info("Deleting Role [{}]", name);
 		Role role = getRoleByName(name);
-		role.setDeletedAt(LocalDateTime.now());
-		role.disable();
-		roleRepository.save(role);
-		logger.info("Role successfully disabled [{}]", name);
+		roleRepository.delete(role);
+		logger.info("Role successfully deleted [{}]", name);
 	}
 	
-	public Page<Role> getAllRoles(Pageable pageable) {
-		logger.debug("Listing all roles (paginated)");
-		Page<Role> roles = roleRepository.findAll(pageable);
-		logger.info("Total roles found [{}]", roles.getTotalElements());
-		return roles != null ? roles : Page.empty();
+	public Page<Role> getAllRoles(Pageable pageable, String search) {
+		if (search == null || search.isBlank()) {
+			return roleRepository.findAll(pageable);
+		} else {
+			return roleRepository.findByEnabledTrueAndNameContainingIgnoreCase(search.trim(), pageable);
+		}
+	}
+	
+	public Page<Role> getAllRolesWithUsers(Pageable pageable, String search) {
+		return getAllRoles(pageable, search);
 	}
 	
 	public Role assignPermissions(String roleName, List<String> permissionDescriptions) {

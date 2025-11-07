@@ -10,4 +10,6 @@ public class RoleUpdateDTO {
 	
 	@NotBlank(message = "New description is required")
 	private String newName;
+	
+	private Boolean enabled;
 }

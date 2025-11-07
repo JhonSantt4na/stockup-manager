@@ -64,10 +64,8 @@ public class PermissionService {
 	public void deletePermission(String description) {
 		logger.info("Deleting Permission [{}]", description);
 		Permission permission = getPermissionByDescription(description);
-		permission.setDeletedAt(LocalDateTime.now());
-		permission.setEnabled(false);
-		permissionRepository.save(permission);
-		logger.info("Permission successfully disabled [{}]", description);
+		permissionRepository.delete(permission);
+		logger.info("Permission successfully deleted [{}]", description);
 	}
 	
 	public Page<PermissionWithRolesDTO> getAllActivePermissions(Pageable pageable) {

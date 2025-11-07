@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.exception;
 
-public class sa extends RuntimeException {
-  public sa(String message) {
+public class CannotDeleteActiveUserException extends RuntimeException {
+  public CannotDeleteActiveUserException(String message) {
     super(message);
   }
 }
