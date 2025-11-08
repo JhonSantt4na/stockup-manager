@@ -1,11 +1,12 @@
 package com.stockup.StockUp.Manager.service;
 
-import com.stockup.StockUp.Manager.dto.security.request.LoginRequestDTO;
-import com.stockup.StockUp.Manager.dto.security.response.TokenDTO;
+import com.stockup.StockUp.Manager.dto.Auth.security.request.LoginRequestDTO;
+import com.stockup.StockUp.Manager.dto.Auth.security.response.TokenDTO;
 import com.stockup.StockUp.Manager.model.User;
 import com.stockup.StockUp.Manager.model.security.Role;
-import com.stockup.StockUp.Manager.repository.UserRepository;
+import com.stockup.StockUp.Manager.repository.auth.UserRepository;
 import com.stockup.StockUp.Manager.security.JwtTokenProvider;
+import com.stockup.StockUp.Manager.service.auth.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

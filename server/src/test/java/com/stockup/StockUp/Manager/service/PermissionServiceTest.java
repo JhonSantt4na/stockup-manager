@@ -1,22 +1,19 @@
 package com.stockup.StockUp.Manager.service;
 
-import com.stockup.StockUp.Manager.dto.permission.request.PermissionCreateDTO;
-import com.stockup.StockUp.Manager.dto.permission.request.PermissionUpdateDTO;
+import com.stockup.StockUp.Manager.dto.Auth.permission.request.PermissionCreateDTO;
+import com.stockup.StockUp.Manager.dto.Auth.permission.request.PermissionUpdateDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.model.security.Permission;
-import com.stockup.StockUp.Manager.repository.PermissionRepository;
+import com.stockup.StockUp.Manager.repository.auth.PermissionRepository;
+import com.stockup.StockUp.Manager.service.auth.PermissionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
