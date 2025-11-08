@@ -1,15 +1,16 @@
 package com.stockup.StockUp.Manager.service;
 
-import com.stockup.StockUp.Manager.dto.user.request.ChangePasswordRequestDTO;
-import com.stockup.StockUp.Manager.dto.user.request.RegisterUserRequestDTO;
-import com.stockup.StockUp.Manager.dto.user.response.UserResponseDTO;
+import com.stockup.StockUp.Manager.dto.Auth.user.request.ChangePasswordRequestDTO;
+import com.stockup.StockUp.Manager.dto.Auth.user.request.RegisterUserRequestDTO;
+import com.stockup.StockUp.Manager.dto.Auth.user.response.UserResponseDTO;
 import com.stockup.StockUp.Manager.exception.InvalidCredentialsException;
 import com.stockup.StockUp.Manager.exception.UsernameAlreadyExistsException;
-import com.stockup.StockUp.Manager.mapper.UserMapper;
+import com.stockup.StockUp.Manager.mapper.auth.UserMapper;
 import com.stockup.StockUp.Manager.model.User;
 import com.stockup.StockUp.Manager.model.security.Role;
-import com.stockup.StockUp.Manager.repository.RoleRepository;
-import com.stockup.StockUp.Manager.repository.UserRepository;
+import com.stockup.StockUp.Manager.repository.auth.RoleRepository;
+import com.stockup.StockUp.Manager.repository.auth.UserRepository;
+import com.stockup.StockUp.Manager.service.auth.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

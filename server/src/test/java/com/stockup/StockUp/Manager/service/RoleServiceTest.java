@@ -1,11 +1,12 @@
 package com.stockup.StockUp.Manager.service;
 
-import com.stockup.StockUp.Manager.dto.roles.request.RoleDTO;
-import com.stockup.StockUp.Manager.dto.roles.request.RoleUpdateDTO;
+import com.stockup.StockUp.Manager.dto.Auth.roles.request.RoleDTO;
+import com.stockup.StockUp.Manager.dto.Auth.roles.request.RoleUpdateDTO;
 import com.stockup.StockUp.Manager.model.security.Permission;
 import com.stockup.StockUp.Manager.model.security.Role;
-import com.stockup.StockUp.Manager.repository.PermissionRepository;
-import com.stockup.StockUp.Manager.repository.RoleRepository;
+import com.stockup.StockUp.Manager.repository.auth.PermissionRepository;
+import com.stockup.StockUp.Manager.repository.auth.RoleRepository;
+import com.stockup.StockUp.Manager.service.auth.RoleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
