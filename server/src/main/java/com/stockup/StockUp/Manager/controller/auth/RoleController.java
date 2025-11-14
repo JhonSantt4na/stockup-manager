@@ -24,7 +24,7 @@ import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/roles")
+@RequestMapping("/api/roles")
 public class RoleController implements RoleControllerDocs {
 	
 	private final RoleService roleService;

@@ -3,7 +3,6 @@ package com.stockup.StockUp.Manager.controller.sales;
 import com.stockup.StockUp.Manager.controller.sales.docs.CategoryControllerDocs;
 import com.stockup.StockUp.Manager.dto.sales.category.CategoryRequestDTO;
 import com.stockup.StockUp.Manager.dto.sales.category.CategoryResponseDTO;
-import com.stockup.StockUp.Manager.dto.sales.category.CategorySummaryDTO;
 import com.stockup.StockUp.Manager.model.sales.Category;
 import com.stockup.StockUp.Manager.service.sales.CategoryServices;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/api/categories")
 @RequiredArgsConstructor
 public class CategoryController implements CategoryControllerDocs {
 	

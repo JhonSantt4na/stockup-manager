@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 
 @RestController
-@RequestMapping("/permissions")
+@RequestMapping("/api/permissions")
 @RequiredArgsConstructor
 public class PermissionController implements PermissionControllerDocs {
 	
