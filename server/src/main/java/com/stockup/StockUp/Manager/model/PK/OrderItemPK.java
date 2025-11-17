@@ -22,11 +22,11 @@ public class OrderItemPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "order_id")
+	@JoinColumn(name = "order_id", nullable = false)
 	private Order order;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "product_id")
+	@JoinColumn(name = "product_id", nullable = false)
 	private Product product;
 	
 	public OrderItemPK() {}
@@ -38,7 +38,7 @@ public class OrderItemPK implements Serializable {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(order.getId(), product.getId());
+		return Objects.hash(order, product);
 	}
 	
 	@Override
@@ -47,7 +47,7 @@ public class OrderItemPK implements Serializable {
 		if (obj == null || getClass() != obj.getClass()) return false;
 		
 		OrderItemPK other = (OrderItemPK) obj;
-		return Objects.equals(order.getId(), other.order.getId()) &&
-			Objects.equals(product.getId(), other.product.getId());
+		return Objects.equals(order, other.order) &&
+			Objects.equals(product, other.product);
 	}
 }

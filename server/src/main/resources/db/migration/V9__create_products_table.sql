@@ -1,4 +1,3 @@
-
 CREATE TABLE products (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -50,27 +49,20 @@ CREATE INDEX idx_products_tax_profile_id ON products(tax_profile_id);
 
 INSERT INTO products (
     id, name, sku, gtin, description, unit_of_measure,
-    cost_price, sale_price, cst, ncm, cfop,
+    cost_price, sale_price,
+    cst, ncm, cfop,
     icms_rate, pis_rate, cofins_rate, ipi_rate,
     category_id, tax_profile_id,
     origin, status
 )
 VALUES (
-    gen_random_uuid(),
-    'Produto de Exemplo',
-    'SKU-0001',
-    '1234567890123',
-    'Produto inicial de teste',
-    'UN',
-    10.00,
-    19.90,
-    '000',
-    '00000000',
-    '5102',
+    '11111111-1111-1111-1111-111111111111',
+    'Produto de Exemplo', 'SKU-0001', '1234567890123',
+    'Produto inicial de teste', 'UN',
+    10.00, 19.90,
+    '000', '00000000', '5102',
     18.00, 1.65, 7.60, 5.00,
-
-    NULL,
-    (SELECT id FROM tax_profiles LIMIT 1),
-    'NATIONAL',
-    'ACTIVE'
+    '11111111-1111-1111-1111-111111111100',
+    '11111111-1111-1111-1111-111111111110',
+    'NATIONAL', 'ACTIVE'
 );

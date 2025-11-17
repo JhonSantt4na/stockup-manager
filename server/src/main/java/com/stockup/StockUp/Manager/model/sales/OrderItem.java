@@ -16,6 +16,16 @@ public class OrderItem {
 	@EmbeddedId
 	private OrderItemPK id = new OrderItemPK();
 	
+	@MapsId("order")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "order_id", nullable = false)
+	private Order order;
+	
+	@MapsId("product")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "product_id", nullable = false)
+	private Product product;
+	
 	@Column(nullable = false)
 	private Integer quantity;
 	
@@ -28,24 +38,18 @@ public class OrderItem {
 	@Column(nullable = false, precision = 19, scale = 2)
 	private BigDecimal finalPrice;
 	
+	@Column(length = 255)
 	private String productName;
+	
+	@Column(length = 60)
 	private String productSku;
+	
+	@Column(length = 500)
 	private String productImage;
 	
-	@MapsId("order")
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "order_id", nullable = false)
-	private Order order;
-	
-	@MapsId("product")
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "product_id", nullable = false)
-	private Product product;
-	
 	public BigDecimal getSubTotal() {
-		if (finalPrice == null || quantity == null) {
-			return BigDecimal.ZERO;
-		}
-		return finalPrice.multiply(BigDecimal.valueOf(quantity));
+		BigDecimal price = (finalPrice != null) ? finalPrice : BigDecimal.ZERO;
+		int qty = (quantity != null) ? quantity : 0;
+		return price.multiply(BigDecimal.valueOf(qty));
 	}
 }

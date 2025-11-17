@@ -7,7 +7,7 @@ import com.stockup.StockUp.Manager.dto.Auth.roles.request.RoleUpdateDTO;
 import com.stockup.StockUp.Manager.dto.Auth.roles.response.RoleWithUsersDTO;
 import com.stockup.StockUp.Manager.mapper.auth.RoleMapper;
 import com.stockup.StockUp.Manager.model.security.Role;
-import com.stockup.StockUp.Manager.service.auth.RoleService;
+import com.stockup.StockUp.Manager.service.auth.impl.RoleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

@@ -7,7 +7,7 @@ import com.stockup.StockUp.Manager.dto.Auth.user.response.RegistrationResponseDT
 import com.stockup.StockUp.Manager.dto.Auth.user.request.UpdateUserRequestDTO;
 import com.stockup.StockUp.Manager.dto.Auth.user.response.UserResponseDTO;
 import com.stockup.StockUp.Manager.exception.CannotDeleteActiveUserException;
-import com.stockup.StockUp.Manager.service.auth.UserService;
+import com.stockup.StockUp.Manager.service.auth.impl.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

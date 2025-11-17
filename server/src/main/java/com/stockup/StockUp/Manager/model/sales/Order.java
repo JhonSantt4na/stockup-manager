@@ -1,6 +1,5 @@
 package com.stockup.StockUp.Manager.model.sales;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.stockup.StockUp.Manager.Enums.OrderStatus;
 import com.stockup.StockUp.Manager.model.BaseEntity;
 import jakarta.persistence.*;
@@ -17,11 +16,7 @@ import java.util.Set;
 @Table(name = "orders")
 public class Order extends BaseEntity {
 	
-	@JsonFormat(
-		shape = JsonFormat.Shape.STRING,
-		pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'",
-		timezone = "GMT"
-	)
+	@Column(nullable = false)
 	private LocalDateTime moment;
 	private LocalDateTime cancelledAt;
 	private LocalDateTime confirmedAt;
@@ -37,12 +32,25 @@ public class Order extends BaseEntity {
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<OrderItem> items = new LinkedHashSet<>();
 	
+	@Column(precision = 19, scale = 2)
 	private BigDecimal subtotal;
+	
+	@Column(precision = 19, scale = 2)
 	private BigDecimal discountTotal;
+	
+	@Column(precision = 19, scale = 2)
 	private BigDecimal shippingTotal;
+	
+	@Column(precision = 19, scale = 2)
 	private BigDecimal taxTotal;
+	
+	@Column(precision = 19, scale = 2)
 	private BigDecimal total;
+	
+	@Column(precision = 19, scale = 2)
 	private BigDecimal totalPaid;
+	
+	@Column(precision = 19, scale = 2)
 	private BigDecimal totalRefunded;
 	
 	public BigDecimal calculateItemsTotal() {
