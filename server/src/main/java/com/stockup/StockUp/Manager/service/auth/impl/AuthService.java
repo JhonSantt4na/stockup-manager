@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.service.auth;
+package com.stockup.StockUp.Manager.service.auth.impl;
 
 import com.stockup.StockUp.Manager.dto.Auth.security.response.TokenDTO;
 import com.stockup.StockUp.Manager.dto.Auth.security.request.LoginRequestDTO;
@@ -6,6 +6,7 @@ import com.stockup.StockUp.Manager.model.User;
 import com.stockup.StockUp.Manager.model.security.Role;
 import com.stockup.StockUp.Manager.repository.auth.UserRepository;
 import com.stockup.StockUp.Manager.security.JwtTokenProvider;
+import com.stockup.StockUp.Manager.service.auth.IAuthService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +23,14 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class AuthService {
+public class AuthService implements IAuthService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 	private final AuthenticationManager authenticationManager;
 	private final JwtTokenProvider tokenProvider;
 	private final UserRepository userRepository;
 	
+	@Override
 	public TokenDTO login(LoginRequestDTO credentials) {
 		logger.info("Authentication requested for user [{}]", credentials.getUsername());
 		
@@ -65,11 +67,13 @@ public class AuthService {
 		return tokenProvider.createAccessToken(user.getUsername(), roleNames);
 	}
 	
+	@Override
 	public TokenDTO generateTokenForNewUser(String username, List<String> roles) {
 		logger.debug("Generating token for new user [{}] with roles [{}]", username, roles);
 		return tokenProvider.createAccessToken(username, roles);
 	}
 	
+	@Override
 	public TokenDTO refreshToken(String username, String refreshToken) {
 		logger.info("Refresh token requested for user [{}]", username);
 		

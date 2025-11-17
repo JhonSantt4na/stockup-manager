@@ -1,0 +1,26 @@
+package com.stockup.StockUp.Manager.service.sales;
+
+import com.stockup.StockUp.Manager.Enums.OrderStatus;
+import com.stockup.StockUp.Manager.dto.sales.order.OrderRequestDTO;
+import com.stockup.StockUp.Manager.dto.sales.order.OrderResponseDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.UUID;
+
+public interface IOrderService {
+	
+	OrderResponseDTO create(OrderRequestDTO dto);
+	
+	OrderResponseDTO findById(UUID id);
+	
+	OrderResponseDTO findByOrderNumber(String orderNumber);
+	
+	Page<OrderResponseDTO> findAll(Pageable pageable);
+	
+	OrderResponseDTO updateStatus(UUID id, OrderStatus newStatus);
+	
+	OrderResponseDTO cancel(UUID id);
+	
+	void delete(UUID id);
+}

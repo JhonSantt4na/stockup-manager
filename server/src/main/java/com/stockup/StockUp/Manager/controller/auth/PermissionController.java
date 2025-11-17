@@ -7,7 +7,7 @@ import com.stockup.StockUp.Manager.dto.Auth.permission.request.PermissionUpdateD
 import com.stockup.StockUp.Manager.dto.Auth.permission.response.PermissionWithRolesDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.model.security.Permission;
-import com.stockup.StockUp.Manager.service.auth.PermissionService;
+import com.stockup.StockUp.Manager.service.auth.impl.PermissionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

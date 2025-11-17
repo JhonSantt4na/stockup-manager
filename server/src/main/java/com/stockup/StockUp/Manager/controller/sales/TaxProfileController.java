@@ -6,7 +6,7 @@ import com.stockup.StockUp.Manager.dto.sales.taxProfile.TaxProfileRequestDTO;
 import com.stockup.StockUp.Manager.dto.sales.taxProfile.TaxProfileResponseDTO;
 import com.stockup.StockUp.Manager.dto.sales.taxProfile.TaxProfileUpdateDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
-import com.stockup.StockUp.Manager.service.sales.TaxProfileService;
+import com.stockup.StockUp.Manager.service.sales.impl.TaxProfileService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.service.sales;
+package com.stockup.StockUp.Manager.service.sales.impl;
 
 import com.stockup.StockUp.Manager.dto.sales.taxProfile.TaxProfileRequestDTO;
 import com.stockup.StockUp.Manager.dto.sales.taxProfile.TaxProfileResponseDTO;
@@ -9,9 +9,10 @@ import com.stockup.StockUp.Manager.model.sales.TaxProfile;
 import com.stockup.StockUp.Manager.repository.sales.TaxProfileRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -20,38 +21,58 @@ import java.util.UUID;
 @Transactional
 public class TaxProfileService {
 	
+	private static final Logger logger = LoggerFactory.getLogger(TaxProfileService.class);
 	private final TaxProfileRepository repository;
 	private final TaxProfileMapper mapper;
 	
 	public TaxProfileResponseDTO create(TaxProfileRequestDTO dto) {
+		logger.debug("Creating new TaxProfile with name: {}", dto.getName());
+		
 		if (repository.existsByName(dto.getName())) {
+			logger.warn("Duplicate TaxProfile creation attempt for name: {}", dto.getName());
 			throw new DuplicateResourceException("A tax profile with this name already exists.");
 		}
 		
 		TaxProfile entity = mapper.toEntity(dto);
 		TaxProfile saved = repository.save(entity);
+		
+		logger.info("TaxProfile created successfully: {}", saved.getId());
 		return mapper.toResponse(saved);
 	}
 	
 	public TaxProfileResponseDTO update(UUID id, TaxProfileUpdateDTO dto) {
+		logger.debug("Updating TaxProfile with ID: {}", id);
+		
 		TaxProfile existing = repository.findById(id)
-			.orElseThrow(() -> new EntityNotFoundException("Tax profile not found: " + id));
+			.orElseThrow(() -> {
+				logger.warn("TaxProfile not found for update: {}", id);
+				return new EntityNotFoundException("Tax profile not found: " + id);
+			});
 		
 		mapper.updateFromDto(dto, existing);
-		
 		TaxProfile saved = repository.save(existing);
+		
+		logger.info("TaxProfile updated successfully: {}", id);
 		return mapper.toResponse(saved);
 	}
 	
 	@Transactional(readOnly = true)
 	public TaxProfileResponseDTO findById(UUID id) {
+		logger.debug("Finding TaxProfile by ID: {}", id);
+		
 		TaxProfile entity = repository.findById(id)
-			.orElseThrow(() -> new EntityNotFoundException("Tax profile not found: " + id));
+			.orElseThrow(() -> {
+				logger.warn("TaxProfile not found with ID: {}", id);
+				return new EntityNotFoundException("Tax profile not found: " + id);
+			});
+		
 		return mapper.toResponse(entity);
 	}
 	
 	@Transactional(readOnly = true)
 	public List<TaxProfileResponseDTO> findAll() {
+		logger.debug("Listing all tax profiles");
+		
 		return repository.findAll()
 			.stream()
 			.map(mapper::toResponse)
@@ -59,9 +80,17 @@ public class TaxProfileService {
 	}
 	
 	public void delete(UUID id) {
+		logger.debug("Soft deleting TaxProfile with ID: {}", id);
+		
 		TaxProfile existing = repository.findById(id)
-			.orElseThrow(() -> new EntityNotFoundException("Tax profile not found: " + id));
+			.orElseThrow(() -> {
+				logger.warn("TaxProfile not found for deletion: {}", id);
+				return new EntityNotFoundException("Tax profile not found: " + id);
+			});
+		
 		existing.disable();
 		repository.save(existing);
+		
+		logger.info("TaxProfile soft deleted successfully: {}", id);
 	}
 }

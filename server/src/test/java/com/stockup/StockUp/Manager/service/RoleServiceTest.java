@@ -6,7 +6,7 @@ import com.stockup.StockUp.Manager.model.security.Permission;
 import com.stockup.StockUp.Manager.model.security.Role;
 import com.stockup.StockUp.Manager.repository.auth.PermissionRepository;
 import com.stockup.StockUp.Manager.repository.auth.RoleRepository;
-import com.stockup.StockUp.Manager.service.auth.RoleService;
+import com.stockup.StockUp.Manager.service.auth.impl.RoleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -7,7 +7,7 @@ import com.stockup.StockUp.Manager.dto.sales.Product.ProductResponseDTO;
 import com.stockup.StockUp.Manager.dto.sales.Product.ProductSummaryDTO;
 import com.stockup.StockUp.Manager.dto.sales.Product.ProductUpdateDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
-import com.stockup.StockUp.Manager.service.sales.ProductServices;
+import com.stockup.StockUp.Manager.service.sales.impl.ProductServices;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

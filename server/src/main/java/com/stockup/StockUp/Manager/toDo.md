@@ -14,6 +14,24 @@
 
 
 
+- O UserService funciona, mas está:
+
+muito grande
+repetitivo
+com validações duplicadas
+com lógica de roles inconsistente
+sem @Transactional
+com pontos que podem quebrar facilmente
+Se você quiser, posso:
+
+Gerar a versão ideal e refatorada
+OU
+Criar os métodos privados auxiliares
+OU
+Quebrar em classes menores
+
+
+
 -product
 @Entity
 @Table(name = "products")

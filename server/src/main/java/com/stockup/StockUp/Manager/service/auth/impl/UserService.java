@@ -1,5 +1,6 @@
-package com.stockup.StockUp.Manager.service.auth;
+package com.stockup.StockUp.Manager.service.auth.impl;
 
+import com.stockup.StockUp.Manager.dto.Auth.security.request.LoginRequestDTO;
 import com.stockup.StockUp.Manager.dto.Auth.security.response.TokenDTO;
 import com.stockup.StockUp.Manager.dto.Auth.user.request.ChangePasswordRequestDTO;
 import com.stockup.StockUp.Manager.dto.Auth.user.request.RegisterUserRequestDTO;
@@ -14,6 +15,8 @@ import com.stockup.StockUp.Manager.model.User;
 import com.stockup.StockUp.Manager.model.security.Role;
 import com.stockup.StockUp.Manager.repository.auth.RoleRepository;
 import com.stockup.StockUp.Manager.repository.auth.UserRepository;
+import com.stockup.StockUp.Manager.service.auth.IAuthService;
+import com.stockup.StockUp.Manager.service.auth.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +36,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService, IUserService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	private final PasswordEncoder passwordEncoder;
@@ -66,6 +69,7 @@ public class UserService implements UserDetailsService {
 			});
 	}
 	
+	@Override
 	public UserResponseDTO assignRoles(String username, List<String> roleNames) {
 		logger.info("Assigning roles to user [{}]: {}", username, roleNames);
 		
@@ -88,6 +92,7 @@ public class UserService implements UserDetailsService {
 		return mapper.entityToResponse(updatedUser);
 	}
 	
+	@Override
 	public UserResponseDTO removeRoles(String username, List<String> roleNames) {
 		logger.info("Removing roles from user [{}]: {}", username, roleNames);
 		
@@ -101,6 +106,7 @@ public class UserService implements UserDetailsService {
 		return mapper.entityToResponse(savedUser);
 	}
 	
+	@Override
 	public List<String> getUserRoles(String username) {
 		logger.debug("Getting roles for user: [{}]", username);
 		
@@ -118,6 +124,7 @@ public class UserService implements UserDetailsService {
 		return roles;
 	}
 	
+	@Override
 	public Page<UserResponseDTO> listUsers(int page, int size, String search, Boolean enabled, String[] sort) {
 		Sort sorting = Sort.by(Sort.Direction.fromString(sort[1]), sort[0]);
 		Pageable pageable = PageRequest.of(page, size, sorting);
@@ -135,6 +142,7 @@ public class UserService implements UserDetailsService {
 		return userPage.map(mapper::entityToResponse);
 	}
 	
+	@Override
 	public RegistrationResponseDTO registerUser(RegisterUserRequestDTO credentials) {
 		logger.info("Registering new user: [{}]", credentials.getUsername());
 		
@@ -184,6 +192,7 @@ public class UserService implements UserDetailsService {
 		return new RegistrationResponseDTO(userDto, tokenDto);
 	}
 	
+	@Override
 	public UserResponseDTO updatedUser(String username, UpdateUserRequestDTO dto) {
 		logger.info("Updating user: [{}]", username);
 		
@@ -243,6 +252,7 @@ public class UserService implements UserDetailsService {
 		}
 	}
 	
+	@Override
 	public List<String> getAllSystemRoles() {
 		logger.info("Fetching all system roles");
 		
@@ -279,6 +289,7 @@ public class UserService implements UserDetailsService {
 		}
 	}
 	
+	@Override
 	public UserResponseDTO updateUserAsAdmin(String username, UpdateUserRequestDTO dto) {
 		logger.info("Admin updating user: [{}]", username);
 		logger.info("Dados recebidos: fullName={}, email={}, roles={}",
@@ -382,6 +393,7 @@ public class UserService implements UserDetailsService {
 		}
 	}
 	
+	@Override
 	public UserResponseDTO findUser(String username) {
 		logger.debug("Finding user: [{}]", username);
 		
@@ -395,6 +407,7 @@ public class UserService implements UserDetailsService {
 		return mapper.entityToResponse(user);
 	}
 	
+	@Override
 	public void deleteUser(String username) {
 		logger.info("Attempting to delete user: [{}]", username);
 		
@@ -413,6 +426,7 @@ public class UserService implements UserDetailsService {
 		logger.info("User deleted successfully: [{}]", username);
 	}
 	
+	@Override
 	public UserResponseDTO toggleUserStatus(String username) {
 		User user = userRepository.findByUsername(username)
 			.orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
@@ -425,6 +439,7 @@ public class UserService implements UserDetailsService {
 		return mapper.entityToResponse(saved);
 	}
 	
+	@Override
 	public Page<UserResponseDTO> listUsersWithFilter(int page, int size, String search, String filter) {
 		Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 		Page<User> users;
@@ -447,6 +462,7 @@ public class UserService implements UserDetailsService {
 		return users.map(mapper::entityToResponse);
 	}
 	
+	@Override
 	public void changePassword(String username, ChangePasswordRequestDTO dto) {
 		logger.info("Changing password for user: [{}]", username);
 		
@@ -467,4 +483,5 @@ public class UserService implements UserDetailsService {
 		
 		logger.info("Password changed successfully for user: [{}]", username);
 	}
+	
 }

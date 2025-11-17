@@ -6,7 +6,7 @@ import com.stockup.StockUp.Manager.dto.Auth.security.request.LoginRequestDTO;
 import com.stockup.StockUp.Manager.dto.Auth.security.response.TokenDTO;
 import com.stockup.StockUp.Manager.exception.InvalidCredentialsException;
 import com.stockup.StockUp.Manager.security.JwtTokenProvider;
-import com.stockup.StockUp.Manager.service.auth.AuthService;
+import com.stockup.StockUp.Manager.service.auth.impl.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
