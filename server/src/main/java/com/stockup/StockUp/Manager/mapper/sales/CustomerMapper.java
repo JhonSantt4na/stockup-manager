@@ -4,6 +4,7 @@ package com.stockup.StockUp.Manager.mapper.sales;
 import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerRequestDTO;
 import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerResponseDTO;
 import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerSummaryDTO;
+import com.stockup.StockUp.Manager.mapper.Others.AddressMapper;
 import com.stockup.StockUp.Manager.model.sales.Customer;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;

@@ -1,12 +1,12 @@
 package com.stockup.StockUp.Manager.service.sales.impl;
 
-
 import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerRequestDTO;
 import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerResponseDTO;
 import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerSummaryDTO;
 import com.stockup.StockUp.Manager.mapper.sales.CustomerMapper;
 import com.stockup.StockUp.Manager.model.sales.Customer;
 import com.stockup.StockUp.Manager.repository.sales.CustomerRepository;
+import com.stockup.StockUp.Manager.service.sales.ICustomerService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Service
 @Transactional
-public class CustomerService {
+public class CustomerService implements ICustomerService {
 	
 	private final CustomerRepository repository;
 	private final CustomerMapper mapper;
@@ -35,7 +35,7 @@ public class CustomerService {
 	public CustomerResponseDTO update(UUID id, CustomerRequestDTO dto) {
 		Customer existing = repository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException("Customer not found: " + id));
-		// MapStruct with IGNORE will update non-null properties; here we can manually set or map
+		
 		if (dto.name() != null) existing.setName(dto.name());
 		existing.setCpfCnpj(dto.cpfCnpj());
 		existing.setPhone(dto.phone());

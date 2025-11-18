@@ -27,11 +27,9 @@ public class Customer extends BaseEntity {
 	@Column(length = 255)
 	private String email;
 	
-	// Relacionamento 1:N com addresses
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Address> addresses = new LinkedHashSet<>();
 	
-	// Construtores auxiliares, helpers
 	public void addAddress(Address address) {
 		address.setCustomer(this);
 		this.addresses.add(address);

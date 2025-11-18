@@ -1,5 +1,7 @@
 package com.stockup.StockUp.Manager.dto.sales.Customer;
 
+import com.stockup.StockUp.Manager.dto.Others.Address.AddressDTO;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
