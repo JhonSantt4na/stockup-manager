@@ -3,6 +3,10 @@ package com.stockup.StockUp.Manager.service.sales.impl;
 import com.stockup.StockUp.Manager.Enums.OrderStatus;
 import com.stockup.StockUp.Manager.dto.sales.order.OrderRequestDTO;
 import com.stockup.StockUp.Manager.dto.sales.order.OrderResponseDTO;
+import com.stockup.StockUp.Manager.mapper.sales.OrderMapper;
+import com.stockup.StockUp.Manager.model.sales.Order;
+import com.stockup.StockUp.Manager.repository.sales.OrderRepository;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -14,12 +18,17 @@ import java.util.Collections;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class OrderService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
+	private OrderRepository repository;
+	private OrderMapper mapper;
 	
 	public OrderResponseDTO create(OrderRequestDTO dto) {
 		logger.debug("Creating new order");
+		
+		
 		return null;
 	}
 	
