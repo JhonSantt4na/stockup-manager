@@ -1,5 +1,7 @@
 package com.stockup.StockUp.Manager.dto.sales.order;
 
+import com.stockup.StockUp.Manager.Enums.OrderStatus;
+import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerSummaryDTO;
 import com.stockup.StockUp.Manager.dto.sales.orderItem.OrderItemResponseDTO;
 
 import java.math.BigDecimal;
@@ -8,11 +10,13 @@ import java.util.List;
 import java.util.UUID;
 
 public record OrderResponseDTO(
+	
 	UUID id,
-	UUID customerId,
+	CustomerSummaryDTO customer,
 	BigDecimal totalAmount,
-	String status,
+	OrderStatus status,
 	LocalDateTime createdAt,
 	LocalDateTime updatedAt,
 	List<OrderItemResponseDTO> items
+
 ) {}

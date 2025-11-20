@@ -18,6 +18,8 @@ public interface ICustomerService {
 	
 	Page<CustomerSummaryDTO> findAll(Pageable pageable);
 	
+	Page<CustomerSummaryDTO> findAllCustom(int page, int size, String[] sort);
+	
 	void softDelete(UUID id);
 	
 	void enable(UUID id);

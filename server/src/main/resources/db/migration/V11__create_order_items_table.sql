@@ -2,10 +2,10 @@ CREATE TABLE order_items (
     order_id UUID NOT NULL,
     product_id UUID NOT NULL,
 
-    quantity INT NOT NULL,
-    unit_price NUMERIC(19,2) NOT NULL,
-    discount NUMERIC(19,2) NOT NULL,
-    final_price NUMERIC(19,2) NOT NULL,
+    quantity INT NOT NULL CHECK (quantity > 0),
+    unit_price NUMERIC(19,2) NOT NULL CHECK (unit_price >= 0),
+    discount NUMERIC(19,2) NOT NULL DEFAULT 0 CHECK (discount >= 0),
+    final_price NUMERIC(19,2) NOT NULL CHECK (final_price >= 0),
 
     product_name VARCHAR(255),
     product_sku VARCHAR(80),

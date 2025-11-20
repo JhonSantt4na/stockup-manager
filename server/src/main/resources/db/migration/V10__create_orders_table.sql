@@ -14,20 +14,23 @@ CREATE TABLE orders (
     order_number VARCHAR(30) NOT NULL UNIQUE,
 
     order_status VARCHAR(20) NOT NULL CHECK (
-        order_status IN ('PENDING','CONFIRMED','CANCELLED','PAID','SHIPPED','DELIVERED')
+        order_status IN (
+            'PENDING','CONFIRMED','CANCELLED',
+            'PAID','SHIPPED','DELIVERED'
+        )
     ),
 
-    subtotal NUMERIC(19,2),
-    discount_total NUMERIC(19,2),
-    shipping_total NUMERIC(19,2),
-    tax_total NUMERIC(19,2),
-    total NUMERIC(19,2),
-    total_paid NUMERIC(19,2),
-    total_refunded NUMERIC(19,2)
+    subtotal NUMERIC(19,2) DEFAULT 0,
+    discount_total NUMERIC(19,2) DEFAULT 0,
+    shipping_total NUMERIC(19,2) DEFAULT 0,
+    tax_total NUMERIC(19,2) DEFAULT 0,
+    total NUMERIC(19,2) DEFAULT 0,
+    total_paid NUMERIC(19,2) DEFAULT 0,
+    total_refunded NUMERIC(19,2) DEFAULT 0
 );
 
 CREATE INDEX idx_orders_order_number ON orders(order_number);
-CREATE INDEX idx_orders_order_status ON orders(order_status);
+CREATE INDEX idx_orders_status ON orders(order_status);
 CREATE INDEX idx_orders_enabled ON orders(enabled);
 
 INSERT INTO orders (

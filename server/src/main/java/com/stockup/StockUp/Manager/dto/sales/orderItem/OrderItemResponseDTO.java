@@ -7,7 +7,8 @@ public record OrderItemResponseDTO(
 	
 	UUID productId,
 	String productName,
-	BigDecimal price,
+	BigDecimal unitPrice,
+	BigDecimal finalPrice,
 	Integer quantity,
 	BigDecimal subtotal
 

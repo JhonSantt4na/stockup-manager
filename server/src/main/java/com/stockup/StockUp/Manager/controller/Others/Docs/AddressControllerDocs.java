@@ -1,5 +1,8 @@
 package com.stockup.StockUp.Manager.controller.Others.Docs;
 
+import com.stockup.StockUp.Manager.dto.Others.Address.AddressRequestDTO;
+import com.stockup.StockUp.Manager.dto.Others.Address.AddressResponseDTO;
+import com.stockup.StockUp.Manager.dto.Others.Address.AddressSummaryDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;

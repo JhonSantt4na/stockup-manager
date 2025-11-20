@@ -1,5 +1,6 @@
 package com.stockup.StockUp.Manager.dto.sales.order;
 
+import com.stockup.StockUp.Manager.dto.sales.orderItem.OrderItemRequestDTO;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
