@@ -22,6 +22,10 @@ public class Order extends BaseEntity {
 	private LocalDateTime confirmedAt;
 	private LocalDateTime paidAt;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "customer_id", nullable = false)
+	private Customer customer;
+	
 	@Column(nullable = false, unique = true, length = 30)
 	private String orderNumber;
 	

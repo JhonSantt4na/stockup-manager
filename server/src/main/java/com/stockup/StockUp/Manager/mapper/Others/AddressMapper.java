@@ -24,7 +24,7 @@ public interface AddressMapper {
 	@Mapping(target = "customer", source = "customerId", qualifiedByName = "mapCustomer")
 	Address toEntity(AddressRequestDTO dto);
 	
-	@Mapping(target = "customer", ignore = true) // customer não muda em updates
+	@Mapping(target = "customer", ignore = true)
 	void updateFromDto(AddressRequestDTO dto, @MappingTarget Address address);
 	
 	@Named("mapCustomer")

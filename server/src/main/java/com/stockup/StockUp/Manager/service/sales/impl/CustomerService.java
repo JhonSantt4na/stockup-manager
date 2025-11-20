@@ -9,9 +9,12 @@ import com.stockup.StockUp.Manager.repository.sales.CustomerRepository;
 import com.stockup.StockUp.Manager.service.sales.ICustomerService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 @Service
@@ -53,6 +56,37 @@ public class CustomerService implements ICustomerService {
 	public Page<CustomerSummaryDTO> findAll(Pageable pageable) {
 		return repository.findAll(pageable)
 			.map(mapper::toSummary);
+	}
+	
+	@Override
+	public Page<CustomerSummaryDTO> findAllCustom(int page, int size, String[] sort) {
+		
+		Pageable pageable = PageRequest.of(page, size, parseSort(sort));
+		
+		return repository.findAll(pageable)
+			.map(mapper::toSummary);
+	}
+	
+	private Sort parseSort(String[] sort) {
+		if (sort == null || sort.length == 0) {
+			return Sort.unsorted();
+		}
+		
+		return Sort.by(
+			Arrays.stream(sort)
+				.map(order -> {
+					String[] parts = order.split(",");
+					String field = parts[0].trim();
+					
+					Sort.Direction direction =
+						(parts.length > 1 && parts[1].trim().equalsIgnoreCase("asc"))
+							? Sort.Direction.ASC
+							: Sort.Direction.DESC;
+					
+					return new Sort.Order(direction, field);
+				})
+				.toList()
+		);
 	}
 	
 	public void softDelete(UUID id) {

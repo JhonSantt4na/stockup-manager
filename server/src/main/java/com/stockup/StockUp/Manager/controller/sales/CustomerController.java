@@ -42,14 +42,21 @@ public class CustomerController implements CustomerControllerDocs {
 		return ResponseEntity.ok(service.findById(id));
 	}
 	
-	@Override
-	public ResponseEntity<Page<CustomerSummaryDTO>> list(int page, int size, String[] sort) {
-		return null;
-	}
-	
 	@GetMapping
 	public ResponseEntity<Page<CustomerSummaryDTO>> list(Pageable pageable) {
-		return ResponseEntity.ok(service.findAll(pageable));
+		Page<CustomerSummaryDTO> result = service.findAll(pageable);
+		return ResponseEntity.ok(result);
+	}
+	
+	@Override
+	@GetMapping("/custom")
+	public ResponseEntity<Page<CustomerSummaryDTO>> listCustom(
+		@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "10") int size,
+		@RequestParam(defaultValue = "createdAt,desc") String[] sort
+	) {
+		Page<CustomerSummaryDTO> result = service.findAllCustom(page, size, sort);
+		return ResponseEntity.ok(result);
 	}
 	
 	@DeleteMapping("/{id}")

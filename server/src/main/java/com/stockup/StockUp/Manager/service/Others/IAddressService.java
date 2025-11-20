@@ -1,5 +1,8 @@
 package com.stockup.StockUp.Manager.service.Others;
 
+import com.stockup.StockUp.Manager.dto.Others.Address.AddressRequestDTO;
+import com.stockup.StockUp.Manager.dto.Others.Address.AddressResponseDTO;
+import com.stockup.StockUp.Manager.dto.Others.Address.AddressSummaryDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,17 +76,35 @@ public interface CustomerControllerDocs {
 		@Parameter(description = "ID do cliente") @PathVariable UUID id
 	);
 	
-	
 	@Operation(
 		summary = "Listar clientes",
-		description = "Retorna uma lista paginada de clientes (todos).",
+		description = """
+        Retorna uma lista paginada de clientes.
+        Parâmetros aceitos automaticamente pelo Pageable:
+        - page: número da página (0-based)
+        - size: tamanho da página
+        - sort: campo e direção (ex: createdAt,desc)
+        """,
 		tags = {"Clientes"}
 	)
 	@GetMapping
-	ResponseEntity<Page<CustomerSummaryDTO>> list(
-		@Parameter(description = "Número da página") @RequestParam(defaultValue = "0") int page,
-		@Parameter(description = "Tamanho da página") @RequestParam(defaultValue = "10") int size,
-		@Parameter(description = "Ordenação") @RequestParam(defaultValue = "createdAt,desc") String[] sort
+	ResponseEntity<Page<CustomerSummaryDTO>> list(Pageable pageable);
+	
+	@Operation(
+		summary = "Listar clientes (Custom)",
+		description = "Retorna uma lista paginada de clientes utilizando parâmetros explícitos de paginação e ordenação.",
+		tags = {"Clientes"}
+	)
+	@GetMapping("/custom")
+	ResponseEntity<Page<CustomerSummaryDTO>> listCustom(
+		@Parameter(description = "Número da página", example = "0")
+		@RequestParam(defaultValue = "0") int page,
+		
+		@Parameter(description = "Tamanho da página", example = "10")
+		@RequestParam(defaultValue = "10") int size,
+		
+		@Parameter(description = "Ordenação no formato campo,direção", example = "createdAt,desc")
+		@RequestParam(defaultValue = "createdAt,desc") String[] sort
 	);
 	
 	
