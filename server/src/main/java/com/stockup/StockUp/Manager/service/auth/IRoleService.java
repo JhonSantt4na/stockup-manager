@@ -2,7 +2,7 @@ package com.stockup.StockUp.Manager.service.auth;
 
 import com.stockup.StockUp.Manager.dto.Auth.roles.request.RoleDTO;
 import com.stockup.StockUp.Manager.dto.Auth.roles.request.RoleUpdateDTO;
-import com.stockup.StockUp.Manager.model.security.Role;
+import com.stockup.StockUp.Manager.model.user.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

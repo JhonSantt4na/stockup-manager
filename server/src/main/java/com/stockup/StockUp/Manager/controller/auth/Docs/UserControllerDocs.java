@@ -5,7 +5,7 @@ import com.stockup.StockUp.Manager.dto.Auth.user.request.RegisterUserRequestDTO;
 import com.stockup.StockUp.Manager.dto.Auth.user.request.UpdateUserRequestDTO;
 import com.stockup.StockUp.Manager.dto.Auth.user.response.RegistrationResponseDTO;
 import com.stockup.StockUp.Manager.dto.Auth.user.response.UserResponseDTO;
-import com.stockup.StockUp.Manager.model.User;
+import com.stockup.StockUp.Manager.model.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

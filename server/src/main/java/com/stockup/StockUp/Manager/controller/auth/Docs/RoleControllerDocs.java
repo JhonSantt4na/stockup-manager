@@ -3,7 +3,7 @@ package com.stockup.StockUp.Manager.controller.auth.Docs;
 import com.stockup.StockUp.Manager.dto.Auth.roles.request.RoleDTO;
 import com.stockup.StockUp.Manager.dto.Auth.roles.request.RoleUpdateDTO;
 import com.stockup.StockUp.Manager.dto.Auth.roles.response.RoleWithUsersDTO;
-import com.stockup.StockUp.Manager.model.security.Role;
+import com.stockup.StockUp.Manager.model.user.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

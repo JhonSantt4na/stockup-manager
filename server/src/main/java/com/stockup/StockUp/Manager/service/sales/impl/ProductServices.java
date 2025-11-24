@@ -5,9 +5,9 @@ import com.stockup.StockUp.Manager.dto.sales.Product.ProductResponseDTO;
 import com.stockup.StockUp.Manager.dto.sales.Product.ProductSummaryDTO;
 import com.stockup.StockUp.Manager.dto.sales.Product.ProductUpdateDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
-import com.stockup.StockUp.Manager.mapper.sales.ProductMapper;
-import com.stockup.StockUp.Manager.model.sales.Product;
-import com.stockup.StockUp.Manager.repository.sales.ProductRepository;
+import com.stockup.StockUp.Manager.mapper.ProductMapper;
+import com.stockup.StockUp.Manager.model.catalog.Product;
+import com.stockup.StockUp.Manager.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 

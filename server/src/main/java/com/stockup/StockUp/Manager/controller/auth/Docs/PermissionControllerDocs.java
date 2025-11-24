@@ -3,7 +3,7 @@ package com.stockup.StockUp.Manager.controller.auth.Docs;
 import com.stockup.StockUp.Manager.dto.Auth.permission.request.PermissionCreateDTO;
 import com.stockup.StockUp.Manager.dto.Auth.permission.request.PermissionUpdateDTO;
 import com.stockup.StockUp.Manager.dto.Auth.permission.response.PermissionWithRolesDTO;
-import com.stockup.StockUp.Manager.model.security.Permission;
+import com.stockup.StockUp.Manager.model.user.Permission;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
