@@ -1,6 +1,7 @@
 package com.stockup.StockUp.Manager.model.sales;
 
-import com.stockup.StockUp.Manager.model.PK.OrderItemPK;
+import com.stockup.StockUp.Manager.model.sales.PK.OrderItemPK;
+import com.stockup.StockUp.Manager.model.catalog.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

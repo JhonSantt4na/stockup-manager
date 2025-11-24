@@ -4,14 +4,14 @@ import com.stockup.StockUp.Manager.Enums.OrderStatus;
 import com.stockup.StockUp.Manager.dto.sales.order.OrderRequestDTO;
 import com.stockup.StockUp.Manager.dto.sales.order.OrderResponseDTO;
 import com.stockup.StockUp.Manager.dto.sales.orderItem.OrderItemRequestDTO;
-import com.stockup.StockUp.Manager.mapper.sales.OrderMapper;
-import com.stockup.StockUp.Manager.model.sales.Customer;
+import com.stockup.StockUp.Manager.mapper.OrderMapper;
+import com.stockup.StockUp.Manager.model.customer.Customer;
 import com.stockup.StockUp.Manager.model.sales.Order;
 import com.stockup.StockUp.Manager.model.sales.OrderItem;
-import com.stockup.StockUp.Manager.model.sales.Product;
-import com.stockup.StockUp.Manager.repository.sales.CustomerRepository;
-import com.stockup.StockUp.Manager.repository.sales.OrderRepository;
-import com.stockup.StockUp.Manager.repository.sales.ProductRepository;
+import com.stockup.StockUp.Manager.model.catalog.Product;
+import com.stockup.StockUp.Manager.repository.CustomerRepository;
+import com.stockup.StockUp.Manager.repository.OrderRepository;
+import com.stockup.StockUp.Manager.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -64,13 +64,12 @@ public class OrderService {
 			item.setOrder(order);
 			item.setProduct(product);
 			item.setQuantity(itemDto.quantity());
-			//item.setUnitPrice(product.getPrice());
+			item.setUnitPrice(product.getSalePrice());
 			item.setDiscount(BigDecimal.ZERO);
-			//item.setFinalPrice(product.getPrice().multiply(BigDecimal.valueOf(itemDto.quantity())));
+			item.setFinalPrice(product.getSalePrice().multiply(BigDecimal.valueOf(itemDto.quantity())));
 			
 			item.setProductName(product.getName());
 			item.setProductSku(product.getSku());
-			//item.setProductImage(product.getImageUrl());
 			
 			order.getItems().add(item);
 			

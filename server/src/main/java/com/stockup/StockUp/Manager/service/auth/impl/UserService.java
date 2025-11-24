@@ -1,6 +1,5 @@
 package com.stockup.StockUp.Manager.service.auth.impl;
 
-import com.stockup.StockUp.Manager.dto.Auth.security.request.LoginRequestDTO;
 import com.stockup.StockUp.Manager.dto.Auth.security.response.TokenDTO;
 import com.stockup.StockUp.Manager.dto.Auth.user.request.ChangePasswordRequestDTO;
 import com.stockup.StockUp.Manager.dto.Auth.user.request.RegisterUserRequestDTO;
@@ -10,12 +9,11 @@ import com.stockup.StockUp.Manager.dto.Auth.user.response.UserResponseDTO;
 import com.stockup.StockUp.Manager.exception.CannotDeleteActiveUserException;
 import com.stockup.StockUp.Manager.exception.InvalidCredentialsException;
 import com.stockup.StockUp.Manager.exception.UsernameAlreadyExistsException;
-import com.stockup.StockUp.Manager.mapper.auth.UserMapper;
-import com.stockup.StockUp.Manager.model.User;
-import com.stockup.StockUp.Manager.model.security.Role;
-import com.stockup.StockUp.Manager.repository.auth.RoleRepository;
-import com.stockup.StockUp.Manager.repository.auth.UserRepository;
-import com.stockup.StockUp.Manager.service.auth.IAuthService;
+import com.stockup.StockUp.Manager.mapper.UserMapper;
+import com.stockup.StockUp.Manager.model.user.User;
+import com.stockup.StockUp.Manager.model.user.Role;
+import com.stockup.StockUp.Manager.repository.RoleRepository;
+import com.stockup.StockUp.Manager.repository.UserRepository;
 import com.stockup.StockUp.Manager.service.auth.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;

@@ -2,6 +2,7 @@ package com.stockup.StockUp.Manager.model.sales;
 
 import com.stockup.StockUp.Manager.Enums.OrderStatus;
 import com.stockup.StockUp.Manager.model.BaseEntity;
+import com.stockup.StockUp.Manager.model.customer.Customer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

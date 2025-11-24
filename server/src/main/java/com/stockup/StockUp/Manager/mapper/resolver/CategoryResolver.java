@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.mapper.resolver;
 
-import com.stockup.StockUp.Manager.model.sales.Category;
-import com.stockup.StockUp.Manager.repository.sales.CategoryRepository;
+import com.stockup.StockUp.Manager.model.catalog.Category;
+import com.stockup.StockUp.Manager.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Named;

@@ -32,70 +32,152 @@ Quebrar em classes menores
 
 
 
--product
-@Entity
-@Table(name = "products")
-public class Product {
+1.3 Brand (opcional)
+id
+name
 
-    @Id
-    @GeneratedValue
-    private UUID id;
 
-    private String nome;
-    private String codigoBarras;
-    private BigDecimal precoCusto;
-    private BigDecimal precoVenda;
-    private String ncm;
-    private String cfop;
-    private String cst;
-    private Boolean ativo;
+1.4 UnitOfMeasure (UN, CX, KG etc.)
+id
+abbreviation
+description
 
-    // Relacionamento
-    @OneToOne(mappedBy = "produto", cascade = CascadeType.ALL)
-    private Stock estoque;
-}
+
+Quotation / Budget (orçamento)
+
+Refund / Return
+
+Shipment / Delivery (entregas)
+
+ShippingMethod (Transportadoras, retirada, frete etc.)
+
+Invoice / NF-e
 
 
 
-- Stock
-  @Entity
-  @Table(name = "stocks")
-  public class Stock {
 
-  @Id
-  @GeneratedValue
-  private UUID id;
+3.3 Payment
+Pode ser 1 pedido → N pagamentos.
+id
+order
+paymentMethod
+paidAmount
+paidAt
+transactionCode
+status
 
-  @OneToOne
-  @JoinColumn(name = "produto_id", nullable = false)
-  private Product produto;
+3.4 PaymentMethod
+id
+name (pix, cartão, dinheiro)
+enabled
 
-  private BigDecimal quantidadeAtual;
-  private BigDecimal quantidadeMinima;
-  private String localizacao;
-  private LocalDate dataUltimaEntrada;
-  private LocalDate dataUltimaSaida;
-  }
+Payable (Contas a pagar)
+Receivable (Contas a receber)
+CashFlow (Fluxo de caixa)
+CashRegister / PDV Session (Abertura/fechamento de caixa)
 
 
-stock moviment
 
-@Entity
-@Table(name = "stock_movements")
-public class StockMovement {
 
-    @Id
-    @GeneratedValue
-    private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "estoque_id")
-    private Stock estoque;
 
-    private BigDecimal quantidade;
-    private String tipo; // ENTRADA, SAIDA, AJUSTE
-    private LocalDateTime dataMovimento;
-    private String motivo;
-}
 
+
+
+
+
+
+
+
+
+
+
+2.1 Stock
+Representa o estoque atual de um produto em um local.
+id
+product
+quantity
+minimumQuantity
+location
+updatedAt
+
+
+
+2.2 StockMovement
+Histórico de movimentações.
+id
+product
+movementType (IN/OUT)
+quantity
+previousQuantity
+finalQuantity
+reason (SALE, PURCHASE, ADJUSTMENT)
+relatedDocumentId (orderId, purchaseId, etc.)
+timestamp
+
+
+
+
+2.3 Warehouse / Location
+id
+name
+description
+
+
+Lot / Batch (lote de produtos — muito comum em alimentos/farmacêutico)
+ExpirationDate / PerishableControl (controle de validade)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Fornecedor
+
+5.1 Supplier
+id
+name
+cnpj
+email
+phone
+
+
+
+
+5.2 PurchaseOrder
+Pedido de compra para fornecedores.
+id
+supplier
+orderNumber
+expectedArrivalDate
+status
+items
+total
+
+
+
+5.3 PurchaseItem
+id
+purchaseOrder
+product
+quantity
+costPrice
+subtotal
 

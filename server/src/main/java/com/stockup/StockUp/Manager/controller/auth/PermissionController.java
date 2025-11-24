@@ -6,7 +6,7 @@ import com.stockup.StockUp.Manager.dto.Auth.permission.request.PermissionCreateD
 import com.stockup.StockUp.Manager.dto.Auth.permission.request.PermissionUpdateDTO;
 import com.stockup.StockUp.Manager.dto.Auth.permission.response.PermissionWithRolesDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
-import com.stockup.StockUp.Manager.model.security.Permission;
+import com.stockup.StockUp.Manager.model.user.Permission;
 import com.stockup.StockUp.Manager.service.auth.impl.PermissionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
