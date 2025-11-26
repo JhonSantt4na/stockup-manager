@@ -1,5 +1,6 @@
 package com.stockup.StockUp.Manager.controller.sales.docs;
 
+import com.stockup.StockUp.Manager.dto.sales.Brand.BrandRequestDTO;
 import com.stockup.StockUp.Manager.dto.sales.Brand.BrandResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -69,7 +70,7 @@ public interface BrandControllerDocs {
 		}
 	)
 	@GetMapping("/list")
-	ResponseEntity<Page<BrandResponseDTO>> list(
+	ResponseEntity<Page<BrandResponseDTO>> listBrands(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,
 		@RequestParam(defaultValue = "name,asc") String[] sort

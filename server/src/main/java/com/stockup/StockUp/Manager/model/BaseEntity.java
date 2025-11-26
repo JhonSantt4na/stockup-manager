@@ -1,8 +1,11 @@
 package com.stockup.StockUp.Manager.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
@@ -12,6 +15,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @MappedSuperclass
+@AllArgsConstructor
 public class BaseEntity {
 	
 	@Id
@@ -41,6 +45,9 @@ public class BaseEntity {
 	
 	public boolean isDeleted() {
 		return deletedAt != null;
+	}
+	
+	public BaseEntity() {
 	}
 	
 	@Override

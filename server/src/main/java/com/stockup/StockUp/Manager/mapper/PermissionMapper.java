@@ -10,6 +10,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface PermissionMapper {
 	
+	@Mapping(target = "enabled", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "createdAt", ignore = true)

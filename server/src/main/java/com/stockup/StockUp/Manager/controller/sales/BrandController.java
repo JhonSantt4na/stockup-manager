@@ -2,6 +2,7 @@ package com.stockup.StockUp.Manager.controller.sales;
 
 import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.controller.sales.docs.BrandControllerDocs;
+import com.stockup.StockUp.Manager.dto.sales.Brand.BrandRequestDTO;
 import com.stockup.StockUp.Manager.dto.sales.Brand.BrandResponseDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.service.sales.impl.BrandService;
@@ -66,7 +67,7 @@ public class BrandController implements BrandControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/list")
-	public ResponseEntity<Page<BrandResponseDTO>> list(
+	public ResponseEntity<Page<BrandResponseDTO>> listBrands(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,
 		@RequestParam(defaultValue = "name,asc") String[] sort

@@ -2,8 +2,11 @@ package com.stockup.StockUp.Manager.model.customer;
 
 import com.stockup.StockUp.Manager.model.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -12,6 +15,8 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "customers")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Customer extends BaseEntity {
 	
 	@Column(nullable = false, length = 255)
