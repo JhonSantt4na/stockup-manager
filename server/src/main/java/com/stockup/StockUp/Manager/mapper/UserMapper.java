@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface UserMapper {
 	
+	@Mapping(target = "authorities", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "lastActivity", ignore = true)
@@ -27,6 +28,7 @@ public interface UserMapper {
 	@Mapping(target = "deletedAt", ignore = true)
 	User registerToUser(RegisterUserRequestDTO dto);
 	
+	@Mapping(target = "authorities", ignore = true)
 	@Mapping(target = "fullName", source = "fullName")
 	@Mapping(target = "email", source = "email")
 	@Mapping(target = "id", ignore = true)
@@ -49,6 +51,8 @@ public interface UserMapper {
 	@Mapping(target = "roles", expression = "java(mapRolesToNames(user))")
 	UserResponseDTO entityToResponse(User user);
 	
+	@Mapping(target = "password", ignore = true)
+	@Mapping(target = "authorities", ignore = true)
 	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "lastActivity", ignore = true)
 	@Mapping(target = "accountNonExpired", ignore = true)

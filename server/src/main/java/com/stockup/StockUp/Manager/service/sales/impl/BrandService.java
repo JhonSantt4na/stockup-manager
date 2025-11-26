@@ -8,6 +8,8 @@ import com.stockup.StockUp.Manager.repository.BrandRepository;
 import com.stockup.StockUp.Manager.service.sales.IBrandService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,6 +47,11 @@ public class BrandService implements IBrandService {
 		return repository.findById(id)
 			.map(mapper::toResponse)
 			.orElseThrow(() -> new EntityNotFoundException("Marca não encontrada"));
+	}
+	
+	@Override
+	public Page<BrandResponseDTO> list(Pageable pageable) {
+		return repository.findAll(pageable).map(mapper::toResponse);
 	}
 	
 	@Override

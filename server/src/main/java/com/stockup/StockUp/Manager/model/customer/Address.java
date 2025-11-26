@@ -1,13 +1,17 @@
 package com.stockup.StockUp.Manager.model.customer;
 import com.stockup.StockUp.Manager.model.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "addresses")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Address extends BaseEntity {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
