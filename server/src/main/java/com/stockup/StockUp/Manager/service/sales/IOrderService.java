@@ -1,8 +1,8 @@
 package com.stockup.StockUp.Manager.service.sales;
 
 import com.stockup.StockUp.Manager.Enums.OrderStatus;
-import com.stockup.StockUp.Manager.dto.sales.order.OrderRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.order.OrderResponseDTO;
+import com.stockup.StockUp.Manager.dto.Sales.order.OrderRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.order.OrderResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

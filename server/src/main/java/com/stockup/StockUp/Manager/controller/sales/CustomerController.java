@@ -1,9 +1,9 @@
 package com.stockup.StockUp.Manager.controller.sales;
 
 import com.stockup.StockUp.Manager.controller.sales.docs.CustomerControllerDocs;
-import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerResponseDTO;
-import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerSummaryDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Customer.CustomerRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Customer.CustomerResponseDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Customer.CustomerSummaryDTO;
 import com.stockup.StockUp.Manager.service.sales.impl.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;

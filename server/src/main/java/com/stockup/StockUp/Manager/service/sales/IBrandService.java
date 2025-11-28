@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.service.sales;
 
-import com.stockup.StockUp.Manager.dto.sales.Brand.BrandRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.Brand.BrandResponseDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Brand.BrandRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Brand.BrandResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

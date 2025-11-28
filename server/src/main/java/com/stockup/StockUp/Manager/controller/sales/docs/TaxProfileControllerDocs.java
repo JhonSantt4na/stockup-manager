@@ -1,8 +1,8 @@
 package com.stockup.StockUp.Manager.controller.sales.docs;
 
-import com.stockup.StockUp.Manager.dto.sales.taxProfile.TaxProfileRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.taxProfile.TaxProfileResponseDTO;
-import com.stockup.StockUp.Manager.dto.sales.taxProfile.TaxProfileUpdateDTO;
+import com.stockup.StockUp.Manager.dto.Sales.taxProfile.TaxProfileRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.taxProfile.TaxProfileResponseDTO;
+import com.stockup.StockUp.Manager.dto.Sales.taxProfile.TaxProfileUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

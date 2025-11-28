@@ -1,8 +1,8 @@
 package com.stockup.StockUp.Manager.controller.sales.docs;
 
-import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerResponseDTO;
-import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerSummaryDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Customer.CustomerRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Customer.CustomerResponseDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Customer.CustomerSummaryDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

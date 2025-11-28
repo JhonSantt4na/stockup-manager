@@ -25,22 +25,10 @@ com pontos que podem quebrar facilmente
 Se você quiser, posso:
 
 Gerar a versão ideal e refatorada
-OU
 Criar os métodos privados auxiliares
-OU
 Quebrar em classes menores
 
 
-
-1.3 Brand (opcional)
-id
-name
-
-
-1.4 UnitOfMeasure (UN, CX, KG etc.)
-id
-abbreviation
-description
 
 
 Quotation / Budget (orçamento)
@@ -85,13 +73,6 @@ CashRegister / PDV Session (Abertura/fechamento de caixa)
 
 
 
-
-
-
-
-
-
-
 2.1 Stock
 Representa o estoque atual de um produto em um local.
 id
@@ -100,7 +81,6 @@ quantity
 minimumQuantity
 location
 updatedAt
-
 
 
 2.2 StockMovement
@@ -116,8 +96,6 @@ relatedDocumentId (orderId, purchaseId, etc.)
 timestamp
 
 
-
-
 2.3 Warehouse / Location
 id
 name
@@ -126,21 +104,6 @@ description
 
 Lot / Batch (lote de produtos — muito comum em alimentos/farmacêutico)
 ExpirationDate / PerishableControl (controle de validade)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -1,10 +1,10 @@
 package com.stockup.StockUp.Manager.service.sales.impl;
 
-import com.stockup.StockUp.Manager.dto.sales.Brand.BrandRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.Brand.BrandResponseDTO;
-import com.stockup.StockUp.Manager.mapper.BrandMapper;
+import com.stockup.StockUp.Manager.dto.Sales.Brand.BrandRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Brand.BrandResponseDTO;
+import com.stockup.StockUp.Manager.mapper.catalog.BrandMapper;
 import com.stockup.StockUp.Manager.model.catalog.Brand;
-import com.stockup.StockUp.Manager.repository.BrandRepository;
+import com.stockup.StockUp.Manager.repository.catalog.BrandRepository;
 import com.stockup.StockUp.Manager.service.sales.IBrandService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

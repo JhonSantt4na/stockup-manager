@@ -2,7 +2,6 @@ package com.stockup.StockUp.Manager.model.catalog;
 
 import com.stockup.StockUp.Manager.Enums.ProductOrigin;
 import com.stockup.StockUp.Manager.Enums.ProductStatus;
-import com.stockup.StockUp.Manager.Enums.UnitOfMeasure;
 import com.stockup.StockUp.Manager.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,9 +31,6 @@ public class Product extends BaseEntity {
 	@Column(columnDefinition = "TEXT")
 	private String description;
 	
-	@Enumerated(EnumType.STRING)
-	private UnitOfMeasure unitOfMeasure;
-	
 	@Column(precision = 19, scale = 4)
 	private BigDecimal costPrice;
 	
@@ -61,6 +57,14 @@ public class Product extends BaseEntity {
 	
 	@Column(precision = 5, scale = 2)
 	private BigDecimal ipiRate;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "unit_of_measure_id", nullable = false)
+	private UnitOfMeasure unitOfMeasure;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "brand_id")
+	private Brand brand;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id")

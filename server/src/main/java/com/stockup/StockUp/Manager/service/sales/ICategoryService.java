@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.service.sales;
 
-import com.stockup.StockUp.Manager.dto.sales.category.CategoryRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.category.CategoryResponseDTO;
+import com.stockup.StockUp.Manager.dto.Sales.category.CategoryRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.category.CategoryResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.UUID;

@@ -1,8 +1,8 @@
 package com.stockup.StockUp.Manager.service.sales;
 
-import com.stockup.StockUp.Manager.dto.sales.taxProfile.TaxProfileRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.taxProfile.TaxProfileResponseDTO;
-import com.stockup.StockUp.Manager.dto.sales.taxProfile.TaxProfileUpdateDTO;
+import com.stockup.StockUp.Manager.dto.Sales.taxProfile.TaxProfileRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.taxProfile.TaxProfileResponseDTO;
+import com.stockup.StockUp.Manager.dto.Sales.taxProfile.TaxProfileUpdateDTO;
 import java.util.List;
 import java.util.UUID;
 

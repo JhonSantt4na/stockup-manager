@@ -4,7 +4,7 @@ import com.stockup.StockUp.Manager.dto.Auth.security.response.TokenDTO;
 import com.stockup.StockUp.Manager.dto.Auth.security.request.LoginRequestDTO;
 import com.stockup.StockUp.Manager.model.user.User;
 import com.stockup.StockUp.Manager.model.user.Role;
-import com.stockup.StockUp.Manager.repository.UserRepository;
+import com.stockup.StockUp.Manager.repository.user.UserRepository;
 import com.stockup.StockUp.Manager.security.JwtTokenProvider;
 import com.stockup.StockUp.Manager.service.auth.IAuthService;
 import lombok.AllArgsConstructor;
