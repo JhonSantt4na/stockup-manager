@@ -2,10 +2,10 @@ package com.stockup.StockUp.Manager.controller.sales;
 
 import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.controller.sales.docs.ProductControllerDocs;
-import com.stockup.StockUp.Manager.dto.sales.Product.ProductRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.Product.ProductResponseDTO;
-import com.stockup.StockUp.Manager.dto.sales.Product.ProductSummaryDTO;
-import com.stockup.StockUp.Manager.dto.sales.Product.ProductUpdateDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Product.ProductRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Product.ProductResponseDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Product.ProductSummaryDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Product.ProductUpdateDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.service.sales.impl.ProductServices;
 import jakarta.validation.Valid;

@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.controller.sales.docs;
 
-import com.stockup.StockUp.Manager.dto.sales.category.CategoryRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.category.CategoryResponseDTO;
+import com.stockup.StockUp.Manager.dto.Sales.category.CategoryRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.category.CategoryResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

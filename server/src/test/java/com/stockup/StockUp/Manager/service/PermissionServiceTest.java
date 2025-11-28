@@ -4,7 +4,7 @@ import com.stockup.StockUp.Manager.dto.Auth.permission.request.PermissionCreateD
 import com.stockup.StockUp.Manager.dto.Auth.permission.request.PermissionUpdateDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.model.user.Permission;
-import com.stockup.StockUp.Manager.repository.PermissionRepository;
+import com.stockup.StockUp.Manager.repository.user.PermissionRepository;
 import com.stockup.StockUp.Manager.service.auth.impl.PermissionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

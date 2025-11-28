@@ -5,7 +5,7 @@ import com.stockup.StockUp.Manager.controller.auth.Docs.RoleControllerDocs;
 import com.stockup.StockUp.Manager.dto.Auth.roles.request.RoleDTO;
 import com.stockup.StockUp.Manager.dto.Auth.roles.request.RoleUpdateDTO;
 import com.stockup.StockUp.Manager.dto.Auth.roles.response.RoleWithUsersDTO;
-import com.stockup.StockUp.Manager.mapper.RoleMapper;
+import com.stockup.StockUp.Manager.mapper.user.RoleMapper;
 import com.stockup.StockUp.Manager.model.user.Role;
 import com.stockup.StockUp.Manager.service.auth.impl.RoleService;
 import jakarta.validation.Valid;

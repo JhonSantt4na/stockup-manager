@@ -2,8 +2,8 @@ package com.stockup.StockUp.Manager.controller.sales;
 
 import com.stockup.StockUp.Manager.Enums.OrderStatus;
 import com.stockup.StockUp.Manager.controller.sales.docs.OrderControllerDocs;
-import com.stockup.StockUp.Manager.dto.sales.order.OrderRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.order.OrderResponseDTO;
+import com.stockup.StockUp.Manager.dto.Sales.order.OrderRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.order.OrderResponseDTO;
 import com.stockup.StockUp.Manager.service.sales.impl.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

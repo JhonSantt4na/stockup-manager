@@ -1,11 +1,11 @@
 package com.stockup.StockUp.Manager.service.sales.impl;
 
-import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerResponseDTO;
-import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerSummaryDTO;
-import com.stockup.StockUp.Manager.mapper.CustomerMapper;
+import com.stockup.StockUp.Manager.dto.Sales.Customer.CustomerRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Customer.CustomerResponseDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Customer.CustomerSummaryDTO;
+import com.stockup.StockUp.Manager.mapper.user.CustomerMapper;
 import com.stockup.StockUp.Manager.model.customer.Customer;
-import com.stockup.StockUp.Manager.repository.CustomerRepository;
+import com.stockup.StockUp.Manager.repository.user.CustomerRepository;
 import com.stockup.StockUp.Manager.service.sales.ICustomerService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;

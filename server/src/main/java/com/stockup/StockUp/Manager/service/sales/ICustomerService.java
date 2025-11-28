@@ -1,8 +1,8 @@
 package com.stockup.StockUp.Manager.service.sales;
 
-import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerResponseDTO;
-import com.stockup.StockUp.Manager.dto.sales.Customer.CustomerSummaryDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Customer.CustomerRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Customer.CustomerResponseDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Customer.CustomerSummaryDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

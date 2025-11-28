@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.controller.sales.docs;
 
-import com.stockup.StockUp.Manager.dto.sales.Brand.BrandRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.Brand.BrandResponseDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Brand.BrandRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Brand.BrandResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

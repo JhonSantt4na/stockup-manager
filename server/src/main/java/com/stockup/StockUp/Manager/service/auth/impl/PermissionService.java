@@ -6,7 +6,7 @@ import com.stockup.StockUp.Manager.dto.Auth.permission.response.PermissionWithRo
 import com.stockup.StockUp.Manager.dto.Auth.permission.response.RoleInPermissionDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.model.user.Permission;
-import com.stockup.StockUp.Manager.repository.PermissionRepository;
+import com.stockup.StockUp.Manager.repository.user.PermissionRepository;
 import com.stockup.StockUp.Manager.service.auth.IPermissionService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;

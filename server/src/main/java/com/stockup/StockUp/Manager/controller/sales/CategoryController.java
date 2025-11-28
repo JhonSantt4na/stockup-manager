@@ -1,8 +1,8 @@
 package com.stockup.StockUp.Manager.controller.sales;
 
 import com.stockup.StockUp.Manager.controller.sales.docs.CategoryControllerDocs;
-import com.stockup.StockUp.Manager.dto.sales.category.CategoryRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.category.CategoryResponseDTO;
+import com.stockup.StockUp.Manager.dto.Sales.category.CategoryRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.category.CategoryResponseDTO;
 import com.stockup.StockUp.Manager.service.sales.ICategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

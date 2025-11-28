@@ -1,12 +1,12 @@
 package com.stockup.StockUp.Manager.service.sales.impl;
 
-import com.stockup.StockUp.Manager.dto.sales.category.CategoryRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.category.CategoryResponseDTO;
+import com.stockup.StockUp.Manager.dto.Sales.category.CategoryRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.category.CategoryResponseDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.exception.NotFoundException;
-import com.stockup.StockUp.Manager.mapper.CategoryMapper;
+import com.stockup.StockUp.Manager.mapper.catalog.CategoryMapper;
 import com.stockup.StockUp.Manager.model.catalog.Category;
-import com.stockup.StockUp.Manager.repository.CategoryRepository;
+import com.stockup.StockUp.Manager.repository.catalog.CategoryRepository;
 import com.stockup.StockUp.Manager.service.sales.ICategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

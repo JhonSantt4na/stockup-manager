@@ -1,12 +1,12 @@
 package com.stockup.StockUp.Manager.service.sales.impl;
 
-import com.stockup.StockUp.Manager.dto.sales.taxProfile.TaxProfileRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.taxProfile.TaxProfileResponseDTO;
-import com.stockup.StockUp.Manager.dto.sales.taxProfile.TaxProfileUpdateDTO;
+import com.stockup.StockUp.Manager.dto.Sales.taxProfile.TaxProfileRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.taxProfile.TaxProfileResponseDTO;
+import com.stockup.StockUp.Manager.dto.Sales.taxProfile.TaxProfileUpdateDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
-import com.stockup.StockUp.Manager.mapper.TaxProfileMapper;
+import com.stockup.StockUp.Manager.mapper.catalog.TaxProfileMapper;
 import com.stockup.StockUp.Manager.model.catalog.TaxProfile;
-import com.stockup.StockUp.Manager.repository.TaxProfileRepository;
+import com.stockup.StockUp.Manager.repository.catalog.TaxProfileRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

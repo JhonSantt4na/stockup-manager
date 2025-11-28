@@ -1,10 +1,9 @@
 package com.stockup.StockUp.Manager.controller.sales.docs;
 
 import com.stockup.StockUp.Manager.Enums.OrderStatus;
-import com.stockup.StockUp.Manager.dto.sales.order.OrderRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.order.OrderResponseDTO;
+import com.stockup.StockUp.Manager.dto.Sales.order.OrderRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.order.OrderResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,7 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import java.util.List;
+
 import java.util.UUID;
 
 @Tag(name = "Orders", description = "Operations related to sales orders.")

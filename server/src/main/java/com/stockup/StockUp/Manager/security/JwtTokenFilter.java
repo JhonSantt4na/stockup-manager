@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.security;
 
 import com.stockup.StockUp.Manager.audit.AuditLogger;
-import com.stockup.StockUp.Manager.repository.UserRepository;
+import com.stockup.StockUp.Manager.repository.user.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

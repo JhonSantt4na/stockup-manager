@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.mapper.resolver;
 
 import com.stockup.StockUp.Manager.model.catalog.TaxProfile;
-import com.stockup.StockUp.Manager.repository.TaxProfileRepository;
+import com.stockup.StockUp.Manager.repository.catalog.TaxProfileRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Named;

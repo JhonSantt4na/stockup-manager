@@ -2,8 +2,8 @@ package com.stockup.StockUp.Manager.controller.sales;
 
 import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.controller.sales.docs.BrandControllerDocs;
-import com.stockup.StockUp.Manager.dto.sales.Brand.BrandRequestDTO;
-import com.stockup.StockUp.Manager.dto.sales.Brand.BrandResponseDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Brand.BrandRequestDTO;
+import com.stockup.StockUp.Manager.dto.Sales.Brand.BrandResponseDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.service.sales.impl.BrandService;
 import lombok.RequiredArgsConstructor;
