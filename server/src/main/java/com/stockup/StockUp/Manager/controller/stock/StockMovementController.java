@@ -4,6 +4,7 @@ import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.controller.stock.docs.StockMovementControllerDocs;
 import com.stockup.StockUp.Manager.dto.Stock.stock.StockMovementRequestDTO;
 import com.stockup.StockUp.Manager.dto.Stock.stock.StockMovementResponseDTO;
+import com.stockup.StockUp.Manager.service.stock.impl.StockMovementService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
