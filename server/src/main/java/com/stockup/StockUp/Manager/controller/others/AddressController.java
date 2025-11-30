@@ -1,6 +1,6 @@
-package com.stockup.StockUp.Manager.controller.Others;
+package com.stockup.StockUp.Manager.controller.others;
 
-import com.stockup.StockUp.Manager.controller.Others.Docs.AddressControllerDocs;
+import com.stockup.StockUp.Manager.controller.others.Docs.AddressControllerDocs;
 import com.stockup.StockUp.Manager.dto.Others.Address.AddressRequestDTO;
 import com.stockup.StockUp.Manager.dto.Others.Address.AddressResponseDTO;
 import com.stockup.StockUp.Manager.dto.Others.Address.AddressSummaryDTO;
