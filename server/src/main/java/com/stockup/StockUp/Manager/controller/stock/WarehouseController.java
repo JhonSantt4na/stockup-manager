@@ -5,6 +5,7 @@ import com.stockup.StockUp.Manager.controller.stock.docs.WarehouseControllerDocs
 import com.stockup.StockUp.Manager.dto.Stock.warehouse.WarehouseRequestDTO;
 import com.stockup.StockUp.Manager.dto.Stock.warehouse.WarehouseResponseDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
+import com.stockup.StockUp.Manager.service.stock.impl.WarehouseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class WarehouseController implements WarehouseControllerDocs {
 	@PostMapping
 	public ResponseEntity<WarehouseResponseDTO> createWarehouse(@Valid @RequestBody WarehouseRequestDTO dto) {
 		try {
-			WarehouseResponseDTO response = warehouseService.createWarehouse(dto);
+			WarehouseResponseDTO response = warehouseService.create(dto);
 			AuditLogger.log("WAREHOUSE_CREATE", getCurrentUser(), "SUCCESS",
 				"Warehouse created: " + dto.name());
 			return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -50,7 +51,7 @@ public class WarehouseController implements WarehouseControllerDocs {
 		@PathVariable UUID id,
 		@Valid @RequestBody WarehouseRequestDTO dto) {
 		try {
-			WarehouseResponseDTO response = warehouseService.updateWarehouse(id, dto);
+			WarehouseResponseDTO response = warehouseService.update(id, dto);
 			AuditLogger.log("WAREHOUSE_UPDATE", getCurrentUser(), "SUCCESS",
 				"Warehouse updated: " + dto.name());
 			return ResponseEntity.ok(response);
@@ -79,7 +80,7 @@ public class WarehouseController implements WarehouseControllerDocs {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteWarehouse(@PathVariable UUID id) {
 		try {
-			warehouseService.deleteWarehouse(id);
+			warehouseService.delete(id);
 			AuditLogger.log("WAREHOUSE_DELETE", getCurrentUser(), "SUCCESS",
 				"Warehouse deleted: " + id);
 			return ResponseEntity.noContent().build();

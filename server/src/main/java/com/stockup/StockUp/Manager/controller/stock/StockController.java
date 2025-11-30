@@ -5,6 +5,7 @@ import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.controller.stock.docs.StockControllerDocs;
 import com.stockup.StockUp.Manager.dto.Stock.stock.StockRequestDTO;
 import com.stockup.StockUp.Manager.dto.Stock.stock.StockResponseDTO;
+import com.stockup.StockUp.Manager.service.stock.impl.StockService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class StockController implements StockControllerDocs {
 	@PostMapping
 	public ResponseEntity<StockResponseDTO> createStock(@Valid @RequestBody StockRequestDTO dto) {
 		try {
-			StockResponseDTO response = stockService.createStock(dto);
+			StockResponseDTO response = stockService.create(dto);
 			AuditLogger.log("STOCK_CREATE", getCurrentUser(), "SUCCESS",
 				"Stock created for product=" + dto.productId());
 			return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -48,7 +49,7 @@ public class StockController implements StockControllerDocs {
 		@Valid @RequestBody StockRequestDTO dto) {
 		
 		try {
-			StockResponseDTO response = stockService.updateStock(id, dto);
+			StockResponseDTO response = stockService.update(id, dto);
 			AuditLogger.log("STOCK_UPDATE", getCurrentUser(), "SUCCESS",
 				"Stock updated ID=" + id);
 			return ResponseEntity.ok(response);
@@ -76,7 +77,7 @@ public class StockController implements StockControllerDocs {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteStock(@PathVariable UUID id) {
 		try {
-			stockService.deleteStock(id);
+			stockService.delete(id);
 			AuditLogger.log("STOCK_DELETE", getCurrentUser(), "SUCCESS",
 				"Stock deleted ID=" + id);
 			return ResponseEntity.noContent().build();
