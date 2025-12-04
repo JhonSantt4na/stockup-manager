@@ -42,20 +42,20 @@ public class StockMovementService implements IStockMovementService {
 		movement.setStock(stock);
 		movementRepository.save(movement);
 		
-		return movementMapper.toResponseDTO(movement);
+		return movementMapper.toDTO(movement);
 	}
 	
 	@Override
 	public StockMovementResponseDTO getById(UUID id) {
 		StockMovement movement = movementRepository.findById(id)
 			.orElseThrow(() -> new ResourceNotFoundException("Stock movement not found: " + id));
-		return movementMapper.toResponseDTO(movement);
+		return movementMapper.toDTO(movement);
 	}
 	
 	@Override
 	public List<StockMovementResponseDTO> listAll() {
 		return movementRepository.findAll().stream()
-			.map(movementMapper::toResponseDTO)
+			.map(movementMapper::toDTO)
 			.toList();
 	}
 	

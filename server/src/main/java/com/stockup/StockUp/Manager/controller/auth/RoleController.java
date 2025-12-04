@@ -7,7 +7,7 @@ import com.stockup.StockUp.Manager.dto.Auth.roles.request.RoleUpdateDTO;
 import com.stockup.StockUp.Manager.dto.Auth.roles.response.RoleWithUsersDTO;
 import com.stockup.StockUp.Manager.mapper.user.RoleMapper;
 import com.stockup.StockUp.Manager.model.user.Role;
-import com.stockup.StockUp.Manager.service.auth.impl.RoleService;
+import com.stockup.StockUp.Manager.service.auth.IRoleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,15 +24,15 @@ import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/roles")
+@RequestMapping("/api/v1/roles")
 public class RoleController implements RoleControllerDocs {
 	
-	private final RoleService roleService;
+	private final IRoleService roleService;
 	private final RoleMapper roleMapper;
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/create")
+	@PostMapping("/createAddress")
 	public ResponseEntity<Role> createRole(@Valid @RequestBody RoleDTO createDto) {
 		Role role = roleService.createRole(createDto);
 		AuditLogger.log("ROLE_CREATE", getCurrentUser(), "SUCCESS", "Role created: " + createDto.getName());
@@ -41,7 +41,7 @@ public class RoleController implements RoleControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/update")
+	@PutMapping("/updateAddress")
 	public ResponseEntity<Role> updateRole(@Valid @RequestBody RoleUpdateDTO updateDto) {
 		Role role = roleService.updateRole(updateDto);
 		AuditLogger.log("ROLE_UPDATE", getCurrentUser(), "SUCCESS",

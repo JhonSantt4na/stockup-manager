@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.controller.sales.docs;
+package com.stockup.StockUp.Manager.controller.catalog.docs;
 
 import com.stockup.StockUp.Manager.dto.Sales.Brand.BrandRequestDTO;
 import com.stockup.StockUp.Manager.dto.Sales.Brand.BrandResponseDTO;
@@ -27,8 +27,8 @@ public interface BrandControllerDocs {
 			@ApiResponse(responseCode = "500", description = "Erro interno")
 		}
 	)
-	@PostMapping("/create")
-	ResponseEntity<BrandResponseDTO> create(@Valid @RequestBody BrandRequestDTO dto);
+	@PostMapping("/createAddress")
+	ResponseEntity<BrandResponseDTO> createBrand(@Valid @RequestBody BrandRequestDTO dto);
 	
 	@Operation(
 		summary = "Atualizar marca",
@@ -38,8 +38,8 @@ public interface BrandControllerDocs {
 			@ApiResponse(responseCode = "404", description = "Marca não encontrada")
 		}
 	)
-	@PutMapping("/update/{id}")
-	ResponseEntity<BrandResponseDTO> update(@PathVariable UUID id, @Valid @RequestBody BrandRequestDTO dto);
+	@PutMapping("/updateAddress/{id}")
+	ResponseEntity<BrandResponseDTO> updateBrand(@PathVariable UUID id, @Valid @RequestBody BrandRequestDTO dto);
 	
 	@Operation(
 		summary = "Buscar marca por ID",
@@ -50,7 +50,7 @@ public interface BrandControllerDocs {
 		}
 	)
 	@GetMapping("/{id}")
-	ResponseEntity<BrandResponseDTO> findById(@PathVariable UUID id);
+	ResponseEntity<BrandResponseDTO> findBrandById(@PathVariable UUID id);
 	
 	@Operation(
 		summary = "Excluir marca",
@@ -60,7 +60,7 @@ public interface BrandControllerDocs {
 		}
 	)
 	@DeleteMapping("/delete/{id}")
-	ResponseEntity<Void> delete(@PathVariable UUID id);
+	ResponseEntity<Void> deleteBrand(@PathVariable UUID id);
 	
 	@Operation(
 		summary = "Listar marcas",

@@ -34,7 +34,7 @@ public interface CustomerControllerDocs {
 		}
 	)
 	@PostMapping
-	ResponseEntity<CustomerResponseDTO> create(@Valid @RequestBody CustomerRequestDTO dto);
+	ResponseEntity<CustomerResponseDTO> createCustomer(@Valid @RequestBody CustomerRequestDTO dto);
 	
 	
 	@Operation(
@@ -52,7 +52,7 @@ public interface CustomerControllerDocs {
 		}
 	)
 	@PutMapping("/{id}")
-	ResponseEntity<CustomerResponseDTO> update(
+	ResponseEntity<CustomerResponseDTO> updateCustomer(
 		@Parameter(description = "ID do cliente") @PathVariable UUID id,
 		@Valid @RequestBody CustomerRequestDTO dto
 	);
@@ -72,7 +72,7 @@ public interface CustomerControllerDocs {
 		}
 	)
 	@GetMapping("/{id}")
-	ResponseEntity<CustomerResponseDTO> getById(
+	ResponseEntity<CustomerResponseDTO> getCustomerById(
 		@Parameter(description = "ID do cliente") @PathVariable UUID id
 	);
 	
@@ -88,7 +88,7 @@ public interface CustomerControllerDocs {
 		tags = {"Clientes"}
 	)
 	@GetMapping
-	ResponseEntity<Page<CustomerSummaryDTO>> list(Pageable pageable);
+	ResponseEntity<Page<CustomerSummaryDTO>> listCustomer(Pageable pageable);
 	
 	@Operation(
 		summary = "Listar clientes (Custom)",
@@ -96,7 +96,7 @@ public interface CustomerControllerDocs {
 		tags = {"Clientes"}
 	)
 	@GetMapping("/custom")
-	ResponseEntity<Page<CustomerSummaryDTO>> listCustom(
+	ResponseEntity<Page<CustomerSummaryDTO>> listCustomCustomer(
 		@Parameter(description = "Número da página", example = "0")
 		@RequestParam(defaultValue = "0") int page,
 		
@@ -118,7 +118,7 @@ public interface CustomerControllerDocs {
 		}
 	)
 	@DeleteMapping("/{id}")
-	ResponseEntity<Void> delete(@PathVariable UUID id);
+	ResponseEntity<Void> deleteCustomer(@PathVariable UUID id);
 	
 	
 	@Operation(
@@ -130,6 +130,6 @@ public interface CustomerControllerDocs {
 			@ApiResponse(responseCode = "404", description = "Cliente não encontrado", content = @Content)
 		}
 	)
-	@PostMapping("/{id}/enable")
-	ResponseEntity<Void> enable(@PathVariable UUID id);
+	@PostMapping("/{id}/enableAddress")
+	ResponseEntity<Void> enableCustomer(@PathVariable UUID id);
 }

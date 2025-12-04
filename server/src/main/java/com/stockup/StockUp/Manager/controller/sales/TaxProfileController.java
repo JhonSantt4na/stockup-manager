@@ -21,7 +21,7 @@ import java.util.UUID;
 import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 
 @RestController
-@RequestMapping("/api/tax-profiles")
+@RequestMapping("/api/v1/tax-profiles")
 @RequiredArgsConstructor
 public class TaxProfileController implements TaxProfileControllerDocs {
 	

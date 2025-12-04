@@ -206,7 +206,7 @@ public class UserService implements UserDetailsService, IUserService {
 		
 		if (dto.getEmail() != null && !dto.getEmail().isBlank()) {
 			if (userRepository.existsByEmailAndIdNot(dto.getEmail(), user.getId())) {
-				logger.warn("Email already in use for update: [{}]", dto.getEmail());
+				logger.warn("Email already in use for updateAddress: [{}]", dto.getEmail());
 				throw new IllegalArgumentException("Email already in use: " + dto.getEmail());
 			}
 			user.setEmail(dto.getEmail());
@@ -235,7 +235,7 @@ public class UserService implements UserDetailsService, IUserService {
 				roleNames
 			);
 		} else {
-			logger.info("No fields provided for update for user [{}]", username);
+			logger.info("No fields provided for updateAddress for user [{}]", username);
 			List<String> roleNames = user.getRoles().stream()
 				.map(Role::getName)
 				.collect(Collectors.toList());
@@ -360,7 +360,7 @@ public class UserService implements UserDetailsService, IUserService {
 			User savedUser = userRepository.save(user);
 			
 			savedUser = userRepository.findByUsername(username)
-				.orElseThrow(() -> new UsernameNotFoundException("User not found after update: " + username));
+				.orElseThrow(() -> new UsernameNotFoundException("User not found after updateAddress: " + username));
 			
 			List<String> finalRoleNames = savedUser.getRoles().stream()
 				.map(Role::getName)

@@ -7,7 +7,7 @@ import com.stockup.StockUp.Manager.dto.Auth.permission.request.PermissionUpdateD
 import com.stockup.StockUp.Manager.dto.Auth.permission.response.PermissionWithRolesDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.model.user.Permission;
-import com.stockup.StockUp.Manager.service.auth.impl.PermissionService;
+import com.stockup.StockUp.Manager.service.auth.IPermissionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,15 +22,15 @@ import org.springframework.web.bind.annotation.*;
 import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 
 @RestController
-@RequestMapping("/api/permissions")
+@RequestMapping("/api/v1/permissions")
 @RequiredArgsConstructor
 public class PermissionController implements PermissionControllerDocs {
 	
-	private final PermissionService permissionService;
+	private final IPermissionService permissionService;
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/create")
+	@PostMapping("/createAddress")
 	public ResponseEntity<Permission> createPermission(@Valid @RequestBody PermissionCreateDTO dto) {
 		try {
 			Permission permission = permissionService.createPermission(dto);
@@ -47,7 +47,7 @@ public class PermissionController implements PermissionControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/update")
+	@PutMapping("/updateAddress")
 	public ResponseEntity<Permission> updatePermission(@Valid @RequestBody PermissionUpdateDTO dto) {
 		try {
 			Permission permission = permissionService.updatePermission(dto);

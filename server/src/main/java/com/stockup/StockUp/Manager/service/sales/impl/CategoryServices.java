@@ -33,7 +33,7 @@ public class CategoryServices implements ICategoryService {
 	
 	@Override
 	public CategoryResponseDTO create(CategoryRequestDTO dto) {
-		logger.info("Request to create category with name [{}]", dto.name());
+		logger.info("Request to createAddress category with name [{}]", dto.name());
 		
 		if (repository.existsByNameIgnoreCase(dto.name())) {
 			logger.warn("Duplicate category creation attempt with name [{}]", dto.name());
@@ -50,18 +50,18 @@ public class CategoryServices implements ICategoryService {
 	
 	@Override
 	public CategoryResponseDTO update(UUID id, CategoryRequestDTO dto) {
-		logger.info("Request to update category [{}]", id);
+		logger.info("Request to updateAddress category [{}]", id);
 		
 		Category existing = repository.findById(id)
 			.orElseThrow(() -> {
-				logger.warn("Category update failed — ID [{}] not found", id);
+				logger.warn("Category updateAddress failed — ID [{}] not found", id);
 				return new NotFoundException("Category not found: " + id);
 			});
 		
 		repository.findByNameIgnoreCase(dto.name())
 			.filter(cat -> !cat.getId().equals(id))
 			.ifPresent(cat -> {
-				logger.warn("Duplicate category name [{}] on update for ID [{}]", dto.name(), id);
+				logger.warn("Duplicate category name [{}] on updateAddress for ID [{}]", dto.name(), id);
 				throw new DuplicateResourceException("Category name already exists: " + dto.name());
 			});
 		

@@ -27,7 +27,7 @@ public class PermissionService implements IPermissionService {
 	
 	@Override
 	public Permission createPermission(PermissionCreateDTO dto) {
-		logger.info("Request received to create permission [{}]", dto.getDescription());
+		logger.info("Request received to createAddress permission [{}]", dto.getDescription());
 		
 		permissionRepository.findByDescription(dto.getDescription())
 			.ifPresent(existing -> {
@@ -54,7 +54,7 @@ public class PermissionService implements IPermissionService {
 		if (!dto.getOldDescription().equalsIgnoreCase(dto.getNewDescription())) {
 			permissionRepository.findByDescription(dto.getNewDescription())
 				.ifPresent(existing -> {
-					logger.warn("Permission update blocked: new description [{}] already exists", dto.getNewDescription());
+					logger.warn("Permission updateAddress blocked: new description [{}] already exists", dto.getNewDescription());
 					throw new DuplicateResourceException(
 						"Permission '" + dto.getNewDescription() + "' already exists"
 					);

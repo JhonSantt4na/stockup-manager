@@ -145,7 +145,7 @@ class PermissionServiceTest {
 //		// Arrange
 //		Pageable pageable = PageRequest.of(0, 10);
 //		Page<Permission> permissionPage = new PageImpl<>(List.of(testPermission));
-//		when(permissionRepository.findAll(pageable)).thenReturn(permissionPage);
+//		when(permissionRepository.findAllAddress(pageable)).thenReturn(permissionPage);
 //
 //		// Act
 //		Page<Permission> result = permissionService.getAllPermission(pageable);
@@ -153,7 +153,7 @@ class PermissionServiceTest {
 //		// Assert
 //		assertEquals(1, result.getNumberOfElements());
 //		assertEquals(testPermission, result.getContent().getFirst());
-//		verify(permissionRepository, times(1)).findAll(pageable);
+//		verify(permissionRepository, times(1)).findAllAddress(pageable);
 //	}
 	
 	@Test

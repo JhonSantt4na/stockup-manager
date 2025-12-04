@@ -28,14 +28,14 @@ public class AddressService implements IAddressService {
 	}
 	
 	@Override
-	public AddressResponseDTO create(AddressRequestDTO dto) {
+	public AddressResponseDTO createAddress(AddressRequestDTO dto) {
 		Address entity = mapper.toEntity(dto);
 		Address saved = repository.save(entity);
 		return mapper.toResponse(saved);
 	}
 	
 	@Override
-	public AddressResponseDTO update(UUID id, AddressRequestDTO dto) {
+	public AddressResponseDTO updateAddress(UUID id, AddressRequestDTO dto) {
 		Address address = repository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException("Address not found: " + id));
 		
@@ -46,20 +46,20 @@ public class AddressService implements IAddressService {
 	}
 	
 	@Override
-	public AddressResponseDTO findById(UUID id) {
+	public AddressResponseDTO findAddressById(UUID id) {
 		Address address = repository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException("Address not found: " + id));
 		return mapper.toResponse(address);
 	}
 	
 	@Override
-	public Page<AddressSummaryDTO> findAll(Pageable pageable) {
+	public Page<AddressSummaryDTO> findAllAddress(Pageable pageable) {
 		return repository.findAll(pageable)
 			.map(mapper::toSummary);
 	}
 	
 	@Override
-	public void softDelete(UUID id) {
+	public void softDeleteAddress(UUID id) {
 		Address address = repository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException("Address not found: " + id));
 		
@@ -69,7 +69,7 @@ public class AddressService implements IAddressService {
 	}
 	
 	@Override
-	public void enable(UUID id) {
+	public void enableAddress(UUID id) {
 		Address address = repository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException("Address not found: " + id));
 		

@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.controller.sales.docs;
+package com.stockup.StockUp.Manager.controller.catalog.docs;
 
 import com.stockup.StockUp.Manager.dto.Sales.Product.ProductRequestDTO;
 import com.stockup.StockUp.Manager.dto.Sales.Product.ProductResponseDTO;

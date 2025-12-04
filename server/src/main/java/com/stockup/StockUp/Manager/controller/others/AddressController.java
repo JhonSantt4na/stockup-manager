@@ -1,62 +1,118 @@
 package com.stockup.StockUp.Manager.controller.others;
 
+import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.controller.others.Docs.AddressControllerDocs;
 import com.stockup.StockUp.Manager.dto.Others.Address.AddressRequestDTO;
 import com.stockup.StockUp.Manager.dto.Others.Address.AddressResponseDTO;
 import com.stockup.StockUp.Manager.dto.Others.Address.AddressSummaryDTO;
+import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.service.Others.IAddressService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
+
 @RestController
 @RequestMapping("/api/v1/addresses")
+@RequiredArgsConstructor
 public class AddressController implements AddressControllerDocs {
 	
 	private final IAddressService service;
 	
-	public AddressController(IAddressService service) {
-		this.service = service;
-	}
-	
 	@Override
 	@PostMapping
-	public AddressResponseDTO create(@RequestBody AddressRequestDTO dto) {
-		return service.create(dto);
+	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+	public ResponseEntity<AddressResponseDTO> createAddress(@Valid @RequestBody AddressRequestDTO dto) {
+		try {
+			AddressResponseDTO created = service.createAddress(dto);
+			AuditLogger.log("ADDRESS_CREATE", getCurrentUser(), "SUCCESS",
+				"Endereço criado para: " + dto.street());
+			return ResponseEntity.status(HttpStatus.CREATED).body(created);
+			
+		} catch (DuplicateResourceException e) {
+			AuditLogger.log("ADDRESS_CREATE", getCurrentUser(), "FAILED", e.getMessage());
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			
+		} catch (Exception e) {
+			AuditLogger.log("ADDRESS_CREATE", getCurrentUser(), "FAILED", e.getMessage());
+			throw new RuntimeException("Erro ao criar endereço", e);
+		}
 	}
 	
 	@Override
 	@PutMapping("/{id}")
-	public AddressResponseDTO update(
+	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+	public ResponseEntity<AddressResponseDTO> updateAddress(
 		@PathVariable UUID id,
-		@RequestBody AddressRequestDTO dto
-	) {
-		return service.update(id, dto);
+		@Valid @RequestBody AddressRequestDTO dto) {
+		
+		AddressResponseDTO updated = service.updateAddress(id, dto);
+		AuditLogger.log("ADDRESS_UPDATE", getCurrentUser(), "SUCCESS",
+			"Endereço atualizado: " + id);
+		
+		return ResponseEntity.ok(updated);
 	}
 	
 	@Override
 	@GetMapping("/{id}")
-	public AddressResponseDTO findById(@PathVariable UUID id) {
-		return service.findById(id);
+	public ResponseEntity<AddressResponseDTO> findAddressById(@PathVariable UUID id) {
+		AddressResponseDTO response = service.findAddressById(id);
+		return ResponseEntity.ok(response);
 	}
 	
 	@Override
 	@GetMapping
-	public Page<AddressSummaryDTO> findAll(Pageable pageable) {
-		return service.findAll(pageable);
+	public ResponseEntity<Page<AddressSummaryDTO>> findAllAddress(
+		@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "10") int size,
+		@RequestParam(defaultValue = "createdAt,desc") String[] sort) {
+		
+		Pageable pageable = buildPageableAddress(page, size, sort);
+		Page<AddressSummaryDTO> result = service.findAllAddress(pageable);
+		
+		return ResponseEntity.ok(result);
 	}
 	
 	@Override
 	@DeleteMapping("/{id}")
-	public void softDelete(@PathVariable UUID id) {
-		service.softDelete(id);
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Void> softDeleteAddress(@PathVariable UUID id) {
+		service.softDeleteAddress(id);
+		AuditLogger.log("ADDRESS_DELETE", getCurrentUser(), "SUCCESS",
+			"Endereço desativado: " + id);
+		
+		return ResponseEntity.noContent().build();
 	}
 	
 	@Override
-	@PatchMapping("/{id}/enable")
-	public void enable(@PathVariable UUID id) {
-		service.enable(id);
+	@PatchMapping("/{id}/enableAddress")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Void> enableAddress(@PathVariable UUID id) {
+		service.enableAddress(id);
+		AuditLogger.log("ADDRESS_ENABLE", getCurrentUser(), "SUCCESS",
+			"Endereço reativado: " + id);
+		
+		return ResponseEntity.noContent().build();
+	}
+	
+	private Pageable buildPageableAddress(int page, int size, String[] sort) {
+		String field = "createdAt";
+		Sort.Direction direction = Sort.Direction.DESC;
+		
+		if (sort.length > 0 && !sort[0].isBlank()) {
+			field = sort[0];
+		}
+		if (sort.length > 1 && sort[1].equalsIgnoreCase("asc")) {
+			direction = Sort.Direction.ASC;
+		}
+		
+		return PageRequest.of(page, size, Sort.by(direction, field));
 	}
 }

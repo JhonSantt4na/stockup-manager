@@ -40,7 +40,7 @@ public interface UserControllerDocs {
 	
 	@Operation(
 		summary = "Atualizar dados de um usuário",
-		description = "Atualiza os dados de um usuário logado (self-update). Campos opcionais: fullName, email, password. Não é possível alterar o username.",
+		description = "Atualiza os dados de um usuário logado (self-updateAddress). Campos opcionais: fullName, email, password. Não é possível alterar o username.",
 		tags = {"Usuários"},
 		security = @SecurityRequirement(name = "Bearer Authentication"),
 		responses = {
@@ -51,7 +51,7 @@ public interface UserControllerDocs {
 			@ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
 		}
 	)
-	@PutMapping("/update")
+	@PutMapping("/updateAddress")
 	public ResponseEntity<UserResponseDTO> updated(
 		@AuthenticationPrincipal User authenticatedUser,
 		@Valid @RequestBody UpdateUserRequestDTO dto

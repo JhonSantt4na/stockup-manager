@@ -6,7 +6,7 @@ import com.stockup.StockUp.Manager.dto.Auth.security.request.LoginRequestDTO;
 import com.stockup.StockUp.Manager.dto.Auth.security.response.TokenDTO;
 import com.stockup.StockUp.Manager.exception.InvalidCredentialsException;
 import com.stockup.StockUp.Manager.security.JwtTokenProvider;
-import com.stockup.StockUp.Manager.service.auth.impl.AuthService;
+import com.stockup.StockUp.Manager.service.auth.IAuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController implements AuthControllerDocs {
 	
-	private final AuthService service;
+	private final IAuthService service;
 	private final JwtTokenProvider tokenProvider;
 	
 	@Override
-	@PostMapping("/login")
+	@PostMapping("/api/v1/login")
 	public ResponseEntity<TokenDTO> login(@Valid @RequestBody LoginRequestDTO credentials) {
 		try {
 			var token = service.login(credentials);

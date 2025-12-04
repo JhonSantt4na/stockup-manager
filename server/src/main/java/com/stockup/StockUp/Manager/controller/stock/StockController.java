@@ -1,11 +1,10 @@
 package com.stockup.StockUp.Manager.controller.stock;
-package com.stockup.StockUp.Manager.controller.stock;
 
 import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.controller.stock.docs.StockControllerDocs;
 import com.stockup.StockUp.Manager.dto.Stock.stock.StockRequestDTO;
 import com.stockup.StockUp.Manager.dto.Stock.stock.StockResponseDTO;
-import com.stockup.StockUp.Manager.service.stock.impl.StockService;
+import com.stockup.StockUp.Manager.service.stock.IStockService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,11 +18,11 @@ import java.util.UUID;
 import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 
 @RestController
-@RequestMapping("/api/stock")
+@RequestMapping("/api/v1/stock")
 @RequiredArgsConstructor
 public class StockController implements StockControllerDocs {
 	
-	private final StockService stockService;
+	private final IStockService stockService;
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")

@@ -1,13 +1,13 @@
-package com.stockup.StockUp.Manager.controller.sales;
+package com.stockup.StockUp.Manager.controller.catalog;
 
 import com.stockup.StockUp.Manager.audit.AuditLogger;
-import com.stockup.StockUp.Manager.controller.sales.docs.ProductControllerDocs;
+import com.stockup.StockUp.Manager.controller.catalog.docs.ProductControllerDocs;
 import com.stockup.StockUp.Manager.dto.Sales.Product.ProductRequestDTO;
 import com.stockup.StockUp.Manager.dto.Sales.Product.ProductResponseDTO;
 import com.stockup.StockUp.Manager.dto.Sales.Product.ProductSummaryDTO;
 import com.stockup.StockUp.Manager.dto.Sales.Product.ProductUpdateDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
-import com.stockup.StockUp.Manager.service.sales.impl.ProductServices;
+import com.stockup.StockUp.Manager.service.sales.IProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,11 +24,11 @@ import java.util.UUID;
 import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
 public class ProductController implements ProductControllerDocs {
 	
-	private final ProductServices productService;
+	private final IProductService productService;
 	
 	@Override
 	public ResponseEntity<ProductResponseDTO> createProduct(ProductRequestDTO dto) {

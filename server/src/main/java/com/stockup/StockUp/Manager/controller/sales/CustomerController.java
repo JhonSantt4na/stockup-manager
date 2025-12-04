@@ -1,73 +1,137 @@
 package com.stockup.StockUp.Manager.controller.sales;
 
+import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.controller.sales.docs.CustomerControllerDocs;
 import com.stockup.StockUp.Manager.dto.Sales.Customer.CustomerRequestDTO;
 import com.stockup.StockUp.Manager.dto.Sales.Customer.CustomerResponseDTO;
 import com.stockup.StockUp.Manager.dto.Sales.Customer.CustomerSummaryDTO;
-import com.stockup.StockUp.Manager.service.sales.impl.CustomerService;
+import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
+import com.stockup.StockUp.Manager.service.sales.ICustomerService;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.UUID;
 
+import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
+
 @RestController
-@RequestMapping("/api/customers")
+@RequestMapping("/api/v1/customers")
+@RequiredArgsConstructor
 public class CustomerController implements CustomerControllerDocs {
 	
-	private final CustomerService service;
+	private final ICustomerService service;
 	
-	public CustomerController(CustomerService service) {
-		this.service = service;
-	}
-	
+	@Override
 	@PostMapping
-	public ResponseEntity<CustomerResponseDTO> create(@Valid @RequestBody CustomerRequestDTO dto) {
-		CustomerResponseDTO created = service.create(dto);
-		return ResponseEntity.created(URI.create("/api/v1/customers/" + created.id())).body(created);
+	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+	public ResponseEntity<CustomerResponseDTO> createCustomer(
+		@Valid @RequestBody CustomerRequestDTO dto) {
+		
+		try {
+			CustomerResponseDTO created = service.create(dto);
+			
+			AuditLogger.log("CUSTOMER_CREATE", getCurrentUser(), "SUCCESS",
+				"Cliente criado: " + dto.name());
+			
+			return ResponseEntity
+				.created(URI.create("/api/v1/customers/" + created.id()))
+				.body(created);
+			
+		} catch (DuplicateResourceException e) {
+			
+			AuditLogger.log("CUSTOMER_CREATE", getCurrentUser(), "FAILED", e.getMessage());
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			
+		} catch (Exception e) {
+			
+			AuditLogger.log("CUSTOMER_CREATE", getCurrentUser(), "FAILED", e.getMessage());
+			throw new RuntimeException("Erro ao criar cliente", e);
+		}
 	}
 	
+	@Override
 	@PutMapping("/{id}")
-	public ResponseEntity<CustomerResponseDTO> update(
+	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+	public ResponseEntity<CustomerResponseDTO> updateCustomer(
 		@PathVariable UUID id,
 		@Valid @RequestBody CustomerRequestDTO dto) {
-		return ResponseEntity.ok(service.update(id, dto));
+		
+		CustomerResponseDTO updated = service.update(id, dto);
+		
+		AuditLogger.log("CUSTOMER_UPDATE", getCurrentUser(), "SUCCESS",
+			"Cliente atualizado: " + id);
+		
+		return ResponseEntity.ok(updated);
 	}
 	
+	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<CustomerResponseDTO> getById(@PathVariable UUID id) {
-		return ResponseEntity.ok(service.findById(id));
+	public ResponseEntity<CustomerResponseDTO> getCustomerById(@PathVariable UUID id) {
+		CustomerResponseDTO response = service.findById(id);
+		return ResponseEntity.ok(response);
 	}
 	
-	@GetMapping
-	public ResponseEntity<Page<CustomerSummaryDTO>> list(Pageable pageable) {
+	@Override
+	public ResponseEntity<Page<CustomerSummaryDTO>> listCustomer(Pageable pageable) {
 		Page<CustomerSummaryDTO> result = service.findAll(pageable);
 		return ResponseEntity.ok(result);
 	}
 	
+	
 	@Override
 	@GetMapping("/custom")
-	public ResponseEntity<Page<CustomerSummaryDTO>> listCustom(
+	public ResponseEntity<Page<CustomerSummaryDTO>> listCustomCustomer(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,
-		@RequestParam(defaultValue = "createdAt,desc") String[] sort
-	) {
+		@RequestParam(defaultValue = "createdAt,desc") String[] sort) {
+		
 		Page<CustomerSummaryDTO> result = service.findAllCustom(page, size, sort);
 		return ResponseEntity.ok(result);
 	}
 	
+	@Override
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> delete(@PathVariable UUID id) {
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) {
+		
 		service.softDelete(id);
+		
+		AuditLogger.log("CUSTOMER_DELETE", getCurrentUser(), "SUCCESS",
+			"Cliente desativado: " + id);
+		
 		return ResponseEntity.noContent().build();
 	}
 	
+	@Override
 	@PostMapping("/{id}/enable")
-	public ResponseEntity<Void> enable(@PathVariable UUID id) {
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Void> enableCustomer(@PathVariable UUID id) {
+		
 		service.enable(id);
+		
+		AuditLogger.log("CUSTOMER_ENABLE", getCurrentUser(), "SUCCESS",
+			"Cliente reativado: " + id);
+		
 		return ResponseEntity.noContent().build();
+	}
+	
+	private Pageable buildPageable(int page, int size, String[] sort) {
+		String field = "createdAt";
+		Sort.Direction direction = Sort.Direction.DESC;
+		
+		if (sort.length > 0 && !sort[0].isBlank()) {
+			field = sort[0];
+		}
+		if (sort.length > 1 && sort[1].equalsIgnoreCase("asc")) {
+			direction = Sort.Direction.ASC;
+		}
+		
+		return PageRequest.of(page, size, Sort.by(direction, field));
 	}
 }
