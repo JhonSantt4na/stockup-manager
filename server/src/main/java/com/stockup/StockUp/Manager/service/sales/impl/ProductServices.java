@@ -35,7 +35,7 @@ public class ProductServices {
 		logger.debug("Creating new product with SKU: {}", dto.getSku());
 		
 		if (repository.existsBySku(dto.getSku())) {
-			logger.warn("Attempt to create product with duplicate SKU: {}", dto.getSku());
+			logger.warn("Attempt to createAddress product with duplicate SKU: {}", dto.getSku());
 			throw new DuplicateResourceException("A product with this SKU already exists: " + dto.getSku());
 		}
 		
@@ -51,7 +51,7 @@ public class ProductServices {
 		
 		Product existing = repository.findById(id)
 			.orElseThrow(() -> {
-				logger.warn("Product not found for update: {}", id);
+				logger.warn("Product not found for updateAddress: {}", id);
 				return new EntityNotFoundException("Product not found: " + id);
 			});
 		

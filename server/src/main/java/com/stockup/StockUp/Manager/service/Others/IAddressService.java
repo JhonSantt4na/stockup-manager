@@ -10,15 +10,15 @@ import java.util.UUID;
 
 public interface IAddressService {
 	
-	AddressResponseDTO create(AddressRequestDTO dto);
+	AddressResponseDTO createAddress(AddressRequestDTO dto);
 	
-	AddressResponseDTO update(UUID id, AddressRequestDTO dto);
+	AddressResponseDTO updateAddress(UUID id, AddressRequestDTO dto);
 	
-	AddressResponseDTO findById(UUID id);
+	AddressResponseDTO findAddressById(UUID id);
 	
-	Page<AddressSummaryDTO> findAll(Pageable pageable);
+	Page<AddressSummaryDTO> findAllAddress(Pageable pageable);
 	
-	void softDelete(UUID id);
+	void softDeleteAddress(UUID id);
 	
-	void enable(UUID id);
+	void enableAddress(UUID id);
 }

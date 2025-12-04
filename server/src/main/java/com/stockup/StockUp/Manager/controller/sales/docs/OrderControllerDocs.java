@@ -30,7 +30,7 @@ public interface OrderControllerDocs {
 			@ApiResponse(responseCode = "404", description = "Customer or product not found.")
 		}
 	)
-	ResponseEntity<OrderResponseDTO> create(OrderRequestDTO dto);
+	ResponseEntity<OrderResponseDTO> createOrder(OrderRequestDTO dto);
 	
 	@Operation(
 		summary = "Find order by ID",
@@ -43,7 +43,7 @@ public interface OrderControllerDocs {
 			@ApiResponse(responseCode = "404", description = "Order not found.")
 		}
 	)
-	ResponseEntity<OrderResponseDTO> findById(UUID id);
+	ResponseEntity<OrderResponseDTO> findOrderById(UUID id);
 	
 	@Operation(
 		summary = "Find order by order number",
@@ -56,7 +56,7 @@ public interface OrderControllerDocs {
 			@ApiResponse(responseCode = "404", description = "Order not found.")
 		}
 	)
-	ResponseEntity<OrderResponseDTO> findByNumber(String orderNumber);
+	ResponseEntity<OrderResponseDTO> findOrderByNumber(String orderNumber);
 	
 	@Operation(
 		summary = "List all orders",
@@ -69,7 +69,7 @@ public interface OrderControllerDocs {
 			)
 		}
 	)
-	ResponseEntity<Page<OrderResponseDTO>> findAll(Pageable pageable);
+	ResponseEntity<Page<OrderResponseDTO>> findAllOrder(Pageable pageable);
 	
 	@Operation(
 		summary = "Update order status",
@@ -83,7 +83,7 @@ public interface OrderControllerDocs {
 			@ApiResponse(responseCode = "404", description = "Order not found.")
 		}
 	)
-	ResponseEntity<OrderResponseDTO> updateStatus(UUID id, OrderStatus status);
+	ResponseEntity<OrderResponseDTO> updateStatusOrder(UUID id, OrderStatus status);
 	
 	@Operation(
 		summary = "Cancel order",
@@ -97,7 +97,7 @@ public interface OrderControllerDocs {
 			@ApiResponse(responseCode = "404", description = "Order not found.")
 		}
 	)
-	ResponseEntity<OrderResponseDTO> cancel(UUID id);
+	ResponseEntity<OrderResponseDTO> cancelOrder(UUID id);
 	
 	@Operation(
 		summary = "Delete order",
@@ -107,5 +107,5 @@ public interface OrderControllerDocs {
 			@ApiResponse(responseCode = "404", description = "Order not found.")
 		}
 	)
-	ResponseEntity<Void> delete(UUID id);
+	ResponseEntity<Void> deleteOrder(UUID id);
 }

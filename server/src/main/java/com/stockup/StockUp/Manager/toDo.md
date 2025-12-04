@@ -67,12 +67,6 @@ CashRegister / PDV Session (Abertura/fechamento de caixa)
 
 
 
-
-
-
-
-
-
 2.1 Stock
 Representa o estoque atual de um produto em um local.
 id
@@ -107,11 +101,6 @@ ExpirationDate / PerishableControl (controle de validade)
 
 
 
-
-
-
-
-
 // Fornecedor
 
 5.1 Supplier
@@ -120,9 +109,6 @@ name
 cnpj
 email
 phone
-
-
-
 
 5.2 PurchaseOrder
 Pedido de compra para fornecedores.
@@ -134,8 +120,6 @@ status
 items
 total
 
-
-
 5.3 PurchaseItem
 id
 purchaseOrder
@@ -143,4 +127,3 @@ product
 quantity
 costPrice
 subtotal
-

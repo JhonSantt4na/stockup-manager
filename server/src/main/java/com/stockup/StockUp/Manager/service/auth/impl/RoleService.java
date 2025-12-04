@@ -49,7 +49,7 @@ public class RoleService implements IRoleService {
 		
 		roleRepository.findByName(dto.getName())
 			.ifPresent(r -> {
-				logger.warn("Attempt to create duplicate role [{}]", dto.getName());
+				logger.warn("Attempt to createAddress duplicate role [{}]", dto.getName());
 				throw new IllegalArgumentException("Role already exists: " + dto.getName());
 			});
 		
@@ -72,7 +72,7 @@ public class RoleService implements IRoleService {
 		if (!dto.getOldName().equals(dto.getNewName())) {
 			roleRepository.findByName(dto.getNewName())
 				.ifPresent(r -> {
-					logger.warn("Role update aborted — '{}' already exists", dto.getNewName());
+					logger.warn("Role updateAddress aborted — '{}' already exists", dto.getNewName());
 					throw new IllegalArgumentException("Role '" + dto.getNewName() + "' already exists");
 				});
 			role.setName(dto.getNewName());

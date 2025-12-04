@@ -4,7 +4,7 @@ import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.controller.stock.docs.StockMovementControllerDocs;
 import com.stockup.StockUp.Manager.dto.Stock.stock.StockMovementRequestDTO;
 import com.stockup.StockUp.Manager.dto.Stock.stock.StockMovementResponseDTO;
-import com.stockup.StockUp.Manager.service.stock.impl.StockMovementService;
+import com.stockup.StockUp.Manager.service.stock.IStockMovementService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,11 +18,11 @@ import java.util.UUID;
 import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 
 @RestController
-@RequestMapping("/api/stock/movements")
+@RequestMapping("/api/v1/stock/movements")
 @RequiredArgsConstructor
 public class StockMovementController implements StockMovementControllerDocs {
 	
-	private final StockMovementService movementService;
+	private final IStockMovementService movementService;
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN') or hasRole('OPERATOR')")

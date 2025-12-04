@@ -1,11 +1,11 @@
-package com.stockup.StockUp.Manager.controller.sales;
+package com.stockup.StockUp.Manager.controller.catalog;
 
 import com.stockup.StockUp.Manager.audit.AuditLogger;
-import com.stockup.StockUp.Manager.controller.sales.docs.BrandControllerDocs;
+import com.stockup.StockUp.Manager.controller.catalog.docs.BrandControllerDocs;
 import com.stockup.StockUp.Manager.dto.Sales.Brand.BrandRequestDTO;
 import com.stockup.StockUp.Manager.dto.Sales.Brand.BrandResponseDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
-import com.stockup.StockUp.Manager.service.sales.impl.BrandService;
+import com.stockup.StockUp.Manager.service.sales.IBrandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.*;
@@ -17,16 +17,16 @@ import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/brands")
+@RequestMapping("/api/v1/brands")
 @RequiredArgsConstructor
 public class BrandController implements BrandControllerDocs {
 	
-	private final BrandService brandService;
+	private final IBrandService brandService;
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/create")
-	public ResponseEntity<BrandResponseDTO> create(@RequestBody BrandRequestDTO dto) {
+	@PostMapping("/createAddress")
+	public ResponseEntity<BrandResponseDTO> createBrand(@RequestBody BrandRequestDTO dto) {
 		try {
 			BrandResponseDTO response = brandService.create(dto);
 			AuditLogger.log("BRAND_CREATE", getCurrentUser(), "SUCCESS", "Brand created: " + dto.name());
@@ -42,8 +42,8 @@ public class BrandController implements BrandControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/update/{id}")
-	public ResponseEntity<BrandResponseDTO> update(@PathVariable UUID id, @RequestBody BrandRequestDTO dto) {
+	@PutMapping("/updateAddress/{id}")
+	public ResponseEntity<BrandResponseDTO> updateBrand(@PathVariable UUID id, @RequestBody BrandRequestDTO dto) {
 		BrandResponseDTO updated = brandService.update(id, dto);
 		return ResponseEntity.ok(updated);
 	}
@@ -51,14 +51,14 @@ public class BrandController implements BrandControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/{id}")
-	public ResponseEntity<BrandResponseDTO> findById(@PathVariable UUID id) {
+	public ResponseEntity<BrandResponseDTO> findBrandById(@PathVariable UUID id) {
 		return ResponseEntity.ok(brandService.findById(id));
 	}
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Void> delete(@PathVariable UUID id) {
+	public ResponseEntity<Void> deleteBrand(@PathVariable UUID id) {
 		brandService.delete(id);
 		AuditLogger.log("BRAND_DELETE", getCurrentUser(), "SUCCESS", "Brand deleted: " + id);
 		return ResponseEntity.noContent().build();

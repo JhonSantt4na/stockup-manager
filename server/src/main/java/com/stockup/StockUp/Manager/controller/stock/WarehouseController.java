@@ -5,7 +5,7 @@ import com.stockup.StockUp.Manager.controller.stock.docs.WarehouseControllerDocs
 import com.stockup.StockUp.Manager.dto.Stock.warehouse.WarehouseRequestDTO;
 import com.stockup.StockUp.Manager.dto.Stock.warehouse.WarehouseResponseDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
-import com.stockup.StockUp.Manager.service.stock.impl.WarehouseService;
+import com.stockup.StockUp.Manager.service.stock.IWarehouseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,11 +19,11 @@ import java.util.UUID;
 import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 
 @RestController
-@RequestMapping("/api/warehouses")
+@RequestMapping("/api/v1/warehouses")
 @RequiredArgsConstructor
 public class WarehouseController implements WarehouseControllerDocs {
 	
-	private final WarehouseService warehouseService;
+	private final IWarehouseService warehouseService;
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")

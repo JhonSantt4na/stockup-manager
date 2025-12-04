@@ -7,7 +7,7 @@ import com.stockup.StockUp.Manager.dto.Auth.user.response.RegistrationResponseDT
 import com.stockup.StockUp.Manager.dto.Auth.user.request.UpdateUserRequestDTO;
 import com.stockup.StockUp.Manager.dto.Auth.user.response.UserResponseDTO;
 import com.stockup.StockUp.Manager.exception.CannotDeleteActiveUserException;
-import com.stockup.StockUp.Manager.service.auth.impl.UserService;
+import com.stockup.StockUp.Manager.service.auth.IUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,10 +28,10 @@ import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 @CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 	
-	private final UserService service;
+	private final IUserService service;
 	
 	@PostMapping("/register")
 	public ResponseEntity<RegistrationResponseDTO> register(@Valid @RequestBody RegisterUserRequestDTO credentials) {
@@ -48,7 +48,7 @@ public class UserController {
 		}
 	}
 	
-	@PutMapping("/update")
+	@PutMapping("/updateAddress")
 	public ResponseEntity<UserResponseDTO> updated(
 		Authentication authentication,
 		@Valid @RequestBody UpdateUserRequestDTO dto
@@ -109,7 +109,7 @@ public class UserController {
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/update/{username}")
+	@PutMapping("/updateAddress/{username}")
 	public ResponseEntity<UserResponseDTO> updateUserAsAdmin(
 		@PathVariable String username,
 		@Valid @RequestBody UpdateUserRequestDTO dto

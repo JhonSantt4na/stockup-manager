@@ -45,7 +45,7 @@ public class TaxProfileService {
 		
 		TaxProfile existing = repository.findById(id)
 			.orElseThrow(() -> {
-				logger.warn("TaxProfile not found for update: {}", id);
+				logger.warn("TaxProfile not found for updateAddress: {}", id);
 				return new EntityNotFoundException("Tax profile not found: " + id);
 			});
 		
