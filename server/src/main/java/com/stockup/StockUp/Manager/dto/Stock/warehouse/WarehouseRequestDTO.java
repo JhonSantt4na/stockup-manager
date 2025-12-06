@@ -4,7 +4,7 @@ import com.stockup.StockUp.Manager.Enums.Stock.WarehouseType;
 import jakarta.validation.constraints.NotBlank;
 
 public record WarehouseRequestDTO(
-	@NotBlank(message = "O nome é obrigatório.")
+	@NotBlank(message = "The name is required.")
 	String name,
 	String description,
 	WarehouseType type,

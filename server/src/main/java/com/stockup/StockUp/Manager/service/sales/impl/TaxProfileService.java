@@ -7,6 +7,7 @@ import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.mapper.catalog.TaxProfileMapper;
 import com.stockup.StockUp.Manager.model.catalog.TaxProfile;
 import com.stockup.StockUp.Manager.repository.catalog.TaxProfileRepository;
+import com.stockup.StockUp.Manager.service.sales.ITaxProfileService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -19,7 +20,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class TaxProfileService {
+public class TaxProfileService implements ITaxProfileService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(TaxProfileService.class);
 	private final TaxProfileRepository repository;

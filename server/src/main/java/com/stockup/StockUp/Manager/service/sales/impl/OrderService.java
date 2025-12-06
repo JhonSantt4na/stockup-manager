@@ -12,6 +12,7 @@ import com.stockup.StockUp.Manager.model.catalog.Product;
 import com.stockup.StockUp.Manager.repository.user.CustomerRepository;
 import com.stockup.StockUp.Manager.repository.sales.OrderRepository;
 import com.stockup.StockUp.Manager.repository.catalog.ProductRepository;
+import com.stockup.StockUp.Manager.service.sales.IOrderService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -27,7 +28,7 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 @Transactional
-public class OrderService {
+public class OrderService implements IOrderService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
 	
