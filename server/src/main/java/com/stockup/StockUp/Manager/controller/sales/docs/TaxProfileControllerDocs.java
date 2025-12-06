@@ -35,7 +35,7 @@ public interface  TaxProfileControllerDocs {
 	
 	@Operation(
 		summary = "Atualizar um perfil fiscal existente",
-		description = "Atualiza as informações fiscais de um perfil existente com base em seu ID.",
+		description = "Atualiza IPurchaseOrderService informações fiscais de um perfil existente com base em seu ID.",
 		tags = {"Perfis Fiscais"},
 		responses = {
 			@ApiResponse(responseCode = "200", description = "Perfil fiscal atualizado com sucesso",
@@ -53,7 +53,7 @@ public interface  TaxProfileControllerDocs {
 	
 	@Operation(
 		summary = "Buscar perfil fiscal por ID",
-		description = "Retorna as informações completas de um perfil fiscal com base em seu ID.",
+		description = "Retorna IPurchaseOrderService informações completas de um perfil fiscal com base em seu ID.",
 		tags = {"Perfis Fiscais"},
 		responses = {
 			@ApiResponse(responseCode = "200", description = "Perfil fiscal encontrado",

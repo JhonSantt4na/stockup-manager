@@ -116,7 +116,7 @@ public interface UserControllerDocs {
 	
 	@Operation(
 		summary = "Listar roles do usuário",
-		description = "Retorna uma lista com todas as roles atribuídas ao usuário informado. Acesso restrito a administradores.",
+		description = "Retorna uma lista com todas IPurchaseOrderService roles atribuídas ao usuário informado. Acesso restrito a administradores.",
 		tags = {"Admin - Usuários"},
 		responses = {
 			@ApiResponse(responseCode = "200", description = "Lista de roles retornada com sucesso", content = @Content(schema = @Schema(implementation = String.class))),

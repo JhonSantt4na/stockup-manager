@@ -20,7 +20,7 @@ public interface AuthControllerDocs {
 	
 	@Operation(
 		summary = "Autenticar usuário",
-		description = "Autentica o usuário com as credenciais fornecidas e retorna um token JWT.",
+		description = "Autentica o usuário com IPurchaseOrderService credenciais fornecidas e retorna um token JWT.",
 		tags = {"Autenticação"},
 		responses = {
 			@ApiResponse(responseCode = "200", description = "Autenticação realizada com sucesso", content = @Content(schema = @Schema(implementation = TokenDTO.class))),

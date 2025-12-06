@@ -37,7 +37,7 @@ public interface ProductControllerDocs {
 	
 	@Operation(
 		summary = "Atualizar um produto existente",
-		description = "Atualiza as informações de um produto com base no seu ID. Permite atualização de dados fiscais, categoria e status.",
+		description = "Atualiza IPurchaseOrderService informações de um produto com base no seu ID. Permite atualização de dados fiscais, categoria e status.",
 		tags = {"Produtos"},
 		responses = {
 			@ApiResponse(responseCode = "200", description = "Produto atualizado com sucesso",
@@ -56,7 +56,7 @@ public interface ProductControllerDocs {
 	
 	@Operation(
 		summary = "Buscar produto por nome",
-		description = "Retorna as informações de um produto com base no nome informado (busca parcial, insensível a maiúsculas/minúsculas).",
+		description = "Retorna IPurchaseOrderService informações de um produto com base no nome informado (busca parcial, insensível a maiúsculas/minúsculas).",
 		tags = {"Produtos"},
 		responses = {
 			@ApiResponse(responseCode = "200", description = "Produto encontrado",
@@ -73,7 +73,7 @@ public interface ProductControllerDocs {
 	
 	@Operation(
 		summary = "Buscar produto por SKU",
-		description = "Retorna as informações completas de um produto com base no código SKU (identificador interno).",
+		description = "Retorna IPurchaseOrderService informações completas de um produto com base no código SKU (identificador interno).",
 		tags = {"Produtos"},
 		responses = {
 			@ApiResponse(responseCode = "200", description = "Produto encontrado",

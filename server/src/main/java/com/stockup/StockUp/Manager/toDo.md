@@ -11,8 +11,7 @@
 - Adicionar Testes Unitary nas classes controller (Auth, User, Roles)
 - Implementar o gitHub actions passando nos testes;
 
-
-
+___________________________________________________________________________-
 
 - O UserService funciona, mas está:
 
@@ -29,6 +28,11 @@ Criar os métodos privados auxiliares
 Quebrar em classes menores
 
 
+___________________________________________________________________________-
+
+Lot / Batch (lote de produtos — muito comum em alimentos/farmacêutico)
+
+ExpirationDate / PerishableControl (controle de validade)
 
 Quotation / Budget (orçamento)
 
@@ -39,9 +43,7 @@ Shipment / Delivery (entregas)
 ShippingMethod (Transportadoras, retirada, frete etc.)
 
 Invoice / NF-e
-
-
-
+_____________________________________________________________________________-
 
 3.3 Payment
 Pode ser 1 pedido → N pagamentos.
@@ -64,41 +66,7 @@ CashFlow (Fluxo de caixa)
 CashRegister / PDV Session (Abertura/fechamento de caixa)
 
 
-
-
-2.1 Stock
-Representa o estoque atual de um produto em um local.
-id
-product
-quantity
-minimumQuantity
-location
-updatedAt
-
-
-2.2 StockMovement
-Histórico de movimentações.
-id
-product
-movementType (IN/OUT)
-quantity
-previousQuantity
-finalQuantity
-reason (SALE, PURCHASE, ADJUSTMENT)
-relatedDocumentId (orderId, purchaseId, etc.)
-timestamp
-
-
-2.3 Warehouse / Location
-id
-name
-description
-
-
-Lot / Batch (lote de produtos — muito comum em alimentos/farmacêutico)
-ExpirationDate / PerishableControl (controle de validade)
-
-
+__________________________________________________________________-
 
 // Fornecedor
 

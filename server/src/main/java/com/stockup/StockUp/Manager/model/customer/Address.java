@@ -1,5 +1,6 @@
 package com.stockup.StockUp.Manager.model.customer;
 import com.stockup.StockUp.Manager.model.BaseEntity;
+import com.stockup.StockUp.Manager.model.procurement.Supplier;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,8 +15,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Address extends BaseEntity {
 	
+	@OneToOne(mappedBy = "address")
+	private Supplier supplier;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "customer_id", nullable = false)
+	@JoinColumn(name = "customer_id")
 	private Customer customer;
 	
 	private String street;

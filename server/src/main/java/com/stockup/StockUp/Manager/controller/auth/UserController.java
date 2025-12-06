@@ -120,7 +120,7 @@ public class UserController {
 			return ResponseEntity.ok(response);
 		} catch (Exception e) {
 			AuditLogger.log("USER_UPDATE_ADMIN", getCurrentUser(), "FAILED", "Error: " + e.getMessage());
-			throw new RuntimeException("Error updating user as admin", e);
+			throw new RuntimeException("Error updating user IPurchaseOrderService admin", e);
 		}
 	}
 	
