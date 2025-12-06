@@ -19,7 +19,6 @@ public interface StockMovementMapper {
 	@Mapping(target = "reason", source = "reason", qualifiedByName = "toMovementReason")
 	StockMovement toEntity(StockMovementRequestDTO dto);
 	
-	@Mapping(target = "productId", source = "product.id")
 	@Mapping(target = "movementType", source = "movementType", qualifiedByName = "movementTypeToString")
 	@Mapping(target = "reason", source = "reason", qualifiedByName = "movementReasonToString")
 	StockMovementResponseDTO toDTO(StockMovement entity);

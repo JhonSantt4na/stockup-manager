@@ -1,19 +1,22 @@
 package com.stockup.StockUp.Manager.controller.stock;
 
+import com.stockup.StockUp.Manager.Enums.Stock.WarehouseType;
 import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.controller.stock.docs.WarehouseControllerDocs;
 import com.stockup.StockUp.Manager.dto.Stock.warehouse.WarehouseRequestDTO;
 import com.stockup.StockUp.Manager.dto.Stock.warehouse.WarehouseResponseDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.service.stock.IWarehouseService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
@@ -28,18 +31,35 @@ public class WarehouseController implements WarehouseControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
-	public ResponseEntity<WarehouseResponseDTO> createWarehouse(@Valid @RequestBody WarehouseRequestDTO dto) {
+	public ResponseEntity<WarehouseResponseDTO> createWarehouse(
+		@Valid @RequestBody WarehouseRequestDTO dto) {
+		
 		try {
 			WarehouseResponseDTO response = warehouseService.create(dto);
-			AuditLogger.log("WAREHOUSE_CREATE", getCurrentUser(), "SUCCESS",
-				"Warehouse created: " + dto.name());
+			AuditLogger.log(
+				"WAREHOUSE_CREATE",
+				getCurrentUser(),
+				"SUCCESS",
+				"Warehouse created: " + dto.name()
+			);
 			return ResponseEntity.status(HttpStatus.CREATED).body(response);
+			
 		} catch (DuplicateResourceException e) {
-			AuditLogger.log("WAREHOUSE_CREATE", getCurrentUser(), "FAILED", e.getMessage());
+			AuditLogger.log(
+				"WAREHOUSE_CREATE",
+				getCurrentUser(),
+				"FAILED",
+				e.getMessage()
+			);
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			
 		} catch (Exception e) {
-			AuditLogger.log("WAREHOUSE_CREATE", getCurrentUser(), "FAILED",
-				"Error creating warehouse: " + e.getMessage());
+			AuditLogger.log(
+				"WAREHOUSE_CREATE",
+				getCurrentUser(),
+				"FAILED",
+				"Error creating warehouse: " + e.getMessage()
+			);
 			throw new RuntimeException("Error creating warehouse", e);
 		}
 	}
@@ -50,14 +70,28 @@ public class WarehouseController implements WarehouseControllerDocs {
 	public ResponseEntity<WarehouseResponseDTO> updateWarehouse(
 		@PathVariable UUID id,
 		@Valid @RequestBody WarehouseRequestDTO dto) {
+		
 		try {
 			WarehouseResponseDTO response = warehouseService.update(id, dto);
-			AuditLogger.log("WAREHOUSE_UPDATE", getCurrentUser(), "SUCCESS",
-				"Warehouse updated: " + dto.name());
+			
+			AuditLogger.log(
+				"WAREHOUSE_UPDATE",
+				getCurrentUser(),
+				"SUCCESS",
+				"Warehouse updated: " + dto.name()
+			);
+			
 			return ResponseEntity.ok(response);
+			
 		} catch (Exception e) {
-			AuditLogger.log("WAREHOUSE_UPDATE", getCurrentUser(), "FAILED",
-				"Error updating warehouse: " + e.getMessage());
+			
+			AuditLogger.log(
+				"WAREHOUSE_UPDATE",
+				getCurrentUser(),
+				"FAILED",
+				"Error updating warehouse: " + e.getMessage()
+			);
+			
 			throw new RuntimeException("Error updating warehouse", e);
 		}
 	}
@@ -65,14 +99,19 @@ public class WarehouseController implements WarehouseControllerDocs {
 	@Override
 	@GetMapping("/{id}")
 	public ResponseEntity<WarehouseResponseDTO> getWarehouseById(@PathVariable UUID id) {
-		WarehouseResponseDTO dto = warehouseService.getById(id);
-		return ResponseEntity.ok(dto);
+		return ResponseEntity.ok(warehouseService.getById(id));
 	}
+	
 	
 	@Override
 	@GetMapping
-	public ResponseEntity<List<WarehouseResponseDTO>> listWarehouses() {
-		return ResponseEntity.ok(warehouseService.listAll());
+	public ResponseEntity<Page<WarehouseResponseDTO>> listWarehouses(
+		@RequestParam(defaultValue = "0") Integer page,
+		@RequestParam(defaultValue = "10") Integer size,
+		@RequestParam(required = false) WarehouseType type) {
+		
+		Page<WarehouseResponseDTO> result = warehouseService.listAll(page, size, type);
+		return ResponseEntity.ok(result);
 	}
 	
 	@Override
@@ -81,12 +120,21 @@ public class WarehouseController implements WarehouseControllerDocs {
 	public ResponseEntity<Void> deleteWarehouse(@PathVariable UUID id) {
 		try {
 			warehouseService.delete(id);
-			AuditLogger.log("WAREHOUSE_DELETE", getCurrentUser(), "SUCCESS",
-				"Warehouse deleted: " + id);
+			AuditLogger.log(
+				"WAREHOUSE_DELETE",
+				getCurrentUser(),
+				"SUCCESS",
+				"Warehouse deleted: " + id
+			);
 			return ResponseEntity.noContent().build();
+			
 		} catch (Exception e) {
-			AuditLogger.log("WAREHOUSE_DELETE", getCurrentUser(), "FAILED",
-				"Error deleting warehouse: " + e.getMessage());
+			AuditLogger.log(
+				"WAREHOUSE_DELETE",
+				getCurrentUser(),
+				"FAILED",
+				"Error deleting warehouse: " + e.getMessage()
+			);
 			throw new RuntimeException("Error deleting warehouse", e);
 		}
 	}

@@ -8,6 +8,7 @@ import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.mapper.catalog.ProductMapper;
 import com.stockup.StockUp.Manager.model.catalog.Product;
 import com.stockup.StockUp.Manager.repository.catalog.ProductRepository;
+import com.stockup.StockUp.Manager.service.sales.IProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
@@ -24,7 +25,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ProductServices {
+public class ProductServices implements IProductService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ProductServices.class);
 	

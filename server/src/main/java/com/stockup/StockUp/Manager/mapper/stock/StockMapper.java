@@ -14,11 +14,9 @@ import org.mapstruct.*;
 public interface StockMapper {
 	
 	@Mapping(target = "product.id", source = "productId")
-	@Mapping(target = "location.id", source = "locationId")
 	Stock toEntity(StockRequestDTO dto);
 	
-	@Mapping(target = "productId", source = "product.id")
-	@Mapping(target = "locationId", source = "location.id")
+	
 	StockResponseDTO toDTO(Stock entity);
 	
 	@InheritConfiguration(name = "toEntity")

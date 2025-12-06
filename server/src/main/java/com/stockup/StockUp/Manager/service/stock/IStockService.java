@@ -2,7 +2,6 @@ package com.stockup.StockUp.Manager.service.stock;
 
 import com.stockup.StockUp.Manager.dto.Stock.stock.StockRequestDTO;
 import com.stockup.StockUp.Manager.dto.Stock.stock.StockResponseDTO;
-
 import java.util.List;
 import java.util.UUID;
 
