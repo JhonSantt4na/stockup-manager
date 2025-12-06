@@ -33,7 +33,7 @@ public interface StockMovementControllerDocs {
 		@Parameter(description = "ID da movimentação") @PathVariable UUID id);
 	
 	@Operation(
-		summary = "Listar todas as movimentações",
+		summary = "Listar todas IPurchaseOrderService movimentações",
 		tags = {"Stock Movements"}
 	)
 	@GetMapping

@@ -64,7 +64,7 @@ public interface BrandControllerDocs {
 	
 	@Operation(
 		summary = "Listar marcas",
-		description = "Lista todas as marcas com paginação.",
+		description = "Lista todas IPurchaseOrderService marcas com paginação.",
 		responses = {
 			@ApiResponse(responseCode = "200", description = "Lista retornada")
 		}

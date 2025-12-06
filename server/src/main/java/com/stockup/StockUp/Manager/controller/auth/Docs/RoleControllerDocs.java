@@ -70,8 +70,8 @@ public interface RoleControllerDocs {
 	ResponseEntity<Void> deleteRole(@Parameter(description = "Nome da role") String name);
 	
 	@Operation(
-		summary = "Listar todas as roles",
-		description = "Retorna uma lista paginada de todas as roles cadastradas, com opção de busca por nome. Acesso restrito a administradores.",
+		summary = "Listar todas IPurchaseOrderService roles",
+		description = "Retorna uma lista paginada de todas IPurchaseOrderService roles cadastradas, com opção de busca por nome. Acesso restrito a administradores.",
 		tags = {"Admin - Role"}
 	)
 	ResponseEntity<Page<RoleWithUsersDTO>> listRoles(
@@ -81,7 +81,7 @@ public interface RoleControllerDocs {
 	
 	@Operation(
 		summary = "Listar roles com usuários",
-		description = "Retorna uma lista paginada de todas as roles junto com os usuários associados, com opção de busca por nome. Acesso restrito a administradores.",
+		description = "Retorna uma lista paginada de todas IPurchaseOrderService roles junto com os usuários associados, com opção de busca por nome. Acesso restrito a administradores.",
 		tags = {"Admin - Role"}
 	)
 	ResponseEntity<Page<RoleWithUsersDTO>> listRolesWithUsers(
@@ -125,7 +125,7 @@ public interface RoleControllerDocs {
 	
 	@Operation(
 		summary = "Listar permissions de uma role",
-		description = "Retorna uma lista de todas as permissions atribuídas a uma role. Acesso restrito a administradores.",
+		description = "Retorna uma lista de todas IPurchaseOrderService permissions atribuídas a uma role. Acesso restrito a administradores.",
 		tags = {"Admin - Role"},
 		responses = {
 			@ApiResponse(responseCode = "200", description = "Lista de permissions retornada com sucesso", content = @Content(schema = @Schema(implementation = String.class))),

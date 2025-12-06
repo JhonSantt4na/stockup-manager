@@ -87,7 +87,7 @@ public interface OrderControllerDocs {
 	
 	@Operation(
 		summary = "Cancel order",
-		description = "Marks the order as canceled.",
+		description = "Marks the order IPurchaseOrderService canceled.",
 		responses = {
 			@ApiResponse(
 				responseCode = "200",
@@ -101,7 +101,7 @@ public interface OrderControllerDocs {
 	
 	@Operation(
 		summary = "Delete order",
-		description = "Soft delete: marks the order as disabled or deleted.",
+		description = "Soft delete: marks the order IPurchaseOrderService disabled or deleted.",
 		responses = {
 			@ApiResponse(responseCode = "204", description = "Order deleted."),
 			@ApiResponse(responseCode = "404", description = "Order not found.")
