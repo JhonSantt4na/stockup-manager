@@ -45,6 +45,8 @@ ShippingMethod (Transportadoras, retirada, frete etc.)
 Invoice / NF-e
 _____________________________________________________________________________-
 
+Falta = IService, Service, ControllerDocs e Controller
+
 3.3 Payment
 Pode ser 1 pedido → N pagamentos.
 id
@@ -70,27 +72,7 @@ __________________________________________________________________-
 
 // Fornecedor
 
+Falta Migrations para isso + População : 
 5.1 Supplier
-id
-name
-cnpj
-email
-phone
-
 5.2 PurchaseOrder
-Pedido de compra para fornecedores.
-id
-supplier
-orderNumber
-expectedArrivalDate
-status
-items
-total
-
 5.3 PurchaseItem
-id
-purchaseOrder
-product
-quantity
-costPrice
-subtotal
