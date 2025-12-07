@@ -48,7 +48,7 @@ public class UserController {
 		}
 	}
 	
-	@PutMapping("/updateAddress")
+	@PutMapping("/update")
 	public ResponseEntity<UserResponseDTO> updated(
 		Authentication authentication,
 		@Valid @RequestBody UpdateUserRequestDTO dto
@@ -109,7 +109,7 @@ public class UserController {
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/updateAddress/{username}")
+	@PutMapping("/update/{username}")
 	public ResponseEntity<UserResponseDTO> updateUserAsAdmin(
 		@PathVariable String username,
 		@Valid @RequestBody UpdateUserRequestDTO dto
@@ -145,8 +145,8 @@ public class UserController {
 	
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping
-	public ResponseEntity<Page<UserResponseDTO>> listUsers(
+	@GetMapping("/listFilter")
+	public ResponseEntity<Page<UserResponseDTO>> listUsersWithFilter(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,
 		@RequestParam(required = false) String search,

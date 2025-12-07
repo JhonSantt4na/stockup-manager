@@ -1,9 +1,9 @@
-package com.stockup.StockUp.Manager.controller.procurement;
+package com.stockup.StockUp.Manager.controller.supply;
 
 import com.stockup.StockUp.Manager.audit.AuditLogger;
-import com.stockup.StockUp.Manager.controller.procurement.docs.PurchaseItemControllerDocs;
-import com.stockup.StockUp.Manager.dto.procurement.PurchaseItem.PurchaseItemRequestDTO;
-import com.stockup.StockUp.Manager.dto.procurement.PurchaseItem.PurchaseItemResponseDTO;
+import com.stockup.StockUp.Manager.controller.supply.docs.PurchaseItemControllerDocs;
+import com.stockup.StockUp.Manager.dto.supply.PurchaseItem.PurchaseItemRequestDTO;
+import com.stockup.StockUp.Manager.dto.supply.PurchaseItem.PurchaseItemResponseDTO;
 import com.stockup.StockUp.Manager.service.procurement.IPurchaseItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;

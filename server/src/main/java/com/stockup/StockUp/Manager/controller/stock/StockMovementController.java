@@ -26,7 +26,7 @@ public class StockMovementController implements StockMovementControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN') or hasRole('OPERATOR')")
-	@PostMapping
+	@PostMapping("/create")
 	public ResponseEntity<StockMovementResponseDTO> createMovement(
 		@Valid @RequestBody StockMovementRequestDTO dto) {
 		try {

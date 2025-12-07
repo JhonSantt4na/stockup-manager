@@ -28,7 +28,7 @@ public class CustomerController implements CustomerControllerDocs {
 	private final ICustomerService service;
 	
 	@Override
-	@PostMapping
+	@PostMapping("/create")
 	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
 	public ResponseEntity<CustomerResponseDTO> createCustomer(
 		@Valid @RequestBody CustomerRequestDTO dto) {
@@ -37,7 +37,7 @@ public class CustomerController implements CustomerControllerDocs {
 			CustomerResponseDTO created = service.create(dto);
 			
 			AuditLogger.log("CUSTOMER_CREATE", getCurrentUser(), "SUCCESS",
-				"Cliente criado: " + dto.name());
+				"Customer Created: " + dto.name());
 			
 			return ResponseEntity
 				.created(URI.create("/api/v1/customers/" + created.id()))
@@ -51,7 +51,7 @@ public class CustomerController implements CustomerControllerDocs {
 		} catch (Exception e) {
 			
 			AuditLogger.log("CUSTOMER_CREATE", getCurrentUser(), "FAILED", e.getMessage());
-			throw new RuntimeException("Erro ao criar cliente", e);
+			throw new RuntimeException("Erro Creating Customer", e);
 		}
 	}
 	
@@ -65,7 +65,7 @@ public class CustomerController implements CustomerControllerDocs {
 		CustomerResponseDTO updated = service.update(id, dto);
 		
 		AuditLogger.log("CUSTOMER_UPDATE", getCurrentUser(), "SUCCESS",
-			"Cliente atualizado: " + id);
+			"Customer Updating: " + id);
 		
 		return ResponseEntity.ok(updated);
 	}
@@ -103,7 +103,7 @@ public class CustomerController implements CustomerControllerDocs {
 		service.softDelete(id);
 		
 		AuditLogger.log("CUSTOMER_DELETE", getCurrentUser(), "SUCCESS",
-			"Cliente desativado: " + id);
+			"Customer Disabled: " + id);
 		
 		return ResponseEntity.noContent().build();
 	}
@@ -116,7 +116,7 @@ public class CustomerController implements CustomerControllerDocs {
 		service.enable(id);
 		
 		AuditLogger.log("CUSTOMER_ENABLE", getCurrentUser(), "SUCCESS",
-			"Cliente reativado: " + id);
+			"Customer Enabled: " + id);
 		
 		return ResponseEntity.noContent().build();
 	}

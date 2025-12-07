@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.service.procurement.impl;
 
-import com.stockup.StockUp.Manager.dto.procurement.Supplier.SupplierRequestDTO;
-import com.stockup.StockUp.Manager.dto.procurement.Supplier.SupplierResponseDTO;
+import com.stockup.StockUp.Manager.dto.supply.Supplier.SupplierRequestDTO;
+import com.stockup.StockUp.Manager.dto.supply.Supplier.SupplierResponseDTO;
 import com.stockup.StockUp.Manager.mapper.procurement.SupplierMapper;
 import com.stockup.StockUp.Manager.model.procurement.Supplier;
 import com.stockup.StockUp.Manager.repository.procurement.SupplierRepository;

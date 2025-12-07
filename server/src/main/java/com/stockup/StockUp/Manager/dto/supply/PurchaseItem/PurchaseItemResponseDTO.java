@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.dto.procurement.PurchaseItem;
+package com.stockup.StockUp.Manager.dto.supply.PurchaseItem;
 
 import java.math.BigDecimal;
 import java.util.UUID;

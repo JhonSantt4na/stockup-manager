@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.mapper.procurement;
 
-import com.stockup.StockUp.Manager.dto.procurement.PurchaseItem.PurchaseItemRequestDTO;
-import com.stockup.StockUp.Manager.dto.procurement.PurchaseItem.PurchaseItemResponseDTO;
+import com.stockup.StockUp.Manager.dto.supply.PurchaseItem.PurchaseItemRequestDTO;
+import com.stockup.StockUp.Manager.dto.supply.PurchaseItem.PurchaseItemResponseDTO;
 import com.stockup.StockUp.Manager.mapper.catalog.ProductMapper;
 import com.stockup.StockUp.Manager.model.procurement.PurchaseItem;
 import org.mapstruct.*;

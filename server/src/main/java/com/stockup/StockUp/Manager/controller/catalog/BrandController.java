@@ -25,7 +25,7 @@ public class BrandController implements BrandControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/createAddress")
+	@PostMapping("/create")
 	public ResponseEntity<BrandResponseDTO> createBrand(@RequestBody BrandRequestDTO dto) {
 		try {
 			BrandResponseDTO response = brandService.create(dto);
@@ -42,7 +42,7 @@ public class BrandController implements BrandControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/updateAddress/{id}")
+	@PutMapping("/update/{id}")
 	public ResponseEntity<BrandResponseDTO> updateBrand(@PathVariable UUID id, @RequestBody BrandRequestDTO dto) {
 		BrandResponseDTO updated = brandService.update(id, dto);
 		return ResponseEntity.ok(updated);
@@ -66,7 +66,7 @@ public class BrandController implements BrandControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/list")
+	@GetMapping()
 	public ResponseEntity<Page<BrandResponseDTO>> listBrands(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,

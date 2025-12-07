@@ -1,7 +1,7 @@
-package com.stockup.StockUp.Manager.controller.procurement.docs;
+package com.stockup.StockUp.Manager.controller.supply.docs;
 
-import com.stockup.StockUp.Manager.dto.procurement.Supplier.SupplierRequestDTO;
-import com.stockup.StockUp.Manager.dto.procurement.Supplier.SupplierResponseDTO;
+import com.stockup.StockUp.Manager.dto.supply.Supplier.SupplierRequestDTO;
+import com.stockup.StockUp.Manager.dto.supply.Supplier.SupplierResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

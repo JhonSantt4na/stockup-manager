@@ -29,14 +29,14 @@ public class CategoryController implements CategoryControllerDocs {
 	private final ICategoryService categoryService;
 	
 	@Override
-	@PostMapping
+	@PostMapping("/create")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<CategoryResponseDTO> createCategory(
 		@Valid @RequestBody CategoryRequestDTO dto) {
 		try {
 			CategoryResponseDTO created = categoryService.create(dto);
 			AuditLogger.log("CATEGORY_CREATE", getCurrentUser(), "SUCCESS",
-				"Categoria criada: " + dto.name());
+				"Category creating: " + dto.name());
 			return ResponseEntity.status(HttpStatus.CREATED).body(created);
 			
 		} catch (DuplicateResourceException e) {
@@ -45,7 +45,7 @@ public class CategoryController implements CategoryControllerDocs {
 			
 		} catch (Exception e) {
 			AuditLogger.log("CATEGORY_CREATE", getCurrentUser(), "FAILED", e.getMessage());
-			throw new RuntimeException("Erro ao criar categoria", e);
+			throw new RuntimeException("Error creating category", e);
 		}
 	}
 	
@@ -58,7 +58,7 @@ public class CategoryController implements CategoryControllerDocs {
 		
 		CategoryResponseDTO updated = categoryService.update(id, dto);
 		AuditLogger.log("CATEGORY_UPDATE", getCurrentUser(), "SUCCESS",
-			"Categoria atualizada: " + id);
+			"Category Updated: " + id);
 		
 		return ResponseEntity.ok(updated);
 	}
@@ -76,12 +76,12 @@ public class CategoryController implements CategoryControllerDocs {
 	public ResponseEntity<Void> deleteCategory(@PathVariable UUID id) {
 		categoryService.delete(id);
 		AuditLogger.log("CATEGORY_DELETE", getCurrentUser(), "SUCCESS",
-			"Categoria desativada: " + id);
+			"Category Disabled: " + id);
 		return ResponseEntity.noContent().build();
 	}
 	
 	@Override
-	@GetMapping
+	@GetMapping()
 	public ResponseEntity<Page<CategoryResponseDTO>> listCategories(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,

@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.service.procurement.impl;
 
-import com.stockup.StockUp.Manager.dto.procurement.PurchaseItem.PurchaseItemRequestDTO;
-import com.stockup.StockUp.Manager.dto.procurement.PurchaseItem.PurchaseItemResponseDTO;
+import com.stockup.StockUp.Manager.dto.supply.PurchaseItem.PurchaseItemRequestDTO;
+import com.stockup.StockUp.Manager.dto.supply.PurchaseItem.PurchaseItemResponseDTO;
 import com.stockup.StockUp.Manager.mapper.procurement.PurchaseItemMapper;
 import com.stockup.StockUp.Manager.model.procurement.PurchaseItem;
 import com.stockup.StockUp.Manager.repository.procurement.PurchaseItemRepository;

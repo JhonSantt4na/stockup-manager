@@ -29,7 +29,7 @@ public class TaxProfileController implements TaxProfileControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping
+	@PostMapping("/create")
 	public ResponseEntity<TaxProfileResponseDTO> createTaxProfile(@Valid @RequestBody TaxProfileRequestDTO dto) {
 		try {
 			TaxProfileResponseDTO created = taxProfileService.create(dto);

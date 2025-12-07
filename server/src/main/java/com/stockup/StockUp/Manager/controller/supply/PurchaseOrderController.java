@@ -1,9 +1,9 @@
-package com.stockup.StockUp.Manager.controller.procurement;
+package com.stockup.StockUp.Manager.controller.supply;
 
 import com.stockup.StockUp.Manager.audit.AuditLogger;
-import com.stockup.StockUp.Manager.controller.procurement.docs.PurchaseOrderControllerDocs;
-import com.stockup.StockUp.Manager.dto.procurement.PurchaseOrder.PurchaseOrderRequestDTO;
-import com.stockup.StockUp.Manager.dto.procurement.PurchaseOrder.PurchaseOrderResponseDTO;
+import com.stockup.StockUp.Manager.controller.supply.docs.PurchaseOrderControllerDocs;
+import com.stockup.StockUp.Manager.dto.supply.PurchaseOrder.PurchaseOrderRequestDTO;
+import com.stockup.StockUp.Manager.dto.supply.PurchaseOrder.PurchaseOrderResponseDTO;
 import com.stockup.StockUp.Manager.service.procurement.IPurchaseOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
@@ -56,7 +56,7 @@ public class PurchaseOrderController implements PurchaseOrderControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/list")
+	@GetMapping()
 	public ResponseEntity<Page<PurchaseOrderResponseDTO>> listPurchaseOrders(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,
