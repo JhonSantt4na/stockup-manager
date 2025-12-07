@@ -31,7 +31,7 @@ public class StockController implements StockControllerDocs {
 		try {
 			StockResponseDTO response = stockService.create(dto);
 			AuditLogger.log("STOCK_CREATE", getCurrentUser(), "SUCCESS",
-				"Stock created for product=" + dto.productId());
+				"Stock created for product: " + dto.productId());
 			return ResponseEntity.status(HttpStatus.CREATED).body(response);
 		} catch (Exception e) {
 			AuditLogger.log("STOCK_CREATE", getCurrentUser(), "FAILED",

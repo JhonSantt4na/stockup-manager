@@ -1,18 +1,16 @@
-package com.stockup.StockUp.Manager.controller.procurement;
+package com.stockup.StockUp.Manager.controller.supply;
 
 import com.stockup.StockUp.Manager.audit.AuditLogger;
-import com.stockup.StockUp.Manager.controller.procurement.docs.SupplierControllerDocs;
-import com.stockup.StockUp.Manager.dto.procurement.Supplier.SupplierRequestDTO;
-import com.stockup.StockUp.Manager.dto.procurement.Supplier.SupplierResponseDTO;
+import com.stockup.StockUp.Manager.controller.supply.docs.SupplierControllerDocs;
+import com.stockup.StockUp.Manager.dto.supply.Supplier.SupplierRequestDTO;
+import com.stockup.StockUp.Manager.dto.supply.Supplier.SupplierResponseDTO;
 import com.stockup.StockUp.Manager.service.procurement.ISupplierService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.UUID;
-
 import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 
 @RestController
@@ -57,7 +55,7 @@ public class SupplierController implements SupplierControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/list")
+	@GetMapping()
 	public ResponseEntity<Page<SupplierResponseDTO>> listSuppliers(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,

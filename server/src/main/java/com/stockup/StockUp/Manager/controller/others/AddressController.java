@@ -20,20 +20,20 @@ import java.util.UUID;
 import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 
 @RestController
-@RequestMapping("/api/v1/addresses")
+@RequestMapping("/api/v1/address")
 @RequiredArgsConstructor
 public class AddressController implements AddressControllerDocs {
 	
 	private final IAddressService service;
 	
 	@Override
-	@PostMapping
+	@PostMapping("/create")
 	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
 	public ResponseEntity<AddressResponseDTO> createAddress(@Valid @RequestBody AddressRequestDTO dto) {
 		try {
 			AddressResponseDTO created = service.createAddress(dto);
 			AuditLogger.log("ADDRESS_CREATE", getCurrentUser(), "SUCCESS",
-				"Endereço criado para: " + dto.street());
+				"Address creating to: " + dto.street());
 			return ResponseEntity.status(HttpStatus.CREATED).body(created);
 			
 		} catch (DuplicateResourceException e) {
@@ -42,7 +42,7 @@ public class AddressController implements AddressControllerDocs {
 			
 		} catch (Exception e) {
 			AuditLogger.log("ADDRESS_CREATE", getCurrentUser(), "FAILED", e.getMessage());
-			throw new RuntimeException("Erro ao criar endereço", e);
+			throw new RuntimeException("Erro creating Address", e);
 		}
 	}
 	
@@ -55,7 +55,7 @@ public class AddressController implements AddressControllerDocs {
 		
 		AddressResponseDTO updated = service.updateAddress(id, dto);
 		AuditLogger.log("ADDRESS_UPDATE", getCurrentUser(), "SUCCESS",
-			"Endereço atualizado: " + id);
+			"Address Updated: " + id);
 		
 		return ResponseEntity.ok(updated);
 	}
@@ -68,7 +68,7 @@ public class AddressController implements AddressControllerDocs {
 	}
 	
 	@Override
-	@GetMapping
+	@GetMapping()
 	public ResponseEntity<Page<AddressSummaryDTO>> findAllAddress(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,
@@ -86,7 +86,7 @@ public class AddressController implements AddressControllerDocs {
 	public ResponseEntity<Void> softDeleteAddress(@PathVariable UUID id) {
 		service.softDeleteAddress(id);
 		AuditLogger.log("ADDRESS_DELETE", getCurrentUser(), "SUCCESS",
-			"Endereço desativado: " + id);
+			"Address Disabled: " + id);
 		
 		return ResponseEntity.noContent().build();
 	}
@@ -97,7 +97,7 @@ public class AddressController implements AddressControllerDocs {
 	public ResponseEntity<Void> enableAddress(@PathVariable UUID id) {
 		service.enableAddress(id);
 		AuditLogger.log("ADDRESS_ENABLE", getCurrentUser(), "SUCCESS",
-			"Endereço reativado: " + id);
+			"Address Enabled: " + id);
 		
 		return ResponseEntity.noContent().build();
 	}

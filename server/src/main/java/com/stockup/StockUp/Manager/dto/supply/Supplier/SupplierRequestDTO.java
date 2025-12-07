@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.dto.procurement.Supplier;
+package com.stockup.StockUp.Manager.dto.supply.Supplier;
 
 import com.stockup.StockUp.Manager.dto.Others.Address.AddressDTO;
 import jakarta.validation.constraints.Email;

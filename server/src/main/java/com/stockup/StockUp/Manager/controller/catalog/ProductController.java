@@ -31,6 +31,7 @@ public class ProductController implements ProductControllerDocs {
 	private final IProductService productService;
 	
 	@Override
+	@PostMapping("/create")
 	public ResponseEntity<ProductResponseDTO> createProduct(ProductRequestDTO dto) {
 		try {
 			ProductResponseDTO product = productService.create(dto);
@@ -41,7 +42,7 @@ public class ProductController implements ProductControllerDocs {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		} catch (Exception e) {
 			AuditLogger.log("PRODUCT_CREATE", getCurrentUser(), "FAILED", e.getMessage());
-			throw new RuntimeException("Erro ao criar produto", e);
+			throw new RuntimeException("Erro Creating Product", e);
 		}
 	}
 	
@@ -51,7 +52,7 @@ public class ProductController implements ProductControllerDocs {
 	public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable UUID id,
 															@Valid @RequestBody ProductUpdateDTO dto) {
 		ProductResponseDTO updated = productService.update(id, dto);
-		AuditLogger.log("PRODUCT_UPDATE", getCurrentUser(), "SUCCESS", "Produto atualizado: " + id);
+		AuditLogger.log("PRODUCT_UPDATE", getCurrentUser(), "SUCCESS", "Product Updated: " + id);
 		return ResponseEntity.ok(updated);
 	}
 	
@@ -74,12 +75,12 @@ public class ProductController implements ProductControllerDocs {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
 		productService.delete(id);
-		AuditLogger.log("PRODUCT_DELETE", getCurrentUser(), "SUCCESS", "Produto desativado: " + id);
+		AuditLogger.log("PRODUCT_DELETE", getCurrentUser(), "SUCCESS", "Product Disable: " + id);
 		return ResponseEntity.noContent().build();
 	}
 	
 	@Override
-	@GetMapping
+	@GetMapping()
 	public ResponseEntity<Page<ProductSummaryDTO>> listProducts(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,

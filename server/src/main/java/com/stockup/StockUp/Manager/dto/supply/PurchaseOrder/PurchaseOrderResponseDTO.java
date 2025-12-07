@@ -1,7 +1,7 @@
-package com.stockup.StockUp.Manager.dto.procurement.PurchaseOrder;
+package com.stockup.StockUp.Manager.dto.supply.PurchaseOrder;
 
 import com.stockup.StockUp.Manager.Enums.pocurement.PurchaseOrderStatus;
-import com.stockup.StockUp.Manager.dto.procurement.PurchaseItem.PurchaseItemResponseDTO;
+import com.stockup.StockUp.Manager.dto.supply.PurchaseItem.PurchaseItemResponseDTO;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;

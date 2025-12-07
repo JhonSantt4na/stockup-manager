@@ -17,7 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController implements AuthControllerDocs {
 	
@@ -25,7 +25,7 @@ public class AuthController implements AuthControllerDocs {
 	private final JwtTokenProvider tokenProvider;
 	
 	@Override
-	@PostMapping("/api/v1/login")
+	@PostMapping("/login")
 	public ResponseEntity<TokenDTO> login(@Valid @RequestBody LoginRequestDTO credentials) {
 		try {
 			var token = service.login(credentials);

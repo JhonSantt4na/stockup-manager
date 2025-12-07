@@ -32,7 +32,7 @@ public class RoleController implements RoleControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/createAddress")
+	@PostMapping("/create")
 	public ResponseEntity<Role> createRole(@Valid @RequestBody RoleDTO createDto) {
 		Role role = roleService.createRole(createDto);
 		AuditLogger.log("ROLE_CREATE", getCurrentUser(), "SUCCESS", "Role created: " + createDto.getName());
@@ -41,7 +41,7 @@ public class RoleController implements RoleControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/updateAddress")
+	@PutMapping("/update")
 	public ResponseEntity<Role> updateRole(@Valid @RequestBody RoleUpdateDTO updateDto) {
 		Role role = roleService.updateRole(updateDto);
 		AuditLogger.log("ROLE_UPDATE", getCurrentUser(), "SUCCESS",

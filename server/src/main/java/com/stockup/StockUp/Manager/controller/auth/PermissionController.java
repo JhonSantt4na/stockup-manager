@@ -30,7 +30,7 @@ public class PermissionController implements PermissionControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/createAddress")
+	@PostMapping("/create")
 	public ResponseEntity<Permission> createPermission(@Valid @RequestBody PermissionCreateDTO dto) {
 		try {
 			Permission permission = permissionService.createPermission(dto);
@@ -47,7 +47,7 @@ public class PermissionController implements PermissionControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/updateAddress")
+	@PutMapping("/update")
 	public ResponseEntity<Permission> updatePermission(@Valid @RequestBody PermissionUpdateDTO dto) {
 		try {
 			Permission permission = permissionService.updatePermission(dto);

@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.service.procurement;
 
-import com.stockup.StockUp.Manager.dto.procurement.PurchaseItem.PurchaseItemRequestDTO;
-import com.stockup.StockUp.Manager.dto.procurement.PurchaseItem.PurchaseItemResponseDTO;
+import com.stockup.StockUp.Manager.dto.supply.PurchaseItem.PurchaseItemRequestDTO;
+import com.stockup.StockUp.Manager.dto.supply.PurchaseItem.PurchaseItemResponseDTO;
 import java.util.List;
 import java.util.UUID;
 

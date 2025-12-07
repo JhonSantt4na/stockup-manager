@@ -1,6 +1,6 @@
-package com.stockup.StockUp.Manager.dto.procurement.PurchaseOrder;
+package com.stockup.StockUp.Manager.dto.supply.PurchaseOrder;
 
-import com.stockup.StockUp.Manager.dto.procurement.PurchaseItem.PurchaseItemRequestDTO;
+import com.stockup.StockUp.Manager.dto.supply.PurchaseItem.PurchaseItemRequestDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 

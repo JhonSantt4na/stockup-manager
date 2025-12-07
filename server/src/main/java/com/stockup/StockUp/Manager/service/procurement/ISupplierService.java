@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.service.procurement;
 
-import com.stockup.StockUp.Manager.dto.procurement.Supplier.SupplierRequestDTO;
-import com.stockup.StockUp.Manager.dto.procurement.Supplier.SupplierResponseDTO;
+import com.stockup.StockUp.Manager.dto.supply.Supplier.SupplierRequestDTO;
+import com.stockup.StockUp.Manager.dto.supply.Supplier.SupplierResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.List;

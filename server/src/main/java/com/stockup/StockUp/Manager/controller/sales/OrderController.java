@@ -24,7 +24,7 @@ public class OrderController implements OrderControllerDocs {
 	private final IOrderService service;
 	
 	@Override
-	@PostMapping
+	@PostMapping("/create")
 	public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody OrderRequestDTO dto) {
 		try {
 			AuditLogger.log("ORDER_CREATE", dto.customerId().toString(), "ATTEMPT", "Creating new order");
