@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.repository.payments;
+package com.stockup.StockUp.Manager.repository.finance;
 
 import com.stockup.StockUp.Manager.Enums.finance.PaymentStatus;
 import com.stockup.StockUp.Manager.model.finance.payments.Payment;
