@@ -1,0 +1,10 @@
+package com.stockup.StockUp.Manager.service.finance;
+
+import com.stockup.StockUp.Manager.dto.payments.payment.PaymentGatewayTransactionResponseDTO;
+
+import java.util.UUID;
+
+public interface IPaymentGatewayTransactionService {
+	
+	PaymentGatewayTransactionResponseDTO findByPayment(UUID paymentId);
+}

@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.mapper.payments;
+package com.stockup.StockUp.Manager.mapper.finance;
 
 import com.stockup.StockUp.Manager.dto.payments.payment.PaymentMethodRequestDTO;
 import com.stockup.StockUp.Manager.dto.payments.payment.PaymentMethodResponseDTO;
@@ -9,6 +9,7 @@ import org.mapstruct.*;
 	nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface PaymentMethodMapper {
 	
+	@Mapping(target = "code", ignore = true)
 	@Mapping(target = "updatedAt", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "enabled", ignore = true)
@@ -18,6 +19,7 @@ public interface PaymentMethodMapper {
 	
 	PaymentMethodResponseDTO toResponse(PaymentMethod entity);
 	
+	@Mapping(target = "code", ignore = true)
 	@Mapping(target = "updatedAt", ignore = true)
 	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "enabled", ignore = true)

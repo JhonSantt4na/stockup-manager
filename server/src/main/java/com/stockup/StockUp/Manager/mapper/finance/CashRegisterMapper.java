@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.mapper.payments;
+package com.stockup.StockUp.Manager.mapper.finance;
 
 import com.stockup.StockUp.Manager.dto.payments.cash.CashRegisterResponseDTO;
 import com.stockup.StockUp.Manager.model.finance.cash.CashRegister;

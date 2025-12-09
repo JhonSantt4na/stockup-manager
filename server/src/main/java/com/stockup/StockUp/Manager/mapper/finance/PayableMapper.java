@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.mapper.payments;
+package com.stockup.StockUp.Manager.mapper.finance;
 
 import com.stockup.StockUp.Manager.dto.payments.payable.PayableRequestDTO;
 import com.stockup.StockUp.Manager.dto.payments.payable.PayableResponseDTO;
