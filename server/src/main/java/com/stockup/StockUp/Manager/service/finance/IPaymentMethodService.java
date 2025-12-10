@@ -1,22 +1,19 @@
 package com.stockup.StockUp.Manager.service.finance;
 
-import com.stockup.StockUp.Manager.dto.payments.payment.PaymentMethodRequestDTO;
-import com.stockup.StockUp.Manager.dto.payments.payment.PaymentMethodResponseDTO;
+import com.stockup.StockUp.Manager.dto.finance.payment.PaymentMethodRequestDTO;
+import com.stockup.StockUp.Manager.dto.finance.payment.PaymentMethodResponseDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface IPaymentMethodService {
 	
 	PaymentMethodResponseDTO create(PaymentMethodRequestDTO dto);
-	
 	PaymentMethodResponseDTO update(UUID id, PaymentMethodRequestDTO dto);
-	
-	void activate(UUID id);
-	
-	void deactivate(UUID id);
-	
 	PaymentMethodResponseDTO findById(UUID id);
-	
-	List<PaymentMethodResponseDTO> findAll();
+	Page<PaymentMethodResponseDTO> findAll(Pageable pageable);
+	void delete(UUID id);
+	void activate(UUID id);
+	void deactivate(UUID id);
 }

@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.dto.payments.payment;
+package com.stockup.StockUp.Manager.dto.finance.payment;
 
 import java.util.UUID;
 

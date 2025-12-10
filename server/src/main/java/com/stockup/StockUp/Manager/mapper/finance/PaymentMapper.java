@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.mapper.finance;
 
-import com.stockup.StockUp.Manager.dto.payments.payment.PaymentRequestDTO;
-import com.stockup.StockUp.Manager.dto.payments.payment.PaymentResponseDTO;
+import com.stockup.StockUp.Manager.dto.finance.payment.PaymentRequestDTO;
+import com.stockup.StockUp.Manager.dto.finance.payment.PaymentResponseDTO;
 import com.stockup.StockUp.Manager.model.finance.payments.Payment;
 import org.mapstruct.*;
 
@@ -10,6 +10,8 @@ import org.mapstruct.*;
 	uses = {PaymentMethodMapper.class})
 public interface PaymentMapper {
 	
+	@Mapping(target = "order", ignore = true)
+	@Mapping(target = "code", ignore = true)
 	@Mapping(target = "updatedAt", ignore = true)
 	@Mapping(target = "status", ignore = true)
 	@Mapping(target = "paidAt", ignore = true)
@@ -24,6 +26,8 @@ public interface PaymentMapper {
 	@Mapping(target = "gateway", ignore = true)
 	PaymentResponseDTO toResponse(Payment entity);
 	
+	@Mapping(target = "order", ignore = true)
+	@Mapping(target = "code", ignore = true)
 	@Mapping(target = "updatedAt", ignore = true)
 	@Mapping(target = "status", ignore = true)
 	@Mapping(target = "paidAt", ignore = true)
