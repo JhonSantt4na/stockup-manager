@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.mapper.finance;
 
-import com.stockup.StockUp.Manager.dto.payments.payment.PaymentMethodRequestDTO;
-import com.stockup.StockUp.Manager.dto.payments.payment.PaymentMethodResponseDTO;
+import com.stockup.StockUp.Manager.dto.finance.payment.PaymentMethodRequestDTO;
+import com.stockup.StockUp.Manager.dto.finance.payment.PaymentMethodResponseDTO;
 import com.stockup.StockUp.Manager.model.finance.payments.PaymentMethod;
 import org.mapstruct.*;
 

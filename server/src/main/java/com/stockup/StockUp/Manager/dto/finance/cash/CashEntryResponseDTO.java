@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.dto.payments.cash;
+package com.stockup.StockUp.Manager.dto.finance.cash;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

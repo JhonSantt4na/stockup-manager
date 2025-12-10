@@ -45,27 +45,14 @@ ShippingMethod (Transportadoras, retirada, frete etc.)
 Invoice / NF-e
 _____________________________________________________________________________-
 
-Falta = IService, Service, ControllerDocs e Controller
+Dtos e mappers e repositorios e service
+controllers aqui embaixo
 
-3.3 Payment
-Pode ser 1 pedido → N pagamentos.
-id
-order
-paymentMethod
-paidAmount
-paidAt
-transactionCode
-status
 
-3.4 PaymentMethod
-id
-name (pix, cartão, dinheiro)
-enabled
+CashMovementControllerDocs
 
-Payable (Contas a pagar)
-Receivable (Contas a receber)
-CashFlow (Fluxo de caixa)
-CashRegister / PDV Session (Abertura/fechamento de caixa)
+
+
 
 
 __________________________________________________________________-
@@ -76,3 +63,11 @@ Falta Migrations para isso + População :
 5.1 Supplier
 5.2 PurchaseOrder
 5.3 PurchaseItem
+5.4 CashEntry
+5.5 CashMovement
+5.6 CashRegister
+5.7 CashRegisterSession
+5.8 Payable
+5.9 Payments
+5.10 PaymentsGatewayTransaction
+5.11 PaymentsMethod

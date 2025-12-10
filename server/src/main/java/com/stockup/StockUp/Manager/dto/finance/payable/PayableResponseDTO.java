@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.dto.payments.payable;
+package com.stockup.StockUp.Manager.dto.finance.payable;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

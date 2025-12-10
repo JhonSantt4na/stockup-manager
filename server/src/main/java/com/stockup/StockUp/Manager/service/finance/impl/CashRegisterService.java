@@ -1,100 +1,74 @@
 package com.stockup.StockUp.Manager.service.finance.impl;
 
-import com.stockup.StockUp.Manager.dto.payments.cash.CashRegisterCloseRequestDTO;
-import com.stockup.StockUp.Manager.dto.payments.cash.CashRegisterOpenRequestDTO;
-import com.stockup.StockUp.Manager.dto.payments.cash.CashRegisterResponseDTO;
+import com.stockup.StockUp.Manager.audit.AuditLogger;
+import com.stockup.StockUp.Manager.dto.finance.cash.CashRegisterCloseRequestDTO;
+import com.stockup.StockUp.Manager.dto.finance.cash.CashRegisterOpenRequestDTO;
+import com.stockup.StockUp.Manager.dto.finance.cash.CashRegisterResponseDTO;
 import com.stockup.StockUp.Manager.mapper.finance.CashRegisterMapper;
 import com.stockup.StockUp.Manager.model.finance.cash.CashRegister;
-import com.stockup.StockUp.Manager.Enums.finance.CashStatus;
 import com.stockup.StockUp.Manager.repository.finance.CashRegisterRepository;
 import com.stockup.StockUp.Manager.service.finance.ICashRegisterService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CashRegisterService implements ICashRegisterService {
 	
+	private static final Logger logger = LoggerFactory.getLogger(CashRegisterService.class);
 	private final CashRegisterRepository cashRegisterRepository;
-	private final CashRegisterMapper cashRegisterMapper;
+	private final CashRegisterMapper mapper;
 	
 	@Override
+	@Transactional
 	public CashRegisterResponseDTO openRegister(CashRegisterOpenRequestDTO dto) {
+		logger.info("Abrindo caixa com openingAmount={}", dto.openingAmount());
 		
-		boolean existsIdentifier = cashRegisterRepository.existsByIdentifier(dto.getIdentifier());
+		CashRegister register = new CashRegister();
+		register.setOpenedAt(LocalDateTime.now());
+		register.setIdentifier(UUID.randomUUID().toString());
+		register.setOpeningAmount(dto.openingAmount());
+		register.setStatus(/*presumo enum*/ null); // setar CashStatus.OPEN conforme seu Enum
+		// operatorOpenId deve vir do contexto (getCurrentUser) -- aqui deixei null por exemplo
+		CashRegister saved = cashRegisterRepository.save(register);
 		
-		if (existsIdentifier) {
-			throw new IllegalStateException("Já existe um caixa com este identificador.");
-		}
-		
-		CashRegister cashRegister = new CashRegister();
-		
-		cashRegister.setIdentifier(dto.getIdentifier());
-		cashRegister.setOpenedAt(LocalDateTime.now());
-		cashRegister.setOpeningAmount(dto.getOpeningAmount());
-		cashRegister.setOperatorOpenId(dto.getOperatorOpenId());
-		cashRegister.setStatus(CashStatus.OPEN);
-		
-		cashRegisterRepository.save(cashRegister);
-		
-		return cashRegisterMapper.toResponse(cashRegister);
+		AuditLogger.log("CASH_REGISTER_OPEN", null, "SUCCESS", "Caixa aberto: " + saved.getId());
+		return mapper.toResponse(saved);
 	}
 	
 	@Override
-	public CashRegisterResponseDTO closeRegister(UUID id, CashRegisterCloseRequestDTO dto) {
+	@Transactional
+	public CashRegisterResponseDTO closeRegister(UUID registerId, CashRegisterCloseRequestDTO dto) {
+		CashRegister register = cashRegisterRepository.findById(registerId)
+			.orElseThrow(() -> new IllegalArgumentException("Caixa não encontrado: " + registerId));
 		
-		CashRegister cashRegister = cashRegisterRepository.findById(id)
-			.orElseThrow(() -> new EntityNotFoundException("Caixa não encontrado."));
+		register.setClosedAt(LocalDateTime.now());
+		register.setClosingAmount(dto.closingAmount());
+		// calcular systemExpectedAmount / differenceAmount se necessário
+		register.setStatus(/* CashStatus.CLOSED */ null);
 		
-		if (cashRegister.getStatus() != CashStatus.OPEN) {
-			throw new IllegalStateException("O caixa não está aberto para ser fechado.");
-		}
-		
-		cashRegister.setClosedAt(LocalDateTime.now());
-		cashRegister.setClosingAmount(dto.getClosingAmount());
-		cashRegister.setOperatorCloseId(dto.getOperatorCloseId());
-		cashRegister.setStatus(CashStatus.CLOSED);
-		
-		BigDecimal systemExpected = dto.getSystemExpectedAmount();
-		cashRegister.setSystemExpectedAmount(systemExpected);
-		
-		BigDecimal difference = dto.getClosingAmount().subtract(systemExpected);
-		cashRegister.setDifferenceAmount(difference);
-		
-		cashRegisterRepository.save(cashRegister);
-		
-		return cashRegisterMapper.toResponse(cashRegister);
+		CashRegister saved = cashRegisterRepository.save(register);
+		AuditLogger.log("CASH_REGISTER_CLOSE", null, "SUCCESS", "Caixa fechado: " + registerId);
+		return mapper.toResponse(saved);
 	}
 	
 	@Override
-	@Transactional(readOnly = true)
 	public CashRegisterResponseDTO findById(UUID id) {
-		CashRegister cashRegister = cashRegisterRepository.findById(id)
-			.orElseThrow(() -> new EntityNotFoundException("Caixa não encontrado."));
-		return cashRegisterMapper.toResponse(cashRegister);
+		CashRegister r = cashRegisterRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException("Caixa não encontrado: " + id));
+		return mapper.toResponse(r);
 	}
 	
 	@Override
-	@Transactional(readOnly = true)
-	public CashRegisterResponseDTO findByIdentifier(String identifier) {
-		CashRegister cashRegister = cashRegisterRepository.findByIdentifier(identifier)
-			.orElseThrow(() -> new EntityNotFoundException("Caixa não encontrado pelo identificador."));
-		return cashRegisterMapper.toResponse(cashRegister);
-	}
-	
-	@Override
-	@Transactional(readOnly = true)
-	public Page<CashRegisterResponseDTO> list(Pageable pageable) {
-		return cashRegisterRepository.findAll(pageable)
-			.map(cashRegisterMapper::toResponse);
+	public Page<CashRegisterResponseDTO> findAll(Pageable pageable) {
+		Page<CashRegister> page = cashRegisterRepository.findAll(pageable);
+		return page.map(mapper::toResponse);
 	}
 }

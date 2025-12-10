@@ -1,7 +1,7 @@
 package com.stockup.StockUp.Manager.mapper.finance;
 
-import com.stockup.StockUp.Manager.dto.payments.cash.CashEntryRequestDTO;
-import com.stockup.StockUp.Manager.dto.payments.cash.CashEntryResponseDTO;
+import com.stockup.StockUp.Manager.dto.finance.cash.CashEntryRequestDTO;
+import com.stockup.StockUp.Manager.dto.finance.cash.CashEntryResponseDTO;
 import com.stockup.StockUp.Manager.model.finance.cash.CashEntry;
 import org.mapstruct.*;
 

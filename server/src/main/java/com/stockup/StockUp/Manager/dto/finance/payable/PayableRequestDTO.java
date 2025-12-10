@@ -1,4 +1,4 @@
-package com.stockup.StockUp.Manager.dto.payments.payable;
+package com.stockup.StockUp.Manager.dto.finance.payable;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
