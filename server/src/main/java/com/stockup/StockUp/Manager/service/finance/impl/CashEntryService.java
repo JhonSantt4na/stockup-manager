@@ -67,7 +67,7 @@ public class CashEntryService implements ICashEntryService {
 	}
 	
 	@Override
-	public Page<CashEntryResponseDTO> findAll(Pageable pageable) {
+	public Page<CashEntry> findAll(Pageable pageable) {
 		Page<CashEntry> page = cashEntryRepository.findAll(pageable);
 		return page.map(mapper::toResponse);
 	}

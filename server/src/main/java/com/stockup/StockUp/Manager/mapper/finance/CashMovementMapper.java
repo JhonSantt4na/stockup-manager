@@ -5,6 +5,8 @@ import com.stockup.StockUp.Manager.dto.finance.cash.CashMovementResponseDTO;
 import com.stockup.StockUp.Manager.model.finance.cash.CashMovement;
 import org.mapstruct.*;
 
+import java.util.Scanner;
+
 @Mapper(
 	componentModel = "spring",
 	unmappedTargetPolicy = ReportingPolicy.IGNORE,

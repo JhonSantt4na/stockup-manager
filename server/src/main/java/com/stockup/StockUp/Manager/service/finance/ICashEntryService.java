@@ -2,6 +2,7 @@ package com.stockup.StockUp.Manager.service.finance;
 
 import com.stockup.StockUp.Manager.dto.finance.cash.CashEntryRequestDTO;
 import com.stockup.StockUp.Manager.dto.finance.cash.CashEntryResponseDTO;
+import com.stockup.StockUp.Manager.model.finance.cash.CashEntry;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,6 +13,6 @@ public interface ICashEntryService {
 	CashEntryResponseDTO create(CashEntryRequestDTO dto);
 	CashEntryResponseDTO update(UUID id, CashEntryRequestDTO dto);
 	CashEntryResponseDTO findById(UUID id);
-	Page<CashEntryResponseDTO> findAll(Pageable pageable);
+	Page<CashEntry> findAll(Pageable pageable);
 	void delete(UUID id);
 }

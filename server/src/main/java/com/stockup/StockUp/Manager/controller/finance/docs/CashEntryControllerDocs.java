@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,5 +31,5 @@ public interface CashEntryControllerDocs {
 	CashEntryResponseDTO findById(UUID id);
 	
 	@Operation(summary = "Listar todos os lançamentos do caixa")
-	List<CashEntryResponseDTO> listByCashRegister(UUID cashRegisterId);
+	Page<CashEntryResponseDTO> listByCashRegister(Pageable pageable);
 }
