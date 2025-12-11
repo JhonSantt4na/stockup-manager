@@ -17,6 +17,13 @@ public interface CashEntryMapper {
 	@Mapping(target = "cashRegister", ignore = true)
 	CashEntry toEntity(CashEntryRequestDTO dto);
 	
+	
+	@Mapping(target = "updatedAt", ignore = true)
+	@Mapping(target = "enabled", ignore = true)
+	@Mapping(target = "deletedAt", ignore = true)
+	@Mapping(target = "cashRegister", ignore = true)
+	CashEntry toEntity(CashEntryResponseDTO dto);
+	
 	CashEntryResponseDTO toResponse(CashEntry entity);
 	
 	@Mapping(target = "updatedAt", ignore = true)
