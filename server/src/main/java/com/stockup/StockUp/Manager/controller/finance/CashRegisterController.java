@@ -1,5 +1,6 @@
 package com.stockup.StockUp.Manager.controller.finance;
 
+import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.controller.finance.docs.CashRegisterControllerDocs;
 import com.stockup.StockUp.Manager.dto.finance.cash.*;
 import com.stockup.StockUp.Manager.service.finance.ICashRegisterService;
@@ -9,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
+
+import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 
 @RestController
 @RequestMapping("/api/v1/cash/registers")
@@ -21,7 +24,13 @@ public class CashRegisterController implements CashRegisterControllerDocs {
 	@PostMapping("/open")
 	@ResponseStatus(HttpStatus.CREATED)
 	public CashRegisterResponseDTO open(@RequestBody @Valid CashRegisterOpenRequestDTO dto) {
-		return service.openRegister(dto);
+		try {
+			AuditLogger.log("OPEN CASH_REGISTER", getCurrentUser() ,"SUCCESS", "Open with successfully");
+			return service.openRegister(dto);
+		} catch (Exception e) {
+			AuditLogger.log("OPEN CASH_REGISTER", getCurrentUser() ,"FAILED", "Error open cash register : " + e.getMessage());
+			throw new RuntimeException( "Error open CASH_REGISTER", e);
+		}
 	}
 	
 	@Override
@@ -30,7 +39,13 @@ public class CashRegisterController implements CashRegisterControllerDocs {
 		@PathVariable UUID id,
 		@RequestBody @Valid CashRegisterCloseRequestDTO dto
 	) {
-		return service.closeRegister(id, dto);
+		try {
+			AuditLogger.log("CLOSE CASH_REGISTER", getCurrentUser() ,"SUCCESS", "Close with successfully");
+			return service.closeRegister(id, dto);
+		} catch (Exception e) {
+			AuditLogger.log("CLOSE CASH_REGISTER", getCurrentUser() ,"FAILED", "Error close cash register : " + e.getMessage());
+			throw new RuntimeException( "Error close CASH_REGISTER", e);
+		}
 	}
 	
 	@Override
