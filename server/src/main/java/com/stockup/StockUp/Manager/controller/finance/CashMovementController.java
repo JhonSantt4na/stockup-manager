@@ -25,9 +25,14 @@ public class CashMovementController implements CashMovementControllerDocs {
 	@Override
 	@PostMapping
 	public ResponseEntity<CashMovementResponseDTO> create(@RequestBody @Valid CashMovementRequestDTO dto) {
-		CashMovementResponseDTO response = service.create(dto);
-		AuditLogger.log("CashMovement", getCurrentUser(), "CREATE", response.id().toString());
-		return ResponseEntity.ok(response);
+		try {
+			CashMovementResponseDTO response = service.create(dto);
+			AuditLogger.log("CASH_MOVEMENT", getCurrentUser(), "CREATE", response.id().toString());
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			AuditLogger.log("CREATE CASH_MOVEMENT", getCurrentUser() ,"FAILED", "Error creating cash movement: " + e.getMessage());
+			throw new RuntimeException( "Error creating CASH_MOVEMENT", e);
+		}
 	}
 	
 	@Override
@@ -48,7 +53,7 @@ public class CashMovementController implements CashMovementControllerDocs {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable UUID id) {
 		service.delete(id);
-		AuditLogger.log("CashMovement", getCurrentUser(), "DELETE", id.toString());
+		AuditLogger.log("CASH_MOVEMENT", getCurrentUser(), "DELETE", id.toString());
 		return ResponseEntity.noContent().build();
 	}
 }
