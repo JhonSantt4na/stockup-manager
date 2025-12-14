@@ -45,11 +45,13 @@ public class PayableController implements PayableControllerDocs {
 	@Override
 	@GetMapping
 	public List<PayableResponseDTO> findAll() {
+		// Implements
 		return List.of();
 	}
 	
 	@Override
 	public List<PayableResponseDTO> findBySupplier(UUID supplierId) {
+		// Implements
 		return List.of();
 	}
 
