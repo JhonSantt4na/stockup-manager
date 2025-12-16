@@ -4,6 +4,7 @@ import com.stockup.StockUp.Manager.dto.finance.cash.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 
 import java.util.UUID;
 
@@ -15,11 +16,11 @@ public interface CashRegisterControllerDocs {
 		description = "Realiza a abertura de um caixa.",
 		responses = @ApiResponse(responseCode = "201")
 	)
-	CashRegisterResponseDTO open(CashRegisterOpenRequestDTO dto);
+	ResponseEntity<CashRegisterResponseDTO> open(CashRegisterOpenRequestDTO dto);
 	
 	@Operation(summary = "Fechar caixa")
-	CashRegisterResponseDTO close(UUID id, CashRegisterCloseRequestDTO dto);
+	ResponseEntity<CashRegisterResponseDTO> close(UUID id, CashRegisterCloseRequestDTO dto);
 	
 	@Operation(summary = "Buscar caixa por ID")
-	CashRegisterResponseDTO findById(UUID id);
+	ResponseEntity<CashRegisterResponseDTO> findById(UUID id);
 }

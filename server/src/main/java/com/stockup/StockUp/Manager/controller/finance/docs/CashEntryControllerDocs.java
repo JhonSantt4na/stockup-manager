@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+
 import java.util.UUID;
 
 @Tag(name = "Cash Entry", description = "Lançamentos de movimentação de caixa")
@@ -23,11 +25,11 @@ public interface CashEntryControllerDocs {
 				content = @Content(schema = @Schema(implementation = CashEntryResponseDTO.class)))
 		}
 	)
-	CashEntryResponseDTO create(CashEntryRequestDTO dto);
+	ResponseEntity<CashEntryResponseDTO> create(CashEntryRequestDTO dto);
 	
 	@Operation(summary = "Buscar por ID")
-	CashEntryResponseDTO findById(UUID id);
+	ResponseEntity<CashEntryResponseDTO> findById(UUID id);
 	
 	@Operation(summary = "Listar todos os lançamentos do caixa")
-	Page<CashEntryResponseDTO> listByCashRegister(Pageable pageable);
+	ResponseEntity<Page<CashEntryResponseDTO>> listByCashRegister(Pageable pageable);
 }
