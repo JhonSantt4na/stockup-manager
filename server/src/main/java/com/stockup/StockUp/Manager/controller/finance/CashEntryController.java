@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -29,10 +30,10 @@ public class CashEntryController implements CashEntryControllerDocs {
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public CashEntryResponseDTO create(@RequestBody @Valid CashEntryRequestDTO dto) {
+	public ResponseEntity<CashEntryResponseDTO> create(@RequestBody @Valid CashEntryRequestDTO dto) {
 		try {
 			AuditLogger.log("CREATE CASH_ENTRY", getCurrentUser() ,"SUCCESS", "Created with successfully");
-			return service.create(dto);
+			return ResponseEntity.ok(service.create(dto));
 		} catch (Exception e) {
 			AuditLogger.log("CREATE CASH_ENTRY", getCurrentUser() ,"FAILED", "Error creating cash_entry: " + e.getMessage());
 			throw new RuntimeException( "Error creating CASH_ENTRY", e);
@@ -41,17 +42,17 @@ public class CashEntryController implements CashEntryControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public CashEntryResponseDTO findById(@PathVariable UUID id) {
+	public ResponseEntity<CashEntryResponseDTO> findById(@PathVariable UUID id) {
 		AuditLogger.log("FIND CASH_ENTRY", getCurrentUser() ,"SUCCESS", "Find Cash_Entry successfully with id = " + id);
-		return service.findById(id);
+		return ResponseEntity.ok(service.findById(id));
 	}
 	
-	public Page<CashEntryResponseDTO> listByCashRegister(Pageable pageable) {
+	public ResponseEntity<Page<CashEntryResponseDTO>> listByCashRegister(Pageable pageable) {
 		AuditLogger.log("Listing All CASH_ENTRY", getCurrentUser() ,"SUCCESS", "List all Cash_Entry successfully");
 		Page<CashEntry> entries = service.findAll(pageable);
 		if (entries.isEmpty()) {
 			return null;
 		}
-		return entries.map(mapper::toResponse);
+		return ResponseEntity.ok(entries.map(mapper::toResponse));
 	}
 }

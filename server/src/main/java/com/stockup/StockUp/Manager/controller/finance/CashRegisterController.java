@@ -7,6 +7,7 @@ import com.stockup.StockUp.Manager.service.finance.ICashRegisterService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -23,10 +24,10 @@ public class CashRegisterController implements CashRegisterControllerDocs {
 	@Override
 	@PostMapping("/open")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CashRegisterResponseDTO open(@RequestBody @Valid CashRegisterOpenRequestDTO dto) {
+	public ResponseEntity<CashRegisterResponseDTO> open(@RequestBody @Valid CashRegisterOpenRequestDTO dto) {
 		try {
 			AuditLogger.log("OPEN CASH_REGISTER", getCurrentUser() ,"SUCCESS", "Open with successfully");
-			return service.openRegister(dto);
+			return ResponseEntity.ok(service.openRegister(dto));
 		} catch (Exception e) {
 			AuditLogger.log("OPEN CASH_REGISTER", getCurrentUser() ,"FAILED", "Error open cash register : " + e.getMessage());
 			throw new RuntimeException( "Error open CASH_REGISTER", e);
@@ -35,13 +36,13 @@ public class CashRegisterController implements CashRegisterControllerDocs {
 	
 	@Override
 	@PostMapping("/{id}/close")
-	public CashRegisterResponseDTO close(
+	public ResponseEntity<CashRegisterResponseDTO> close(
 		@PathVariable UUID id,
 		@RequestBody @Valid CashRegisterCloseRequestDTO dto
 	) {
 		try {
 			AuditLogger.log("CLOSE CASH_REGISTER", getCurrentUser() ,"SUCCESS", "Close with successfully");
-			return service.closeRegister(id, dto);
+			return ResponseEntity.ok(service.closeRegister(id, dto));
 		} catch (Exception e) {
 			AuditLogger.log("CLOSE CASH_REGISTER", getCurrentUser() ,"FAILED", "Error close cash register : " + e.getMessage());
 			throw new RuntimeException( "Error close CASH_REGISTER", e);
@@ -50,7 +51,7 @@ public class CashRegisterController implements CashRegisterControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public CashRegisterResponseDTO findById(@PathVariable UUID id) {
-		return service.findById(id);
+	public ResponseEntity<CashRegisterResponseDTO> findById(@PathVariable UUID id) {
+		return ResponseEntity.ok(service.findById(id));
 	}
 }
