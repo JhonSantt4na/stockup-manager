@@ -7,7 +7,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.UUID;
 
 @Tag(name = "Payment Methods", description = "Gerenciamento dos métodos de pagamento")
@@ -22,7 +24,7 @@ public interface PaymentMethodControllerDocs {
 			@ApiResponse(responseCode = "400", description = "Requisição inválida")
 		}
 	)
-	PaymentMethodResponseDTO create(PaymentMethodRequestDTO dto);
+	ResponseEntity<PaymentMethodResponseDTO> create(PaymentMethodRequestDTO dto);
 	
 	@Operation(
 		summary = "Listar métodos de pagamento",
@@ -31,7 +33,7 @@ public interface PaymentMethodControllerDocs {
 			@ApiResponse(responseCode = "200", description = "Lista retornada")
 		}
 	)
-	java.util.List<PaymentMethodResponseDTO> findAll();
+	ResponseEntity<List<PaymentMethodResponseDTO>> findAll();
 	
 	@Operation(
 		summary = "Buscar método por ID",
@@ -41,7 +43,7 @@ public interface PaymentMethodControllerDocs {
 			@ApiResponse(responseCode = "404", description = "Registro não encontrado")
 		}
 	)
-	PaymentMethodResponseDTO findById(UUID id);
+	ResponseEntity<PaymentMethodResponseDTO> findById(UUID id);
 	
 	@Operation(
 		summary = "Atualizar método de pagamento",
@@ -51,7 +53,7 @@ public interface PaymentMethodControllerDocs {
 			@ApiResponse(responseCode = "404", description = "Registro não encontrado")
 		}
 	)
-	PaymentMethodResponseDTO update(UUID id, PaymentMethodRequestDTO dto);
+	ResponseEntity<PaymentMethodResponseDTO> update(UUID id, PaymentMethodRequestDTO dto);
 	
 	@Operation(
 		summary = "Deletar método de pagamento",
