@@ -7,6 +7,7 @@ import com.stockup.StockUp.Manager.dto.finance.payment.PaymentMethodResponseDTO;
 import com.stockup.StockUp.Manager.service.finance.IPaymentMethodService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -24,10 +25,10 @@ public class PaymentMethodController implements PaymentMethodControllerDocs {
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public PaymentMethodResponseDTO create(@RequestBody @Valid PaymentMethodRequestDTO dto) {
+	public ResponseEntity<PaymentMethodResponseDTO> create(@RequestBody @Valid PaymentMethodRequestDTO dto) {
 		try {
 			AuditLogger.log("CREATE PAYMENT_METHOD", getCurrentUser(), "CREATE", dto.toString());
-			return service.create(dto);
+			return ResponseEntity.ok(service.create(dto));
 		} catch (Exception e) {
 			AuditLogger.log("CREATE PAYMENT_METHOD", getCurrentUser() ,"FAILED", "Error creating Payment Method: " + e.getMessage());
 			throw new RuntimeException("Error creating PAYMENT_METHOD",e);
@@ -35,27 +36,27 @@ public class PaymentMethodController implements PaymentMethodControllerDocs {
 	}
 	
 	@Override
-	public List<PaymentMethodResponseDTO> findAll() {
+	public ResponseEntity<List<PaymentMethodResponseDTO>> findAll() {
 		// Implements
-		return List.of();
+		return ResponseEntity.ok(List.of());
 	}
 	
 	@Override
 	@GetMapping("/{id}")
-	public PaymentMethodResponseDTO findById(@PathVariable UUID id) {
+	public ResponseEntity<PaymentMethodResponseDTO> findById(@PathVariable UUID id) {
 		AuditLogger.log("FIND PAYMENT METHOD WITH ID", getCurrentUser(), "FINDING", id.toString());
-		return service.findById(id);
+		return ResponseEntity.ok(service.findById(id));
 	}
 	
 	@Override
 	@PutMapping("/{id}")
-	public PaymentMethodResponseDTO update(
+	public ResponseEntity<PaymentMethodResponseDTO> update(
 		@PathVariable UUID id,
 		@RequestBody @Valid PaymentMethodRequestDTO dto
 	) {
 		try {
 			AuditLogger.log("UPDATE PAYMENT_METHOD", getCurrentUser(), "UPDATED", dto.toString());
-			return service.update(id, dto);
+			return ResponseEntity.ok(service.update(id, dto));
 		} catch (Exception e) {
 			AuditLogger.log("UPDATE PAYMENT_METHOD", getCurrentUser() ,"FAILED", "Error updating Payment Method: " + e.getMessage());
 			throw new RuntimeException("Error updating PAYMENT_METHOD",e);
@@ -74,4 +75,5 @@ public class PaymentMethodController implements PaymentMethodControllerDocs {
 			throw new RuntimeException("Error removing PAYMENT_METHOD",e);
 		}
 	}
+	
 }

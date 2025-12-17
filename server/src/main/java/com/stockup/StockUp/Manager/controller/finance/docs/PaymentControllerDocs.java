@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +23,7 @@ public interface PaymentControllerDocs {
 				content = @Content(schema = @Schema(implementation = PaymentResponseDTO.class)))
 		}
 	)
-	PaymentResponseDTO create(PaymentRequestDTO dto);
+	ResponseEntity<PaymentResponseDTO> create(PaymentRequestDTO dto);
 	
 	@Operation(
 		summary = "Buscar pagamento por ID",
@@ -31,18 +32,18 @@ public interface PaymentControllerDocs {
 			@ApiResponse(responseCode = "404")
 		}
 	)
-	PaymentResponseDTO findById(UUID id);
+	ResponseEntity<PaymentResponseDTO> findById(UUID id);
 	
 	@Operation(
 		summary = "Listar todos os pagamentos",
 		responses = @ApiResponse(responseCode = "200")
 	)
-	List<PaymentResponseDTO> findAll();
+	ResponseEntity<List<PaymentResponseDTO>> findAll();
 	
 	@Operation(
 		summary = "Listar pagamentos por referência",
 		description = "Lista pagamentos associados a um referenceId (pedido/venda)."
 	)
-	List<PaymentResponseDTO> findByReference(UUID referenceId);
+	ResponseEntity<List<PaymentResponseDTO>> findByReference(UUID referenceId);
 }
 

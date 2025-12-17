@@ -7,6 +7,7 @@ import com.stockup.StockUp.Manager.dto.finance.payment.PaymentResponseDTO;
 import com.stockup.StockUp.Manager.service.finance.IPaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -25,10 +26,10 @@ public class PaymentController implements PaymentControllerDocs {
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public PaymentResponseDTO create(@RequestBody @Valid PaymentRequestDTO dto) {
+	public ResponseEntity<PaymentResponseDTO> create(@RequestBody @Valid PaymentRequestDTO dto) {
 		try {
 			AuditLogger.log("CREATE PAYMENT", getCurrentUser(), "CREATE", dto.toString());
-			return service.create(dto);
+			return ResponseEntity.ok(service.create(dto));
 		} catch (Exception e) {
 			AuditLogger.log("CREATE PAYMENT", getCurrentUser() ,"FAILED", "Error creating payment: " + e.getMessage());
 			throw new RuntimeException("Error creating PAYMENT",e);
@@ -37,22 +38,22 @@ public class PaymentController implements PaymentControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public PaymentResponseDTO findById(@PathVariable UUID id) {
+	public ResponseEntity<PaymentResponseDTO> findById(@PathVariable UUID id) {
 		AuditLogger.log("FIND PAYABLE WITH ID", getCurrentUser(), "FINDING", id.toString());
-		return service.findById(id);
+		return ResponseEntity.ok(service.findById(id));
 	}
 	
 	@Override
 	@GetMapping
-	public List<PaymentResponseDTO> findAll() {
+	public ResponseEntity<List<PaymentResponseDTO>> findAll() {
 		// Implements
-		return List.of();
+		return ResponseEntity.ok(List.of());
 	}
 	
 	@Override
-	public List<PaymentResponseDTO> findByReference(UUID referenceId) {
+	public ResponseEntity<List<PaymentResponseDTO>> findByReference(UUID referenceId) {
 		// Implements
-		return List.of();
+		return ResponseEntity.ok(List.of());
 	}
 	
 }

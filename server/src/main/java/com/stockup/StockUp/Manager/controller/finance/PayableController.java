@@ -8,6 +8,7 @@ import com.stockup.StockUp.Manager.service.finance.IPayableService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,10 +26,10 @@ public class PayableController implements PayableControllerDocs {
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public PayableResponseDTO create(@RequestBody @Valid PayableRequestDTO dto) {
+	public ResponseEntity<PayableResponseDTO> create(@RequestBody @Valid PayableRequestDTO dto) {
 		try {
 			AuditLogger.log("CREATE PAYABLE", getCurrentUser(), "CREATE", dto.toString());
-			return service.create(dto);
+			return ResponseEntity.ok(service.create(dto));
 		} catch (Exception e) {
 			AuditLogger.log("CREATE PAYABLE", getCurrentUser() ,"FAILED", "Error creating payable: " + e.getMessage());
 			throw new RuntimeException("Error creating PAYABLE",e);
@@ -37,22 +38,22 @@ public class PayableController implements PayableControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public PayableResponseDTO findById(@PathVariable UUID id) {
+	public ResponseEntity<PayableResponseDTO> findById(@PathVariable UUID id) {
 		AuditLogger.log("FIND PAYABLE WITH ID", getCurrentUser(), "FINDING", id.toString());
-		return service.findById(id);
+		return ResponseEntity.ok(service.findById(id));
 	}
 	
 	@Override
 	@GetMapping
-	public List<PayableResponseDTO> findAll() {
+	public ResponseEntity<List<PayableResponseDTO>> findAll() {
 		// Implements
-		return List.of();
+		return ResponseEntity.ok(List.of());
 	}
 	
 	@Override
-	public List<PayableResponseDTO> findBySupplier(UUID supplierId) {
+	public ResponseEntity<List<PayableResponseDTO>> findBySupplier(UUID supplierId) {
 		// Implements
-		return List.of();
+		return ResponseEntity.ok(List.of());
 	}
 
 //	@Override
