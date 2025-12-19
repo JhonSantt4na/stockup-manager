@@ -11,11 +11,11 @@ import java.util.UUID;
 @Tag(name = "Payables", description = "Contas a pagar")
 public interface PayableControllerDocs {
 	
-	ResponseEntity<PayableResponseDTO> create(PayableRequestDTO dto);
+	ResponseEntity<PayableResponseDTO> createPayable(PayableRequestDTO dto);
 	
-	ResponseEntity<PayableResponseDTO> findById(UUID id);
+	ResponseEntity<PayableResponseDTO> findPayableById(UUID id);
 	
-	ResponseEntity<List<PayableResponseDTO>> findAll();
+	ResponseEntity<List<PayableResponseDTO>> findAllPayable();
 	
-	ResponseEntity<List<PayableResponseDTO>> findBySupplier(UUID supplierId);
+	ResponseEntity<List<PayableResponseDTO>> findPayableBySupplier(UUID supplierId);
 }

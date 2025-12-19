@@ -28,13 +28,13 @@ public class CustomerController implements CustomerControllerDocs {
 	private final ICustomerService service;
 	
 	@Override
-	@PostMapping("/create")
+	@PostMapping("/createCashMovement")
 	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
 	public ResponseEntity<CustomerResponseDTO> createCustomer(
 		@Valid @RequestBody CustomerRequestDTO dto) {
 		
 		try {
-			CustomerResponseDTO created = service.create(dto);
+			CustomerResponseDTO created = service.createCustomer(dto);
 			
 			AuditLogger.log("CUSTOMER_CREATE", getCurrentUser(), "SUCCESS",
 				"Customer Created: " + dto.name());
@@ -62,7 +62,7 @@ public class CustomerController implements CustomerControllerDocs {
 		@PathVariable UUID id,
 		@Valid @RequestBody CustomerRequestDTO dto) {
 		
-		CustomerResponseDTO updated = service.update(id, dto);
+		CustomerResponseDTO updated = service.updateCustomer(id, dto);
 		
 		AuditLogger.log("CUSTOMER_UPDATE", getCurrentUser(), "SUCCESS",
 			"Customer Updating: " + id);
@@ -73,13 +73,13 @@ public class CustomerController implements CustomerControllerDocs {
 	@Override
 	@GetMapping("/{id}")
 	public ResponseEntity<CustomerResponseDTO> getCustomerById(@PathVariable UUID id) {
-		CustomerResponseDTO response = service.findById(id);
+		CustomerResponseDTO response = service.findCustomerById(id);
 		return ResponseEntity.ok(response);
 	}
 	
 	@Override
 	public ResponseEntity<Page<CustomerSummaryDTO>> listCustomer(Pageable pageable) {
-		Page<CustomerSummaryDTO> result = service.findAll(pageable);
+		Page<CustomerSummaryDTO> result = service.findAllCustomer(pageable);
 		return ResponseEntity.ok(result);
 	}
 	
@@ -91,7 +91,7 @@ public class CustomerController implements CustomerControllerDocs {
 		@RequestParam(defaultValue = "10") int size,
 		@RequestParam(defaultValue = "createdAt,desc") String[] sort) {
 		
-		Page<CustomerSummaryDTO> result = service.findAllCustom(page, size, sort);
+		Page<CustomerSummaryDTO> result = service.findAllCustomerCustom(page, size, sort);
 		return ResponseEntity.ok(result);
 	}
 	
@@ -100,7 +100,7 @@ public class CustomerController implements CustomerControllerDocs {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) {
 		
-		service.softDelete(id);
+		service.softDeleteCustomer(id);
 		
 		AuditLogger.log("CUSTOMER_DELETE", getCurrentUser(), "SUCCESS",
 			"Customer Disabled: " + id);
@@ -109,11 +109,11 @@ public class CustomerController implements CustomerControllerDocs {
 	}
 	
 	@Override
-	@PostMapping("/{id}/enable")
+	@PostMapping("/{id}/enableCustomer")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Void> enableCustomer(@PathVariable UUID id) {
 		
-		service.enable(id);
+		service.enableCustomer(id);
 		
 		AuditLogger.log("CUSTOMER_ENABLE", getCurrentUser(), "SUCCESS",
 			"Customer Enabled: " + id);

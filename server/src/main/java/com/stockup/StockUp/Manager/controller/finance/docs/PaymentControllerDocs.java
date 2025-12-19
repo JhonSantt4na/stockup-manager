@@ -23,7 +23,7 @@ public interface PaymentControllerDocs {
 				content = @Content(schema = @Schema(implementation = PaymentResponseDTO.class)))
 		}
 	)
-	ResponseEntity<PaymentResponseDTO> create(PaymentRequestDTO dto);
+	ResponseEntity<PaymentResponseDTO> createPayment(PaymentRequestDTO dto);
 	
 	@Operation(
 		summary = "Buscar pagamento por ID",
@@ -32,18 +32,18 @@ public interface PaymentControllerDocs {
 			@ApiResponse(responseCode = "404")
 		}
 	)
-	ResponseEntity<PaymentResponseDTO> findById(UUID id);
+	ResponseEntity<PaymentResponseDTO> findPaymentById(UUID id);
 	
 	@Operation(
 		summary = "Listar todos os pagamentos",
 		responses = @ApiResponse(responseCode = "200")
 	)
-	ResponseEntity<List<PaymentResponseDTO>> findAll();
+	ResponseEntity<List<PaymentResponseDTO>> findAllPayment();
 	
 	@Operation(
 		summary = "Listar pagamentos por referência",
 		description = "Lista pagamentos associados a um referenceId (pedido/venda)."
 	)
-	ResponseEntity<List<PaymentResponseDTO>> findByReference(UUID referenceId);
+	ResponseEntity<List<PaymentResponseDTO>> findPaymentByReference(UUID referenceId);
 }
 

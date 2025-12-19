@@ -7,13 +7,9 @@ import java.util.UUID;
 
 public interface IPurchaseItemService {
 	
-	PurchaseItemResponseDTO create(PurchaseItemRequestDTO dto);
-	
-	PurchaseItemResponseDTO update(UUID id, PurchaseItemRequestDTO dto);
-	
-	void delete(UUID id);
-	
-	PurchaseItemResponseDTO findById(UUID id);
-	
-	List<PurchaseItemResponseDTO> findByPurchaseOrder(UUID purchaseOrderId);
+	PurchaseItemResponseDTO createPurchaseItem(PurchaseItemRequestDTO dto);
+	PurchaseItemResponseDTO updatePurchaseItem(UUID id, PurchaseItemRequestDTO dto);
+	void deletePurchaseItem(UUID id);
+	PurchaseItemResponseDTO findPurchaseItemById(UUID id);
+	List<PurchaseItemResponseDTO> findPurchaseItemByPurchaseOrder(UUID purchaseOrderId);
 }

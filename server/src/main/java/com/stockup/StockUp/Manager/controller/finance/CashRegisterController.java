@@ -24,10 +24,10 @@ public class CashRegisterController implements CashRegisterControllerDocs {
 	@Override
 	@PostMapping("/open")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<CashRegisterResponseDTO> open(@RequestBody @Valid CashRegisterOpenRequestDTO dto) {
+	public ResponseEntity<CashRegisterResponseDTO> openCashRegister(@RequestBody @Valid CashRegisterOpenRequestDTO dto) {
 		try {
 			AuditLogger.log("OPEN CASH_REGISTER", getCurrentUser() ,"SUCCESS", "Open with successfully");
-			return ResponseEntity.ok(service.openRegister(dto));
+			return ResponseEntity.ok(service.openCashRegister(dto));
 		} catch (Exception e) {
 			AuditLogger.log("OPEN CASH_REGISTER", getCurrentUser() ,"FAILED", "Error open cash register : " + e.getMessage());
 			throw new RuntimeException( "Error open CASH_REGISTER", e);
@@ -36,13 +36,13 @@ public class CashRegisterController implements CashRegisterControllerDocs {
 	
 	@Override
 	@PostMapping("/{id}/close")
-	public ResponseEntity<CashRegisterResponseDTO> close(
+	public ResponseEntity<CashRegisterResponseDTO> closeCashRegister(
 		@PathVariable UUID id,
 		@RequestBody @Valid CashRegisterCloseRequestDTO dto
 	) {
 		try {
 			AuditLogger.log("CLOSE CASH_REGISTER", getCurrentUser() ,"SUCCESS", "Close with successfully");
-			return ResponseEntity.ok(service.closeRegister(id, dto));
+			return ResponseEntity.ok(service.closeCashRegister(id, dto));
 		} catch (Exception e) {
 			AuditLogger.log("CLOSE CASH_REGISTER", getCurrentUser() ,"FAILED", "Error close cash register : " + e.getMessage());
 			throw new RuntimeException( "Error close CASH_REGISTER", e);
@@ -51,7 +51,7 @@ public class CashRegisterController implements CashRegisterControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<CashRegisterResponseDTO> findById(@PathVariable UUID id) {
-		return ResponseEntity.ok(service.findById(id));
+	public ResponseEntity<CashRegisterResponseDTO> findCashRegisterById(@PathVariable UUID id) {
+		return ResponseEntity.ok(service.findCashRegisterById(id));
 	}
 }

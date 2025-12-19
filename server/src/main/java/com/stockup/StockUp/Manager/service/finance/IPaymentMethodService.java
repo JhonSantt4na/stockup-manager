@@ -9,11 +9,11 @@ import java.util.UUID;
 
 public interface IPaymentMethodService {
 	
-	PaymentMethodResponseDTO create(PaymentMethodRequestDTO dto);
-	PaymentMethodResponseDTO update(UUID id, PaymentMethodRequestDTO dto);
-	PaymentMethodResponseDTO findById(UUID id);
-	Page<PaymentMethodResponseDTO> findAll(Pageable pageable);
-	void delete(UUID id);
-	void activate(UUID id);
-	void deactivate(UUID id);
+	PaymentMethodResponseDTO createPaymentMethod(PaymentMethodRequestDTO dto);
+	PaymentMethodResponseDTO updatePaymentMethod(UUID id, PaymentMethodRequestDTO dto);
+	PaymentMethodResponseDTO findPaymentMethodById(UUID id);
+	Page<PaymentMethodResponseDTO> findAllPaymentMethod(Pageable pageable);
+	void deletePaymentMethod(UUID id);
+	void activatePaymentMethod(UUID id);
+	void deactivatePaymentMethod(UUID id);
 }

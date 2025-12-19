@@ -11,12 +11,12 @@ import java.util.UUID;
 
 public interface IPayableService {
 	
-	PayableResponseDTO create(PayableRequestDTO dto);
-	PayableResponseDTO update(UUID id, PayableRequestDTO dto);
-	PayableResponseDTO findById(UUID id);
-	Page<PayableResponseDTO> findAll(Pageable pageable);
-	void delete(UUID id);
-	List<PayableResponseDTO> findByPayment(UUID paymentId);
-	List<PayableResponseDTO> findByStatus(String status);
+	PayableResponseDTO createPayable(PayableRequestDTO dto);
+	PayableResponseDTO updatePayable(UUID id, PayableRequestDTO dto);
+	PayableResponseDTO findPayableById(UUID id);
+	Page<PayableResponseDTO> findAllPayable(Pageable pageable);
+	void deletePayable(UUID id);
+	List<PayableResponseDTO> findPayableByPayment(UUID paymentId);
+	List<PayableResponseDTO> findPayableByStatus(String status);
 	
 }

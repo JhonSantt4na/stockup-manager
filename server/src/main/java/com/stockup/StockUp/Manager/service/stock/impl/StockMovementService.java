@@ -35,7 +35,7 @@ public class StockMovementService implements IStockMovementService {
 	private final StockMovementMapper mapper;
 	
 	@Override
-	public StockMovementResponseDTO registerMovement(StockMovementRequestDTO dto) {
+	public StockMovementResponseDTO registerStockMovement(StockMovementRequestDTO dto) {
 		log.info("Registering stock movement: {}", dto);
 		
 		Product product = productRepository.findById(UUID.fromString(dto.productId()))
@@ -62,7 +62,7 @@ public class StockMovementService implements IStockMovementService {
 			finalQty = previousQty.subtract(movementQty);
 		}
 		
-		log.debug("Stock update | Product={}, Warehouse={}, Previous={}, Movement={}, Final={}",
+		log.debug("Stock updatePaymentMethod | Product={}, Warehouse={}, Previous={}, Movement={}, Final={}",
 			product.getId(), warehouse.getId(), previousQty, movementQty, finalQty);
 		
 		stock.setQuantity(finalQty);
@@ -83,14 +83,14 @@ public class StockMovementService implements IStockMovementService {
 	}
 	
 	@Override
-	public StockMovementResponseDTO getById(UUID id) {
+	public StockMovementResponseDTO getStockMovementById(UUID id) {
 		StockMovement movement = repository.findById(id)
 			.orElseThrow(() -> new EntityNotFoundException("Movement not found"));
 		return mapper.toDTO(movement);
 	}
 	
 	@Override
-	public List<StockMovementResponseDTO> listAll() {
+	public List<StockMovementResponseDTO> listAllStockMovement() {
 		return repository.findAll()
 			.stream()
 			.map(mapper::toDTO)
@@ -98,7 +98,7 @@ public class StockMovementService implements IStockMovementService {
 	}
 	
 	@Override
-	public void delete(UUID id) {
+	public void deleteStockMovement(UUID id) {
 		if (!repository.existsById(id)) {
 			throw new EntityNotFoundException("Movement not found");
 		}

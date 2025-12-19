@@ -30,10 +30,10 @@ public class CashEntryController implements CashEntryControllerDocs {
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<CashEntryResponseDTO> create(@RequestBody @Valid CashEntryRequestDTO dto) {
+	public ResponseEntity<CashEntryResponseDTO> createCashEntry(CashEntryRequestDTO dto) {
 		try {
 			AuditLogger.log("CREATE CASH_ENTRY", getCurrentUser() ,"SUCCESS", "Created with successfully");
-			return ResponseEntity.ok(service.create(dto));
+			return ResponseEntity.ok(service.createCashEntry(dto));
 		} catch (Exception e) {
 			AuditLogger.log("CREATE CASH_ENTRY", getCurrentUser() ,"FAILED", "Error creating cash_entry: " + e.getMessage());
 			throw new RuntimeException( "Error creating CASH_ENTRY", e);
@@ -44,12 +44,12 @@ public class CashEntryController implements CashEntryControllerDocs {
 	@GetMapping("/{id}")
 	public ResponseEntity<CashEntryResponseDTO> findById(@PathVariable UUID id) {
 		AuditLogger.log("FIND CASH_ENTRY", getCurrentUser() ,"SUCCESS", "Find Cash_Entry successfully with id = " + id);
-		return ResponseEntity.ok(service.findById(id));
+		return ResponseEntity.ok(service.findCashEntryById(id));
 	}
 	
 	public ResponseEntity<Page<CashEntryResponseDTO>> listByCashRegister(Pageable pageable) {
 		AuditLogger.log("Listing All CASH_ENTRY", getCurrentUser() ,"SUCCESS", "List all Cash_Entry successfully");
-		Page<CashEntry> entries = service.findAll(pageable);
+		Page<CashEntry> entries = service.findAllCashEntry(pageable);
 		if (entries.isEmpty()) {
 			return null;
 		}

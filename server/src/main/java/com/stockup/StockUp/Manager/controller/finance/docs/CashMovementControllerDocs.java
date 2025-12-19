@@ -13,14 +13,14 @@ import java.util.UUID;
 public interface CashMovementControllerDocs {
 	
 	@Operation(summary = "Registrar movimentação", description = "Cria uma nova movimentação no caixa.")
-	ResponseEntity<CashMovementResponseDTO> create(CashMovementRequestDTO dto);
+	ResponseEntity<CashMovementResponseDTO> createCashMovement(CashMovementRequestDTO dto);
 	
 	@Operation(summary = "Buscar por ID")
-	ResponseEntity<CashMovementResponseDTO> findById(UUID id);
+	ResponseEntity<CashMovementResponseDTO> findCashMovementById(UUID id);
 	
 	@Operation(summary = "Listar movimentações da sessão")
-	ResponseEntity<List<CashMovementResponseDTO>> findBySession(UUID sessionId);
+	ResponseEntity<List<CashMovementResponseDTO>> findCashMovementBySession(UUID sessionId);
 	
 	@Operation(summary = "Excluir movimentação")
-	ResponseEntity<Void> delete(UUID id);
+	ResponseEntity<Void> deleteCashMovement(UUID id);
 }

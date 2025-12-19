@@ -110,7 +110,7 @@ public interface CustomerControllerDocs {
 	
 	@Operation(
 		summary = "Excluir cliente",
-		description = "Realiza exclusão lógica (soft delete).",
+		description = "Realiza exclusão lógica (soft deleteCashMovement).",
 		tags = {"Clientes"},
 		responses = {
 			@ApiResponse(responseCode = "204", description = "Cliente excluído"),
@@ -123,7 +123,7 @@ public interface CustomerControllerDocs {
 	
 	@Operation(
 		summary = "Reativar cliente",
-		description = "Reverte o soft delete, habilitando o cliente novamente.",
+		description = "Reverte o soft deleteCashMovement, habilitando o cliente novamente.",
 		tags = {"Clientes"},
 		responses = {
 			@ApiResponse(responseCode = "204", description = "Cliente reativado"),

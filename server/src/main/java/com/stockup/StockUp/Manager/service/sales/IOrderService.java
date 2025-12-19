@@ -10,17 +10,11 @@ import java.util.UUID;
 
 public interface IOrderService {
 	
-	OrderResponseDTO create(OrderRequestDTO dto);
-	
-	OrderResponseDTO findById(UUID id);
-	
+	OrderResponseDTO createOrder(OrderRequestDTO dto);
+	OrderResponseDTO findOrderById(UUID id);
 	OrderResponseDTO findByOrderNumber(String orderNumber);
-	
-	Page<OrderResponseDTO> findAll(Pageable pageable);
-	
-	OrderResponseDTO updateStatus(UUID id, OrderStatus newStatus);
-	
-	OrderResponseDTO cancel(UUID id);
-	
-	void delete(UUID id);
+	Page<OrderResponseDTO> findAllOrder(Pageable pageable);
+	OrderResponseDTO updateOrderStatus(UUID id, OrderStatus newStatus);
+	OrderResponseDTO cancelOrder(UUID id);
+	void deleteOrder(UUID id);
 }

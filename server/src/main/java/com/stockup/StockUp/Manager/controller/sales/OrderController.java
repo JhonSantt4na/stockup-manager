@@ -24,11 +24,11 @@ public class OrderController implements OrderControllerDocs {
 	private final IOrderService service;
 	
 	@Override
-	@PostMapping("/create")
+	@PostMapping("/createCashMovement")
 	public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody OrderRequestDTO dto) {
 		try {
 			AuditLogger.log("ORDER_CREATE", dto.customerId().toString(), "ATTEMPT", "Creating new order");
-			OrderResponseDTO created = service.create(dto);
+			OrderResponseDTO created = service.createOrder(dto);
 			AuditLogger.log("ORDER_CREATE", created.id().toString(), "SUCCESS", "Order created successfully");
 			return ResponseEntity.status(HttpStatus.CREATED).body(created);
 			
@@ -43,7 +43,7 @@ public class OrderController implements OrderControllerDocs {
 	public ResponseEntity<OrderResponseDTO> findOrderById(@PathVariable UUID id) {
 		try {
 			AuditLogger.log("ORDER_FIND_BY_ID", id.toString(), "ATTEMPT", "Fetching order by ID");
-			OrderResponseDTO response = service.findById(id);
+			OrderResponseDTO response = service.findOrderById(id);
 			AuditLogger.log("ORDER_FIND_BY_ID", id.toString(), "SUCCESS", "Order found");
 			return ResponseEntity.ok(response);
 			
@@ -86,7 +86,7 @@ public class OrderController implements OrderControllerDocs {
 		try {
 			AuditLogger.log("ORDER_UPDATE_STATUS", id.toString(), "ATTEMPT",
 				"Updating status to: " + status);
-			OrderResponseDTO updated = service.updateStatus(id, status);
+			OrderResponseDTO updated = service.updateOrderStatus(id, status);
 			AuditLogger.log("ORDER_UPDATE_STATUS", id.toString(), "SUCCESS",
 				"Status updated successfully");
 			return ResponseEntity.ok(updated);
@@ -99,11 +99,11 @@ public class OrderController implements OrderControllerDocs {
 	}
 	
 	@Override
-	@PatchMapping("/{id}/cancel")
+	@PatchMapping("/{id}/cancelOrder")
 	public ResponseEntity<OrderResponseDTO> cancelOrder(@PathVariable UUID id) {
 		try {
 			AuditLogger.log("ORDER_CANCEL", id.toString(), "ATTEMPT", "Cancelling order");
-			OrderResponseDTO canceled = service.cancel(id);
+			OrderResponseDTO canceled = service.cancelOrder(id);
 			AuditLogger.log("ORDER_CANCEL", id.toString(), "SUCCESS", "Order cancelled successfully");
 			return ResponseEntity.ok(canceled);
 			
@@ -118,7 +118,7 @@ public class OrderController implements OrderControllerDocs {
 	public ResponseEntity<Void> deleteOrder(@PathVariable UUID id) {
 		try {
 			AuditLogger.log("ORDER_DELETE", id.toString(), "ATTEMPT", "Deleting order permanently");
-			service.delete(id);
+			service.deleteOrder(id);
 			AuditLogger.log("ORDER_DELETE", id.toString(), "SUCCESS", "Order deleted");
 			return ResponseEntity.noContent().build();
 			

@@ -26,7 +26,7 @@ public class CashMovementServiceImpl implements ICashMovementService {
 	
 	@Override
 	@Transactional
-	public CashMovementResponseDTO create(CashMovementRequestDTO dto) {
+	public CashMovementResponseDTO createCashMovement(CashMovementRequestDTO dto) {
 		CashRegisterSession session = sessionRepository.findById(dto.sessionId())
 			.orElseThrow(() -> new EntityNotFoundException("Sessão de caixa não encontrada."));
 		
@@ -38,14 +38,14 @@ public class CashMovementServiceImpl implements ICashMovementService {
 	}
 	
 	@Override
-	public CashMovementResponseDTO findById(UUID id) {
+	public CashMovementResponseDTO findCashMovementById(UUID id) {
 		CashMovement entity = repository.findById(id)
 			.orElseThrow(() -> new EntityNotFoundException("Movimentação não encontrada."));
 		return mapper.toDTO(entity);
 	}
 	
 	@Override
-	public List<CashMovementResponseDTO> findBySession(UUID sessionId) {
+	public List<CashMovementResponseDTO> findCashMovementBySession(UUID sessionId) {
 		return repository.findBySessionId(sessionId)
 			.stream()
 			.map(mapper::toDTO)
@@ -54,7 +54,7 @@ public class CashMovementServiceImpl implements ICashMovementService {
 	
 	@Override
 	@Transactional
-	public void delete(UUID id) {
+	public void deleteCashMovement(UUID id) {
 		CashMovement entity = repository.findById(id)
 			.orElseThrow(() -> new EntityNotFoundException("Movimentação não encontrada."));
 		repository.delete(entity);

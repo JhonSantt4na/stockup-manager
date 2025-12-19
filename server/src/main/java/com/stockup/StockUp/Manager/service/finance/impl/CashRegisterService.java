@@ -28,7 +28,7 @@ public class CashRegisterService implements ICashRegisterService {
 	
 	@Override
 	@Transactional
-	public CashRegisterResponseDTO openRegister(CashRegisterOpenRequestDTO dto) {
+	public CashRegisterResponseDTO openCashRegister(CashRegisterOpenRequestDTO dto) {
 		logger.info("Abrindo caixa com openingAmount={}", dto.openingAmount());
 		
 		CashRegister register = new CashRegister();
@@ -45,7 +45,7 @@ public class CashRegisterService implements ICashRegisterService {
 	
 	@Override
 	@Transactional
-	public CashRegisterResponseDTO closeRegister(UUID registerId, CashRegisterCloseRequestDTO dto) {
+	public CashRegisterResponseDTO closeCashRegister(UUID registerId, CashRegisterCloseRequestDTO dto) {
 		CashRegister register = cashRegisterRepository.findById(registerId)
 			.orElseThrow(() -> new IllegalArgumentException("Caixa não encontrado: " + registerId));
 		
@@ -60,14 +60,14 @@ public class CashRegisterService implements ICashRegisterService {
 	}
 	
 	@Override
-	public CashRegisterResponseDTO findById(UUID id) {
+	public CashRegisterResponseDTO findCashRegisterById(UUID id) {
 		CashRegister r = cashRegisterRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException("Caixa não encontrado: " + id));
 		return mapper.toResponse(r);
 	}
 	
 	@Override
-	public Page<CashRegisterResponseDTO> findAll(Pageable pageable) {
+	public Page<CashRegisterResponseDTO> findAllCashRegister(Pageable pageable) {
 		Page<CashRegister> page = cashRegisterRepository.findAll(pageable);
 		return page.map(mapper::toResponse);
 	}

@@ -24,7 +24,7 @@ public interface PaymentMethodControllerDocs {
 			@ApiResponse(responseCode = "400", description = "Requisição inválida")
 		}
 	)
-	ResponseEntity<PaymentMethodResponseDTO> create(PaymentMethodRequestDTO dto);
+	ResponseEntity<PaymentMethodResponseDTO> createPaymentMethod(PaymentMethodRequestDTO dto);
 	
 	@Operation(
 		summary = "Listar métodos de pagamento",
@@ -33,7 +33,7 @@ public interface PaymentMethodControllerDocs {
 			@ApiResponse(responseCode = "200", description = "Lista retornada")
 		}
 	)
-	ResponseEntity<List<PaymentMethodResponseDTO>> findAll();
+	ResponseEntity<List<PaymentMethodResponseDTO>> findAllPaymentMethod();
 	
 	@Operation(
 		summary = "Buscar método por ID",
@@ -43,7 +43,7 @@ public interface PaymentMethodControllerDocs {
 			@ApiResponse(responseCode = "404", description = "Registro não encontrado")
 		}
 	)
-	ResponseEntity<PaymentMethodResponseDTO> findById(UUID id);
+	ResponseEntity<PaymentMethodResponseDTO> findPaymentMethodById(UUID id);
 	
 	@Operation(
 		summary = "Atualizar método de pagamento",
@@ -53,7 +53,7 @@ public interface PaymentMethodControllerDocs {
 			@ApiResponse(responseCode = "404", description = "Registro não encontrado")
 		}
 	)
-	ResponseEntity<PaymentMethodResponseDTO> update(UUID id, PaymentMethodRequestDTO dto);
+	ResponseEntity<PaymentMethodResponseDTO> updatePaymentMethod(UUID id, PaymentMethodRequestDTO dto);
 	
 	@Operation(
 		summary = "Deletar método de pagamento",
@@ -63,5 +63,5 @@ public interface PaymentMethodControllerDocs {
 			@ApiResponse(responseCode = "404", description = "Registro não encontrado")
 		}
 	)
-	void delete(UUID id);
+	void deletePaymentMethod(UUID id);
 }

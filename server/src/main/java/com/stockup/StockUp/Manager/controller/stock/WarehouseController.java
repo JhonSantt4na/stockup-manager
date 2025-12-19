@@ -35,7 +35,7 @@ public class WarehouseController implements WarehouseControllerDocs {
 		@Valid @RequestBody WarehouseRequestDTO dto) {
 		
 		try {
-			WarehouseResponseDTO response = warehouseService.create(dto);
+			WarehouseResponseDTO response = warehouseService.createWarehouse(dto);
 			AuditLogger.log(
 				"WAREHOUSE_CREATE",
 				getCurrentUser(),
@@ -72,7 +72,7 @@ public class WarehouseController implements WarehouseControllerDocs {
 		@Valid @RequestBody WarehouseRequestDTO dto) {
 		
 		try {
-			WarehouseResponseDTO response = warehouseService.update(id, dto);
+			WarehouseResponseDTO response = warehouseService.updateWarehouse(id, dto);
 			
 			AuditLogger.log(
 				"WAREHOUSE_UPDATE",
@@ -99,7 +99,7 @@ public class WarehouseController implements WarehouseControllerDocs {
 	@Override
 	@GetMapping("/{id}")
 	public ResponseEntity<WarehouseResponseDTO> getWarehouseById(@PathVariable UUID id) {
-		return ResponseEntity.ok(warehouseService.getById(id));
+		return ResponseEntity.ok(warehouseService.getWarehouseById(id));
 	}
 	
 	
@@ -110,7 +110,7 @@ public class WarehouseController implements WarehouseControllerDocs {
 		@RequestParam(defaultValue = "10") Integer size,
 		@RequestParam(required = false) WarehouseType type) {
 		
-		Page<WarehouseResponseDTO> result = warehouseService.listAll(page, size, type);
+		Page<WarehouseResponseDTO> result = warehouseService.listAllWarehouse(page, size, type);
 		return ResponseEntity.ok(result);
 	}
 	
@@ -119,7 +119,7 @@ public class WarehouseController implements WarehouseControllerDocs {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteWarehouse(@PathVariable UUID id) {
 		try {
-			warehouseService.delete(id);
+			warehouseService.deleteWarehouse(id);
 			AuditLogger.log(
 				"WAREHOUSE_DELETE",
 				getCurrentUser(),

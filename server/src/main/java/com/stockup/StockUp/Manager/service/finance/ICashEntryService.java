@@ -10,9 +10,9 @@ import java.util.UUID;
 
 public interface ICashEntryService {
 	
-	CashEntryResponseDTO create(CashEntryRequestDTO dto);
-	CashEntryResponseDTO update(UUID id, CashEntryRequestDTO dto);
-	CashEntryResponseDTO findById(UUID id);
-	Page<CashEntry> findAll(Pageable pageable);
-	void delete(UUID id);
+	CashEntryResponseDTO createCashEntry(CashEntryRequestDTO dto);
+	CashEntryResponseDTO updateCashEntry(UUID id, CashEntryRequestDTO dto);
+	CashEntryResponseDTO findCashEntryById(UUID id);
+	Page<CashEntry> findAllCashEntry(Pageable pageable);
+	void deleteCashEntry(UUID id);
 }

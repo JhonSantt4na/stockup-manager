@@ -22,7 +22,7 @@ public class SupplierService implements ISupplierService {
 	private final SupplierMapper mapper;
 	
 	@Override
-	public SupplierResponseDTO create(SupplierRequestDTO dto) {
+	public SupplierResponseDTO createSupplier(SupplierRequestDTO dto) {
 		
 		if (repository.existsByCnpj(dto.cnpj())) {
 			throw new IllegalArgumentException("Já existe um fornecedor com este CNPJ.");
@@ -37,7 +37,7 @@ public class SupplierService implements ISupplierService {
 	}
 	
 	@Override
-	public SupplierResponseDTO update(UUID id, SupplierRequestDTO dto) {
+	public SupplierResponseDTO updateSupplier(UUID id, SupplierRequestDTO dto) {
 		
 		Supplier supplier = repository.findById(id)
 			.orElseThrow(() -> new EntityNotFoundException("Fornecedor não encontrado."));
@@ -47,24 +47,24 @@ public class SupplierService implements ISupplierService {
 	}
 	
 	@Override
-	public void delete(UUID id) {
+	public void deleteSupplier(UUID id) {
 		repository.deleteById(id);
 	}
 	
 	@Override
-	public SupplierResponseDTO findById(UUID id) {
+	public SupplierResponseDTO findSupplierById(UUID id) {
 		return repository.findById(id)
 			.map(mapper::toResponse)
 			.orElseThrow(() -> new EntityNotFoundException("Fornecedor não encontrado."));
 	}
 	
 	@Override
-	public List<SupplierResponseDTO> findAll() {
+	public List<SupplierResponseDTO> findAllSupplier() {
 		return repository.findAll().stream().map(mapper::toResponse).toList();
 	}
 	
 	@Override
-	public Page<SupplierResponseDTO> list(Pageable pageable) {
+	public Page<SupplierResponseDTO> listSupplier(Pageable pageable) {
 		return repository.findAll(pageable).map(mapper::toResponse);
 	}
 }

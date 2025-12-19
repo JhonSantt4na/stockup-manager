@@ -10,13 +10,9 @@ import java.util.UUID;
 
 public interface IWarehouseService {
 	
-	WarehouseResponseDTO create(WarehouseRequestDTO dto);
-	
-	WarehouseResponseDTO update(UUID id, WarehouseRequestDTO dto);
-	
-	WarehouseResponseDTO getById(UUID id);
-	
-	Page<WarehouseResponseDTO> listAll(Integer page, Integer size, WarehouseType type);
-	
-	void delete(UUID id);
+	WarehouseResponseDTO createWarehouse(WarehouseRequestDTO dto);
+	WarehouseResponseDTO updateWarehouse(UUID id, WarehouseRequestDTO dto);
+	WarehouseResponseDTO getWarehouseById(UUID id);
+	Page<WarehouseResponseDTO> listAllWarehouse(Integer page, Integer size, WarehouseType type);
+	void deleteWarehouse(UUID id);
 }

@@ -28,7 +28,7 @@ public interface SupplierControllerDocs {
 			@ApiResponse(responseCode = "500", description = "Erro interno")
 		}
 	)
-	@PostMapping("/create")
+	@PostMapping("/createCashMovement")
 	ResponseEntity<SupplierResponseDTO> createSupplier(@Valid @RequestBody SupplierRequestDTO dto);
 	
 	@Operation(
@@ -39,7 +39,7 @@ public interface SupplierControllerDocs {
 			@ApiResponse(responseCode = "404", description = "Fornecedor não encontrado")
 		}
 	)
-	@PutMapping("/update/{id}")
+	@PutMapping("/updatePaymentMethod/{id}")
 	ResponseEntity<SupplierResponseDTO> updateSupplier(@PathVariable UUID id, @Valid @RequestBody SupplierRequestDTO dto);
 	
 	@Operation(
@@ -60,7 +60,7 @@ public interface SupplierControllerDocs {
 			@ApiResponse(responseCode = "204", description = "Fornecedor excluído")
 		}
 	)
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/deleteCashMovement/{id}")
 	ResponseEntity<Void> deleteSupplier(@PathVariable UUID id);
 	
 	@Operation(
@@ -70,7 +70,7 @@ public interface SupplierControllerDocs {
 			@ApiResponse(responseCode = "200", description = "Lista retornada")
 		}
 	)
-	@GetMapping("/list")
+	@GetMapping("/listPurchaseOrder")
 	ResponseEntity<Page<SupplierResponseDTO>> listSuppliers(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,

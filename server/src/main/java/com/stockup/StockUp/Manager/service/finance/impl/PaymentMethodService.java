@@ -26,7 +26,7 @@ public class PaymentMethodService implements IPaymentMethodService {
 	
 	@Override
 	@Transactional
-	public PaymentMethodResponseDTO create(PaymentMethodRequestDTO dto) {
+	public PaymentMethodResponseDTO createPaymentMethod(PaymentMethodRequestDTO dto) {
 		logger.info("Criando PaymentMethod name={}", dto.name());
 		// checar duplicidade por code/nome se necessário
 		PaymentMethod entity = mapper.toEntity(dto);
@@ -38,7 +38,7 @@ public class PaymentMethodService implements IPaymentMethodService {
 	
 	@Override
 	@Transactional
-	public PaymentMethodResponseDTO update(UUID id, PaymentMethodRequestDTO dto) {
+	public PaymentMethodResponseDTO updatePaymentMethod(UUID id, PaymentMethodRequestDTO dto) {
 		PaymentMethod existing = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("PaymentMethod não encontrado: " + id));
 		mapper.updateEntityFromDTO(dto, existing);
 		PaymentMethod updated = repository.save(existing);
@@ -47,32 +47,32 @@ public class PaymentMethodService implements IPaymentMethodService {
 	}
 	
 	@Override
-	public PaymentMethodResponseDTO findById(UUID id) {
+	public PaymentMethodResponseDTO findPaymentMethodById(UUID id) {
 		PaymentMethod pm = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("PaymentMethod não encontrado: " + id));
 		return mapper.toResponse(pm);
 	}
 	
 	@Override
-	public Page<PaymentMethodResponseDTO> findAll(Pageable pageable) {
+	public Page<PaymentMethodResponseDTO> findAllPaymentMethod(Pageable pageable) {
 		Page<PaymentMethod> page = repository.findAll(pageable);
 		return page.map(mapper::toResponse);
 	}
 	
 	@Override
 	@Transactional
-	public void delete(UUID id) {
+	public void deletePaymentMethod(UUID id) {
 		if (!repository.existsById(id)) throw new IllegalArgumentException("PaymentMethod não encontrado: " + id);
 		repository.deleteById(id);
 		AuditLogger.log("PAYMENT_METHOD_DELETE", null, "SUCCESS", "PaymentMethod excluído: " + id);
 	}
 	
 	@Override
-	public void activate(UUID id) {
+	public void activatePaymentMethod(UUID id) {
 	
 	}
 	
 	@Override
-	public void deactivate(UUID id) {
+	public void deactivatePaymentMethod(UUID id) {
 	
 	}
 }

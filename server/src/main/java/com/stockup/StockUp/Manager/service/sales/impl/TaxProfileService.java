@@ -26,7 +26,7 @@ public class TaxProfileService implements ITaxProfileService {
 	private final TaxProfileRepository repository;
 	private final TaxProfileMapper mapper;
 	
-	public TaxProfileResponseDTO create(TaxProfileRequestDTO dto) {
+	public TaxProfileResponseDTO createTaxProfile(TaxProfileRequestDTO dto) {
 		logger.debug("Creating new TaxProfile with name: {}", dto.getName());
 		
 		if (repository.existsByName(dto.getName())) {
@@ -41,7 +41,7 @@ public class TaxProfileService implements ITaxProfileService {
 		return mapper.toResponse(saved);
 	}
 	
-	public TaxProfileResponseDTO update(UUID id, TaxProfileUpdateDTO dto) {
+	public TaxProfileResponseDTO updateTaxProfile(UUID id, TaxProfileUpdateDTO dto) {
 		logger.debug("Updating TaxProfile with ID: {}", id);
 		
 		TaxProfile existing = repository.findById(id)
@@ -58,7 +58,7 @@ public class TaxProfileService implements ITaxProfileService {
 	}
 	
 	@Transactional(readOnly = true)
-	public TaxProfileResponseDTO findById(UUID id) {
+	public TaxProfileResponseDTO findTaxProfileById(UUID id) {
 		logger.debug("Finding TaxProfile by ID: {}", id);
 		
 		TaxProfile entity = repository.findById(id)
@@ -71,7 +71,7 @@ public class TaxProfileService implements ITaxProfileService {
 	}
 	
 	@Transactional(readOnly = true)
-	public List<TaxProfileResponseDTO> findAll() {
+	public List<TaxProfileResponseDTO> findAllTaxProfile() {
 		logger.debug("Listing all tax profiles");
 		
 		return repository.findAll()
@@ -80,7 +80,7 @@ public class TaxProfileService implements ITaxProfileService {
 			.toList();
 	}
 	
-	public void delete(UUID id) {
+	public void deleteTaxProfile(UUID id) {
 		logger.debug("Soft deleting TaxProfile with ID: {}", id);
 		
 		TaxProfile existing = repository.findById(id)

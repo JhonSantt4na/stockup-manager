@@ -10,8 +10,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface ICashRegisterService {
 	
-	CashRegisterResponseDTO openRegister(CashRegisterOpenRequestDTO dto);
-	CashRegisterResponseDTO closeRegister(UUID registerId, CashRegisterCloseRequestDTO dto);
-	CashRegisterResponseDTO findById(UUID id);
-	Page<CashRegisterResponseDTO> findAll(Pageable pageable);
+	CashRegisterResponseDTO openCashRegister(CashRegisterOpenRequestDTO dto);
+	CashRegisterResponseDTO closeCashRegister(UUID registerId, CashRegisterCloseRequestDTO dto);
+	CashRegisterResponseDTO findCashRegisterById(UUID id);
+	Page<CashRegisterResponseDTO> findAllCashRegister(Pageable pageable);
 }

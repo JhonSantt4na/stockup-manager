@@ -6,5 +6,5 @@ import java.util.UUID;
 
 public interface IPaymentGatewayTransactionService {
 	
-	PaymentGatewayTransactionResponseDTO findByPayment(UUID paymentId);
+	PaymentGatewayTransactionResponseDTO findPaymentGatewayTransactionByPayment(UUID paymentId);
 }

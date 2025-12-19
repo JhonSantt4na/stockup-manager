@@ -22,18 +22,18 @@ public class SupplierController implements SupplierControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/create")
+	@PostMapping("/createCashMovement")
 	public ResponseEntity<SupplierResponseDTO> createSupplier(@RequestBody SupplierRequestDTO dto) {
-		SupplierResponseDTO response = service.create(dto);
+		SupplierResponseDTO response = service.createSupplier(dto);
 		AuditLogger.log("SUPPLIER_CREATE", getCurrentUser(), "SUCCESS", "Supplier created: " + dto.name());
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/update/{id}")
+	@PutMapping("/updatePaymentMethod/{id}")
 	public ResponseEntity<SupplierResponseDTO> updateSupplier(@PathVariable UUID id, @RequestBody SupplierRequestDTO dto) {
-		SupplierResponseDTO updated = service.update(id, dto);
+		SupplierResponseDTO updated = service.updateSupplier(id, dto);
 		return ResponseEntity.ok(updated);
 	}
 	
@@ -41,14 +41,14 @@ public class SupplierController implements SupplierControllerDocs {
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/{id}")
 	public ResponseEntity<SupplierResponseDTO> findSupplierById(@PathVariable UUID id) {
-		return ResponseEntity.ok(service.findById(id));
+		return ResponseEntity.ok(service.findSupplierById(id));
 	}
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/deleteCashMovement/{id}")
 	public ResponseEntity<Void> deleteSupplier(@PathVariable UUID id) {
-		service.delete(id);
+		service.deleteSupplier(id);
 		AuditLogger.log("SUPPLIER_DELETE", getCurrentUser(), "SUCCESS", "Supplier deleted: " + id);
 		return ResponseEntity.noContent().build();
 	}
@@ -62,7 +62,7 @@ public class SupplierController implements SupplierControllerDocs {
 		@RequestParam(defaultValue = "name,asc") String[] sort
 	) {
 		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.by(sort[0])));
-		Page<SupplierResponseDTO> response = service.list(pageable);
+		Page<SupplierResponseDTO> response = service.listSupplier(pageable);
 		return ResponseEntity.ok(response);
 	}
 }

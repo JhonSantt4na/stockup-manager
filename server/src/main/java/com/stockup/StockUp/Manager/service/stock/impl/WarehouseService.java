@@ -28,7 +28,7 @@ public class WarehouseService implements IWarehouseService {
 	private final WarehouseMapper mapper;
 	
 	@Override
-	public WarehouseResponseDTO create(WarehouseRequestDTO dto) {
+	public WarehouseResponseDTO createWarehouse(WarehouseRequestDTO dto) {
 		log.info("Creating a new warehouse. Payload={}", dto);
 		
 		if (repository.existsByName(dto.name())) {
@@ -45,12 +45,12 @@ public class WarehouseService implements IWarehouseService {
 	}
 	
 	@Override
-	public WarehouseResponseDTO update(UUID id, WarehouseRequestDTO dto) {
+	public WarehouseResponseDTO updateWarehouse(UUID id, WarehouseRequestDTO dto) {
 		log.info("Updating warehouse. id={}, payload={}", id, dto);
 		
 		Warehouse warehouse = repository.findById(id)
 			.orElseThrow(() -> {
-				log.warn("Warehouse update failed. Warehouse not found. id={}", id);
+				log.warn("Warehouse updatePaymentMethod failed. Warehouse not found. id={}", id);
 				return new EntityNotFoundException("Warehouse not found");
 			});
 		
@@ -63,7 +63,7 @@ public class WarehouseService implements IWarehouseService {
 	}
 	
 	@Override
-	public WarehouseResponseDTO getById(UUID id) {
+	public WarehouseResponseDTO getWarehouseById(UUID id) {
 		log.debug("Fetching warehouse by id={}", id);
 		
 		Warehouse warehouse = repository.findById(id)
@@ -76,7 +76,7 @@ public class WarehouseService implements IWarehouseService {
 	}
 	
 	@Override
-	public Page<WarehouseResponseDTO> listAll(Integer page, Integer size, WarehouseType type) {
+	public Page<WarehouseResponseDTO> listAllWarehouse(Integer page, Integer size, WarehouseType type) {
 		log.debug("Listing warehouses. page={}, size={}, typeFilter={}", page, size, type);
 		
 		Pageable pageable = PageRequest.of(page, size);
@@ -94,12 +94,12 @@ public class WarehouseService implements IWarehouseService {
 	}
 	
 	@Override
-	public void delete(UUID id) {
-		log.info("Attempting to delete warehouse. id={}",id);
+	public void deleteWarehouse(UUID id) {
+		log.info("Attempting to deleteCashMovement warehouse. id={}",id);
 		
 		Warehouse warehouse = repository.findById(id)
 			.orElseThrow(() -> {
-				log.warn("Warehouse delete failed. Not found. id={}", id);
+				log.warn("Warehouse deleteCashMovement failed. Not found. id={}", id);
 				return new EntityNotFoundException("Warehouse not found");
 			});
 		

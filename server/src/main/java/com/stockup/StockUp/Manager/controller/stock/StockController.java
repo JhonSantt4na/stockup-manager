@@ -29,7 +29,7 @@ public class StockController implements StockControllerDocs {
 	@PostMapping
 	public ResponseEntity<StockResponseDTO> createStock(@Valid @RequestBody StockRequestDTO dto) {
 		try {
-			StockResponseDTO response = stockService.create(dto);
+			StockResponseDTO response = stockService.createStock(dto);
 			AuditLogger.log("STOCK_CREATE", getCurrentUser(), "SUCCESS",
 				"Stock created for product: " + dto.productId());
 			return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -48,7 +48,7 @@ public class StockController implements StockControllerDocs {
 		@Valid @RequestBody StockRequestDTO dto) {
 		
 		try {
-			StockResponseDTO response = stockService.update(id, dto);
+			StockResponseDTO response = stockService.updateStock(id, dto);
 			AuditLogger.log("STOCK_UPDATE", getCurrentUser(), "SUCCESS",
 				"Stock updated ID=" + id);
 			return ResponseEntity.ok(response);
@@ -62,13 +62,13 @@ public class StockController implements StockControllerDocs {
 	@Override
 	@GetMapping("/{id}")
 	public ResponseEntity<StockResponseDTO> getStockById(@PathVariable UUID id) {
-		return ResponseEntity.ok(stockService.getById(id));
+		return ResponseEntity.ok(stockService.getStockById(id));
 	}
 	
 	@Override
 	@GetMapping
 	public ResponseEntity<List<StockResponseDTO>> listAllStock() {
-		return ResponseEntity.ok(stockService.listAll());
+		return ResponseEntity.ok(stockService.listAllStock());
 	}
 	
 	@Override
@@ -76,7 +76,7 @@ public class StockController implements StockControllerDocs {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteStock(@PathVariable UUID id) {
 		try {
-			stockService.delete(id);
+			stockService.deleteStock(id);
 			AuditLogger.log("STOCK_DELETE", getCurrentUser(), "SUCCESS",
 				"Stock deleted ID=" + id);
 			return ResponseEntity.noContent().build();

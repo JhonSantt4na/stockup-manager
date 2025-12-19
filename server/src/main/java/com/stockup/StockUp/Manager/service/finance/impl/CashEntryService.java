@@ -30,7 +30,7 @@ public class CashEntryService implements ICashEntryService {
 	
 	@Override
 	@Transactional
-	public CashEntryResponseDTO create(CashEntryRequestDTO dto) {
+	public CashEntryResponseDTO createCashEntry(CashEntryRequestDTO dto) {
 		logger.info("Criando CashEntry para caixaId={}", dto.cashRegisterId());
 		CashRegister cashRegister = cashRegisterRepository.findById(dto.cashRegisterId())
 			.orElseThrow(() -> new IllegalArgumentException("Caixa não encontrado: " + dto.cashRegisterId()));
@@ -48,7 +48,7 @@ public class CashEntryService implements ICashEntryService {
 	
 	@Override
 	@Transactional
-	public CashEntryResponseDTO update(UUID id, CashEntryRequestDTO dto) {
+	public CashEntryResponseDTO updateCashEntry(UUID id, CashEntryRequestDTO dto) {
 		CashEntry existing = cashEntryRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException("CashEntry não encontrado: " + id));
 		
@@ -60,21 +60,21 @@ public class CashEntryService implements ICashEntryService {
 	}
 	
 	@Override
-	public CashEntryResponseDTO findById(UUID id) {
+	public CashEntryResponseDTO findCashEntryById(UUID id) {
 		CashEntry e = cashEntryRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException("CashEntry não encontrado: " + id));
 		return mapper.toResponse(e);
 	}
 	
 	@Override
-	public Page<CashEntry> findAll(Pageable pageable) {
+	public Page<CashEntry> findAllCashEntry(Pageable pageable) {
 		Page<CashEntry> page = cashEntryRepository.findAll(pageable);
 		return page.map(mapper::toResponse);
 	}
 	
 	@Override
 	@Transactional
-	public void delete(UUID id) {
+	public void deleteCashEntry(UUID id) {
 		if (!cashEntryRepository.existsById(id)) {
 			throw new IllegalArgumentException("CashEntry não encontrado: " + id);
 		}
