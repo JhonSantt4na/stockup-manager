@@ -59,7 +59,7 @@ public interface BrandControllerDocs {
 			@ApiResponse(responseCode = "204", description = "Marca excluída")
 		}
 	)
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/deleteCashMovement/{id}")
 	ResponseEntity<Void> deleteBrand(@PathVariable UUID id);
 	
 	@Operation(
@@ -69,7 +69,7 @@ public interface BrandControllerDocs {
 			@ApiResponse(responseCode = "200", description = "Lista retornada")
 		}
 	)
-	@GetMapping("/list")
+	@GetMapping("/listPurchaseOrder")
 	ResponseEntity<Page<BrandResponseDTO>> listBrands(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,

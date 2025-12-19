@@ -20,13 +20,13 @@ public class PurchaseItemService implements IPurchaseItemService {
 	private final PurchaseItemMapper mapper;
 	
 	@Override
-	public PurchaseItemResponseDTO create(PurchaseItemRequestDTO dto) {
+	public PurchaseItemResponseDTO createPurchaseItem(PurchaseItemRequestDTO dto) {
 		PurchaseItem item = mapper.toEntity(dto);
 		return mapper.toResponse(repository.save(item));
 	}
 	
 	@Override
-	public PurchaseItemResponseDTO update(UUID id, PurchaseItemRequestDTO dto) {
+	public PurchaseItemResponseDTO updatePurchaseItem(UUID id, PurchaseItemRequestDTO dto) {
 		
 		PurchaseItem item = repository.findById(id)
 			.orElseThrow(() -> new EntityNotFoundException("Item de compra não encontrado."));
@@ -36,19 +36,19 @@ public class PurchaseItemService implements IPurchaseItemService {
 	}
 	
 	@Override
-	public void delete(UUID id) {
+	public void deletePurchaseItem(UUID id) {
 		repository.deleteById(id);
 	}
 	
 	@Override
-	public PurchaseItemResponseDTO findById(UUID id) {
+	public PurchaseItemResponseDTO findPurchaseItemById(UUID id) {
 		return repository.findById(id)
 			.map(mapper::toResponse)
 			.orElseThrow(() -> new EntityNotFoundException("Item de compra não encontrado."));
 	}
 	
 	@Override
-	public List<PurchaseItemResponseDTO> findByPurchaseOrder(UUID purchaseOrderId) {
+	public List<PurchaseItemResponseDTO> findPurchaseItemByPurchaseOrder(UUID purchaseOrderId) {
 		return repository.findByPurchaseOrderId(purchaseOrderId)
 			.stream()
 			.map(mapper::toResponse)

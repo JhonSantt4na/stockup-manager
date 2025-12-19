@@ -26,10 +26,10 @@ public class PaymentController implements PaymentControllerDocs {
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<PaymentResponseDTO> create(@RequestBody @Valid PaymentRequestDTO dto) {
+	public ResponseEntity<PaymentResponseDTO> createPayment(@RequestBody @Valid PaymentRequestDTO dto) {
 		try {
 			AuditLogger.log("CREATE PAYMENT", getCurrentUser(), "CREATE", dto.toString());
-			return ResponseEntity.ok(service.create(dto));
+			return ResponseEntity.ok(service.createPayment(dto));
 		} catch (Exception e) {
 			AuditLogger.log("CREATE PAYMENT", getCurrentUser() ,"FAILED", "Error creating payment: " + e.getMessage());
 			throw new RuntimeException("Error creating PAYMENT",e);
@@ -38,20 +38,20 @@ public class PaymentController implements PaymentControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<PaymentResponseDTO> findById(@PathVariable UUID id) {
+	public ResponseEntity<PaymentResponseDTO> findPaymentById(@PathVariable UUID id) {
 		AuditLogger.log("FIND PAYABLE WITH ID", getCurrentUser(), "FINDING", id.toString());
-		return ResponseEntity.ok(service.findById(id));
+		return ResponseEntity.ok(service.findPaymentById(id));
 	}
 	
 	@Override
 	@GetMapping
-	public ResponseEntity<List<PaymentResponseDTO>> findAll() {
+	public ResponseEntity<List<PaymentResponseDTO>> findAllPayment() {
 		// Implements
 		return ResponseEntity.ok(List.of());
 	}
 	
 	@Override
-	public ResponseEntity<List<PaymentResponseDTO>> findByReference(UUID referenceId) {
+	public ResponseEntity<List<PaymentResponseDTO>> findPaymentByReference(UUID referenceId) {
 		// Implements
 		return ResponseEntity.ok(List.of());
 	}

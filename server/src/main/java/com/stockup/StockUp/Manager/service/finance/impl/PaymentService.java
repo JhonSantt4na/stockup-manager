@@ -30,7 +30,7 @@ public class PaymentService implements IPaymentService {
 	
 	@Override
 	@Transactional
-	public PaymentResponseDTO create(PaymentRequestDTO dto) {
+	public PaymentResponseDTO createPayment(PaymentRequestDTO dto) {
 		logger.info("Criando pagamento para referenceId={}", dto.referenceId());
 		
 		// validar método
@@ -48,7 +48,7 @@ public class PaymentService implements IPaymentService {
 	
 	@Override
 	@Transactional
-	public PaymentResponseDTO update(UUID id, PaymentRequestDTO dto) {
+	public PaymentResponseDTO updatePayment(UUID id, PaymentRequestDTO dto) {
 		Payment existing = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Pagamento não encontrado: " + id));
 		mapper.updateEntityFromDTO(dto, existing);
 		var method = methodRepository.findById(dto.paymentMethodId()).orElseThrow(() -> new IllegalArgumentException("Método de pagamento não encontrado"));
@@ -59,37 +59,37 @@ public class PaymentService implements IPaymentService {
 	}
 	
 	@Override
-	public PaymentResponseDTO findById(UUID id) {
+	public PaymentResponseDTO findPaymentById(UUID id) {
 		Payment p = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Pagamento não encontrado: " + id));
 		return mapper.toResponse(p);
 	}
 	
 	@Override
-	public Page<PaymentResponseDTO> findAll(Pageable pageable) {
+	public Page<PaymentResponseDTO> findAllPayment(Pageable pageable) {
 		Page<Payment> page = repository.findAll(pageable);
 		return page.map(mapper::toResponse);
 	}
 	
 	@Override
 	@Transactional
-	public void delete(UUID id) {
+	public void deletePayment(UUID id) {
 		if (!repository.existsById(id)) throw new IllegalArgumentException("Pagamento não encontrado: " + id);
 		repository.deleteById(id);
 		AuditLogger.log("PAYMENT_DELETE", null, "SUCCESS", "Payment excluído: " + id);
 	}
 	
 	@Override
-	public PaymentResponseDTO updateStatus(UUID id, String status) {
+	public PaymentResponseDTO updatePaymentStatus(UUID id, String status) {
 		return null;
 	}
 	
 	@Override
-	public List<PaymentResponseDTO> findByOrder(UUID orderId) {
+	public List<PaymentResponseDTO> findPaymentByOrder(UUID orderId) {
 		return List.of();
 	}
 	
 	@Override
-	public List<PaymentResponseDTO> findByStatus(String status) {
+	public List<PaymentResponseDTO> findPaymentByStatus(String status) {
 		return List.of();
 	}
 }

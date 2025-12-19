@@ -23,13 +23,13 @@ public class BrandService implements IBrandService {
 	private final BrandMapper mapper;
 	
 	@Override
-	public BrandResponseDTO create(BrandRequestDTO dto) {
+	public BrandResponseDTO createBrand(BrandRequestDTO dto) {
 		Brand brand = mapper.toEntity(dto);
 		return mapper.toResponse(repository.save(brand));
 	}
 	
 	@Override
-	public BrandResponseDTO update(UUID id, BrandRequestDTO dto) {
+	public BrandResponseDTO updateBrand(UUID id, BrandRequestDTO dto) {
 		Brand brand = repository.findById(id)
 			.orElseThrow(() -> new EntityNotFoundException("Marca não encontrada"));
 		
@@ -38,24 +38,24 @@ public class BrandService implements IBrandService {
 	}
 	
 	@Override
-	public void delete(UUID id) {
+	public void deleteBrand(UUID id) {
 		repository.deleteById(id);
 	}
 	
 	@Override
-	public BrandResponseDTO findById(UUID id) {
+	public BrandResponseDTO findBrandById(UUID id) {
 		return repository.findById(id)
 			.map(mapper::toResponse)
 			.orElseThrow(() -> new EntityNotFoundException("Marca não encontrada"));
 	}
 	
 	@Override
-	public Page<BrandResponseDTO> list(Pageable pageable) {
+	public Page<BrandResponseDTO> listBrand(Pageable pageable) {
 		return repository.findAll(pageable).map(mapper::toResponse);
 	}
 	
 	@Override
-	public List<BrandResponseDTO> findAll() {
+	public List<BrandResponseDTO> findAllBrand() {
 		return repository.findAll().stream().map(mapper::toResponse).toList();
 	}
 }

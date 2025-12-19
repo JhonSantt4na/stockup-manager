@@ -12,7 +12,7 @@ public record OrderRequestDTO(
 	@NotNull(message = "Customer ID is required.")
 	UUID customerId,
 	
-	@NotNull(message = "Item list is required.")
+	@NotNull(message = "Item listPurchaseOrder is required.")
 	@Size(min = 1, message = "Order must contain at least one item.")
 	List<OrderItemRequestDTO> items
 

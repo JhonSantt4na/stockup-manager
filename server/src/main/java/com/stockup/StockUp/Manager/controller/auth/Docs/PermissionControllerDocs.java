@@ -87,7 +87,7 @@ public interface PermissionControllerDocs {
 			@ApiResponse(responseCode = "403", description = "Acesso negado")
 		}
 	)
-	@GetMapping("/list")
+	@GetMapping("/listPurchaseOrder")
 	public ResponseEntity<Page<PermissionWithRolesDTO>> listPermissions(
 		@Parameter(description = "Número da página (0 baseado)") @RequestParam(defaultValue = "0") int page,
 		@Parameter(description = "Tamanho da página") @RequestParam(defaultValue = "10") int size,
@@ -110,7 +110,7 @@ public interface PermissionControllerDocs {
 			@ApiResponse(responseCode = "403", description = "Acesso negado")
 		}
 	)
-	@GetMapping("/list")
+	@GetMapping("/listPurchaseOrder")
 	public ResponseEntity<Page<PermissionWithRolesDTO>> getAllPermissionsIsActive(
 		@Parameter(description = "Número da página (0 baseado)") @RequestParam(defaultValue = "0") int page,
 		@Parameter(description = "Tamanho da página") @RequestParam(defaultValue = "10") int size,

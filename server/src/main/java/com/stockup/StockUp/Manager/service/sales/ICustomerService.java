@@ -10,17 +10,17 @@ import java.util.UUID;
 
 public interface ICustomerService {
 	
-	CustomerResponseDTO create(CustomerRequestDTO dto);
+	CustomerResponseDTO createCustomer(CustomerRequestDTO dto);
 	
-	CustomerResponseDTO update(UUID id, CustomerRequestDTO dto);
+	CustomerResponseDTO updateCustomer(UUID id, CustomerRequestDTO dto);
 	
-	CustomerResponseDTO findById(UUID id);
+	CustomerResponseDTO findCustomerById(UUID id);
 	
-	Page<CustomerSummaryDTO> findAll(Pageable pageable);
+	Page<CustomerSummaryDTO> findAllCustomer(Pageable pageable);
 	
-	Page<CustomerSummaryDTO> findAllCustom(int page, int size, String[] sort);
+	Page<CustomerSummaryDTO> findAllCustomerCustom(int page, int size, String[] sort);
 	
-	void softDelete(UUID id);
+	void softDeleteCustomer(UUID id);
 	
-	void enable(UUID id);
+	void enableCustomer(UUID id);
 }

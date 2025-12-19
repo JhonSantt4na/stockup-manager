@@ -37,7 +37,7 @@ public class OrderService implements IOrderService {
 	private final ProductRepository productRepository;
 	private final OrderMapper mapper;
 	
-	public OrderResponseDTO create(OrderRequestDTO dto) {
+	public OrderResponseDTO createOrder(OrderRequestDTO dto) {
 		
 		logger.debug("Starting order creation");
 		
@@ -92,7 +92,7 @@ public class OrderService implements IOrderService {
 		return mapper.toResponseDTO(saved);
 	}
 	
-	public OrderResponseDTO findById(UUID id) {
+	public OrderResponseDTO findOrderById(UUID id) {
 		logger.debug("Finding order by ID: {}", id);
 		
 		Order order = orderRepository.findById(id)
@@ -110,14 +110,15 @@ public class OrderService implements IOrderService {
 		return mapper.toResponseDTO(order);
 	}
 	
-	public Page<OrderResponseDTO> findAll(Pageable pageable) {
+	@Override
+	public Page<OrderResponseDTO> findAllOrder(Pageable pageable) {
 		logger.debug("Listing orders with pagination");
 		
 		return orderRepository.findAll(pageable)
 			.map(mapper::toResponseDTO);
 	}
 	
-	public OrderResponseDTO updateStatus(UUID id, OrderStatus newStatus) {
+	public OrderResponseDTO updateOrderStatus(UUID id, OrderStatus newStatus) {
 		
 		logger.debug("Updating order status. ID: {}, newStatus: {}", id, newStatus);
 		
@@ -136,7 +137,7 @@ public class OrderService implements IOrderService {
 		return mapper.toResponseDTO(saved);
 	}
 	
-	public OrderResponseDTO cancel(UUID id) {
+	public OrderResponseDTO cancelOrder(UUID id) {
 		
 		logger.debug("Cancelling order ID: {}", id);
 		
@@ -150,7 +151,7 @@ public class OrderService implements IOrderService {
 		return mapper.toResponseDTO(saved);
 	}
 	
-	public void delete(UUID id) {
+	public void deleteOrder(UUID id) {
 		
 		logger.debug("Soft deleting order ID: {}", id);
 		

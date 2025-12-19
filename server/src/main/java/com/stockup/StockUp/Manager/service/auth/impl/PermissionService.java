@@ -75,7 +75,7 @@ public class PermissionService implements IPermissionService {
 	
 	@Override
 	public void deletePermission(String description) {
-		logger.info("Request received to delete permission [{}]", description);
+		logger.info("Request received to deleteCashMovement permission [{}]", description);
 		
 		Permission permission = getPermissionByDescription(description);
 		permissionRepository.delete(permission);

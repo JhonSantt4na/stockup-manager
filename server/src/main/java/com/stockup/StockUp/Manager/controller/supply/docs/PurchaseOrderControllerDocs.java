@@ -26,11 +26,11 @@ public interface PurchaseOrderControllerDocs {
 			@ApiResponse(responseCode = "409", description = "Número do pedido já utilizado")
 		}
 	)
-	@PostMapping("/create")
+	@PostMapping("/createCashMovement")
 	ResponseEntity<PurchaseOrderResponseDTO> createPurchaseOrder(@Valid @RequestBody PurchaseOrderRequestDTO dto);
 	
 	@Operation(summary = "Atualizar pedido de compra")
-	@PutMapping("/update/{id}")
+	@PutMapping("/updatePaymentMethod/{id}")
 	ResponseEntity<PurchaseOrderResponseDTO> updatePurchaseOrder(@PathVariable UUID id, @Valid @RequestBody PurchaseOrderRequestDTO dto);
 	
 	@Operation(summary = "Buscar pedido de compra por ID")
@@ -38,11 +38,11 @@ public interface PurchaseOrderControllerDocs {
 	ResponseEntity<PurchaseOrderResponseDTO> findPurchaseOrderById(@PathVariable UUID id);
 	
 	@Operation(summary = "Excluir pedido de compra")
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/deleteCashMovement/{id}")
 	ResponseEntity<Void> deletePurchaseOrder(@PathVariable UUID id);
 	
 	@Operation(summary = "Listar pedidos de compra")
-	@GetMapping("/list")
+	@GetMapping("/listPurchaseOrder")
 	ResponseEntity<Page<PurchaseOrderResponseDTO>> listPurchaseOrders(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,

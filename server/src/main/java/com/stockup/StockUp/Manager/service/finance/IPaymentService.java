@@ -11,12 +11,12 @@ import java.util.UUID;
 
 public interface IPaymentService {
 	
-	PaymentResponseDTO create(PaymentRequestDTO dto);
-	PaymentResponseDTO update(UUID id, PaymentRequestDTO dto);
-	PaymentResponseDTO findById(UUID id);
-	Page<PaymentResponseDTO> findAll(Pageable pageable);
-	void delete(UUID id);
-	PaymentResponseDTO updateStatus(UUID id, String status);
-	List<PaymentResponseDTO> findByOrder(UUID orderId);
-	List<PaymentResponseDTO> findByStatus(String status);
+	PaymentResponseDTO createPayment(PaymentRequestDTO dto);
+	PaymentResponseDTO updatePayment(UUID id, PaymentRequestDTO dto);
+	PaymentResponseDTO findPaymentById(UUID id);
+	Page<PaymentResponseDTO> findAllPayment(Pageable pageable);
+	void deletePayment(UUID id);
+	PaymentResponseDTO updatePaymentStatus(UUID id, String status);
+	List<PaymentResponseDTO> findPaymentByOrder(UUID orderId);
+	List<PaymentResponseDTO> findPaymentByStatus(String status);
 }

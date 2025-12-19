@@ -24,39 +24,39 @@ public class PurchaseItemController implements PurchaseItemControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/create")
+	@PostMapping("/createCashMovement")
 	public ResponseEntity<PurchaseItemResponseDTO> createPurchaseItem(@RequestBody PurchaseItemRequestDTO dto) {
-		PurchaseItemResponseDTO response = service.create(dto);
+		PurchaseItemResponseDTO response = service.createPurchaseItem(dto);
 		AuditLogger.log("PURCHASE_ITEM_CREATE", getCurrentUser(), "SUCCESS", "Item created");
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/update/{id}")
+	@PutMapping("/updatePaymentMethod/{id}")
 	public ResponseEntity<PurchaseItemResponseDTO> updatePurchaseItem(@PathVariable UUID id, @RequestBody PurchaseItemRequestDTO dto) {
-		return ResponseEntity.ok(service.update(id, dto));
+		return ResponseEntity.ok(service.updatePurchaseItem(id, dto));
 	}
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/{id}")
 	public ResponseEntity<PurchaseItemResponseDTO> findPurchaseItemById(@PathVariable UUID id) {
-		return ResponseEntity.ok(service.findById(id));
+		return ResponseEntity.ok(service.findPurchaseItemById(id));
 	}
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/order/{orderId}")
 	public ResponseEntity<List<PurchaseItemResponseDTO>> findItemsByOrder(@PathVariable UUID orderId) {
-		return ResponseEntity.ok(service.findByPurchaseOrder(orderId));
+		return ResponseEntity.ok(service.findPurchaseItemByPurchaseOrder(orderId));
 	}
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/deleteCashMovement/{id}")
 	public ResponseEntity<Void> deletePurchaseItem(@PathVariable UUID id) {
-		service.delete(id);
+		service.deletePurchaseItem(id);
 		AuditLogger.log("PURCHASE_ITEM_DELETE", getCurrentUser(), "SUCCESS", "Item deleted: " + id);
 		return ResponseEntity.noContent().build();
 	}

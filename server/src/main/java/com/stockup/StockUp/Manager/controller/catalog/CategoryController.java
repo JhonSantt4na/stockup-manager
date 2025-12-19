@@ -29,12 +29,12 @@ public class CategoryController implements CategoryControllerDocs {
 	private final ICategoryService categoryService;
 	
 	@Override
-	@PostMapping("/create")
+	@PostMapping("/createCashMovement")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<CategoryResponseDTO> createCategory(
 		@Valid @RequestBody CategoryRequestDTO dto) {
 		try {
-			CategoryResponseDTO created = categoryService.create(dto);
+			CategoryResponseDTO created = categoryService.createCategory(dto);
 			AuditLogger.log("CATEGORY_CREATE", getCurrentUser(), "SUCCESS",
 				"Category creating: " + dto.name());
 			return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -56,7 +56,7 @@ public class CategoryController implements CategoryControllerDocs {
 		@PathVariable UUID id,
 		@Valid @RequestBody CategoryRequestDTO dto) {
 		
-		CategoryResponseDTO updated = categoryService.update(id, dto);
+		CategoryResponseDTO updated = categoryService.updateCategory(id, dto);
 		AuditLogger.log("CATEGORY_UPDATE", getCurrentUser(), "SUCCESS",
 			"Category Updated: " + id);
 		
@@ -66,7 +66,7 @@ public class CategoryController implements CategoryControllerDocs {
 	@Override
 	@GetMapping("/by-name/{name}")
 	public ResponseEntity<CategoryResponseDTO> getCategoryByName(@PathVariable String name) {
-		CategoryResponseDTO response = categoryService.findByName(name);
+		CategoryResponseDTO response = categoryService.findCategoryByName(name);
 		return ResponseEntity.ok(response);
 	}
 	
@@ -74,7 +74,7 @@ public class CategoryController implements CategoryControllerDocs {
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteCategory(@PathVariable UUID id) {
-		categoryService.delete(id);
+		categoryService.deleteCategory(id);
 		AuditLogger.log("CATEGORY_DELETE", getCurrentUser(), "SUCCESS",
 			"Category Disabled: " + id);
 		return ResponseEntity.noContent().build();
@@ -88,7 +88,7 @@ public class CategoryController implements CategoryControllerDocs {
 		@RequestParam(defaultValue = "createdAt,desc") String[] sort) {
 		
 		Pageable pageable = buildPageable(page, size, sort);
-		Page<CategoryResponseDTO> response = categoryService.getAll(pageable);
+		Page<CategoryResponseDTO> response = categoryService.getAllCategory(pageable);
 		return ResponseEntity.ok(response);
 	}
 	
@@ -100,7 +100,7 @@ public class CategoryController implements CategoryControllerDocs {
 		@RequestParam(defaultValue = "createdAt,desc") String[] sort) {
 		
 		Pageable pageable = buildPageable(page, size, sort);
-		Page<CategoryResponseDTO> response = categoryService.getAllActive(pageable);
+		Page<CategoryResponseDTO> response = categoryService.getAllCategoryActive(pageable);
 		return ResponseEntity.ok(response);
 	}
 	

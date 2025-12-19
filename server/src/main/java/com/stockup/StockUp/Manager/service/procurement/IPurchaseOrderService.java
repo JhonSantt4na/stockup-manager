@@ -9,15 +9,10 @@ import java.util.UUID;
 
 public interface IPurchaseOrderService {
 	
-	PurchaseOrderResponseDTO create(PurchaseOrderRequestDTO dto);
-	
-	PurchaseOrderResponseDTO update(UUID id, PurchaseOrderRequestDTO dto);
-	
-	void delete(UUID id);
-	
-	PurchaseOrderResponseDTO findById(UUID id);
-	
-	List<PurchaseOrderResponseDTO> findAll();
-	
-	Page<PurchaseOrderResponseDTO> list(Pageable pageable);
+	PurchaseOrderResponseDTO createPurchaseOrder(PurchaseOrderRequestDTO dto);
+	PurchaseOrderResponseDTO updatePurchaseOrder(UUID id, PurchaseOrderRequestDTO dto);
+	void deletePurchaseOrder(UUID id);
+	PurchaseOrderResponseDTO findPurchaseOrderById(UUID id);
+	List<PurchaseOrderResponseDTO> findAllPurchaseOrder();
+	Page<PurchaseOrderResponseDTO> listPurchaseOrder(Pageable pageable);
 }

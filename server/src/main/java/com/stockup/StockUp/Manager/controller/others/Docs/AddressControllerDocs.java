@@ -78,7 +78,7 @@ public interface AddressControllerDocs {
 	
 	@Operation(
 		summary = "Desativar endereço",
-		description = "Realiza o soft delete do endereço.",
+		description = "Realiza o soft deleteCashMovement do endereço.",
 		responses = {
 			@ApiResponse(responseCode = "204", description = "Endereço desativado com sucesso"),
 			@ApiResponse(responseCode = "404", description = "Endereço não encontrado")

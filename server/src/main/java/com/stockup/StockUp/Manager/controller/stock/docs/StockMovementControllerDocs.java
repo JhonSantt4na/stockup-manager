@@ -4,9 +4,6 @@ import com.stockup.StockUp.Manager.dto.Stock.stock.StockMovementRequestDTO;
 import com.stockup.StockUp.Manager.dto.Stock.stock.StockMovementResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,14 +19,14 @@ public interface StockMovementControllerDocs {
 		tags = {"Stock Movements"}
 	)
 	@PostMapping
-	ResponseEntity<StockMovementResponseDTO> createMovement(@Valid @RequestBody StockMovementRequestDTO dto);
+	ResponseEntity<StockMovementResponseDTO> createStockMovements(@Valid @RequestBody StockMovementRequestDTO dto);
 	
 	@Operation(
 		summary = "Buscar movimentação por ID",
 		tags = {"Stock Movements"}
 	)
 	@GetMapping("/{id}")
-	ResponseEntity<StockMovementResponseDTO> getMovementById(
+	ResponseEntity<StockMovementResponseDTO> getStockMovementsById(
 		@Parameter(description = "ID da movimentação") @PathVariable UUID id);
 	
 	@Operation(
@@ -37,13 +34,13 @@ public interface StockMovementControllerDocs {
 		tags = {"Stock Movements"}
 	)
 	@GetMapping
-	ResponseEntity<List<StockMovementResponseDTO>> listMovements();
+	ResponseEntity<List<StockMovementResponseDTO>> listStockMovements();
 	
 	@Operation(
 		summary = "Excluir movimentação (lógica)",
 		tags = {"Stock Movements"}
 	)
 	@DeleteMapping("/{id}")
-	ResponseEntity<Void> deleteMovement(
+	ResponseEntity<Void> deleteStockMovements(
 		@Parameter(description = "ID da movimentação") @PathVariable UUID id);
 }

@@ -48,7 +48,7 @@ public class UserController {
 		}
 	}
 	
-	@PutMapping("/update")
+	@PutMapping("/updatePaymentMethod")
 	public ResponseEntity<UserResponseDTO> updated(
 		Authentication authentication,
 		@Valid @RequestBody UpdateUserRequestDTO dto
@@ -74,7 +74,7 @@ public class UserController {
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping("/delete/{username}")
+	@DeleteMapping("/deleteCashMovement/{username}")
 	public ResponseEntity<Void> delete(@PathVariable String username) {
 		try {
 			service.deleteUser(username);
@@ -82,7 +82,7 @@ public class UserController {
 			return ResponseEntity.noContent().build();
 			
 		} catch (CannotDeleteActiveUserException e) {
-			AuditLogger.log("USER_DELETE", getCurrentUser(), "FAILED", "Cannot delete active user: " + e.getMessage());
+			AuditLogger.log("USER_DELETE", getCurrentUser(), "FAILED", "Cannot deleteCashMovement active user: " + e.getMessage());
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
 			
 		} catch (Exception e) {
@@ -109,7 +109,7 @@ public class UserController {
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/update/{username}")
+	@PutMapping("/updatePaymentMethod/{username}")
 	public ResponseEntity<UserResponseDTO> updateUserAsAdmin(
 		@PathVariable String username,
 		@Valid @RequestBody UpdateUserRequestDTO dto
@@ -156,7 +156,7 @@ public class UserController {
 		return ResponseEntity.ok(usersPage);
 	}
 	
-	@GetMapping("/list")
+	@GetMapping("/listPurchaseOrder")
 	public Page<UserResponseDTO> listUsers(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,

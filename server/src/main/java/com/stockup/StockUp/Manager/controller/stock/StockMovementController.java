@@ -26,11 +26,11 @@ public class StockMovementController implements StockMovementControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN') or hasRole('OPERATOR')")
-	@PostMapping("/create")
-	public ResponseEntity<StockMovementResponseDTO> createMovement(
+	@PostMapping("/createCashMovement")
+	public ResponseEntity<StockMovementResponseDTO> createStockMovements(
 		@Valid @RequestBody StockMovementRequestDTO dto) {
 		try {
-			StockMovementResponseDTO response = movementService.registerMovement(dto);
+			StockMovementResponseDTO response = movementService.registerStockMovement(dto);
 			AuditLogger.log("STOCK_MOVEMENT_CREATE", getCurrentUser(), "SUCCESS",
 				"Movement created: product=" + dto.productId());
 			return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -43,22 +43,22 @@ public class StockMovementController implements StockMovementControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<StockMovementResponseDTO> getMovementById(@PathVariable UUID id) {
-		return ResponseEntity.ok(movementService.getById(id));
+	public ResponseEntity<StockMovementResponseDTO> getStockMovementsById(@PathVariable UUID id) {
+		return ResponseEntity.ok(movementService.getStockMovementById(id));
 	}
 	
 	@Override
 	@GetMapping
-	public ResponseEntity<List<StockMovementResponseDTO>> listMovements() {
-		return ResponseEntity.ok(movementService.listAll());
+	public ResponseEntity<List<StockMovementResponseDTO>> listStockMovements() {
+		return ResponseEntity.ok(movementService.listAllStockMovement());
 	}
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteMovement(@PathVariable UUID id) {
+	public ResponseEntity<Void> deleteStockMovements(@PathVariable UUID id) {
 		try {
-			movementService.delete(id);
+			movementService.deleteStockMovement(id);
 			AuditLogger.log("STOCK_MOVEMENT_DELETE", getCurrentUser(), "SUCCESS",
 				"Movement deleted ID=" + id);
 			return ResponseEntity.noContent().build();

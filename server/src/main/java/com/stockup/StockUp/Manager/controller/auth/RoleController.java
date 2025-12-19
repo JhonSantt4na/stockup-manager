@@ -32,7 +32,7 @@ public class RoleController implements RoleControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/create")
+	@PostMapping("/createCashMovement")
 	public ResponseEntity<Role> createRole(@Valid @RequestBody RoleDTO createDto) {
 		Role role = roleService.createRole(createDto);
 		AuditLogger.log("ROLE_CREATE", getCurrentUser(), "SUCCESS", "Role created: " + createDto.getName());
@@ -41,7 +41,7 @@ public class RoleController implements RoleControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/update")
+	@PutMapping("/updatePaymentMethod")
 	public ResponseEntity<Role> updateRole(@Valid @RequestBody RoleUpdateDTO updateDto) {
 		Role role = roleService.updateRole(updateDto);
 		AuditLogger.log("ROLE_UPDATE", getCurrentUser(), "SUCCESS",
@@ -67,7 +67,7 @@ public class RoleController implements RoleControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping("/delete/{name}")
+	@DeleteMapping("/deleteCashMovement/{name}")
 	public ResponseEntity<Void> deleteRole(@PathVariable String name) {
 		roleService.deleteRole(name);
 		AuditLogger.log("ROLE_DELETE", getCurrentUser(), "SUCCESS", "Role deleted: " + name);
@@ -75,7 +75,7 @@ public class RoleController implements RoleControllerDocs {
 	}
 	
 	@Override
-	@GetMapping("/list")
+	@GetMapping("/listPurchaseOrder")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Page<RoleWithUsersDTO>> listRoles(
 		Pageable pageable,
@@ -87,7 +87,7 @@ public class RoleController implements RoleControllerDocs {
 	}
 	
 	@Override
-	@GetMapping("/list-with-users")
+	@GetMapping("/listPurchaseOrder-with-users")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Page<RoleWithUsersDTO>> listRolesWithUsers(Pageable pageable, String search) {
 		Page<Role> rolesPage = roleService.getAllRolesWithUsers(pageable, search);

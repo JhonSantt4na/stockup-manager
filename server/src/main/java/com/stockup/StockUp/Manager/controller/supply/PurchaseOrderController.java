@@ -24,32 +24,32 @@ public class PurchaseOrderController implements PurchaseOrderControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/create")
+	@PostMapping("/createCashMovement")
 	public ResponseEntity<PurchaseOrderResponseDTO> createPurchaseOrder(@RequestBody PurchaseOrderRequestDTO dto) {
-		PurchaseOrderResponseDTO response = service.create(dto);
+		PurchaseOrderResponseDTO response = service.createPurchaseOrder(dto);
 		AuditLogger.log("PURCHASE_ORDER_CREATE", getCurrentUser(), "SUCCESS", "Order created: " + dto.orderNumber());
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/update/{id}")
+	@PutMapping("/updatePaymentMethod/{id}")
 	public ResponseEntity<PurchaseOrderResponseDTO> updatePurchaseOrder(@PathVariable UUID id, @RequestBody PurchaseOrderRequestDTO dto) {
-		return ResponseEntity.ok(service.update(id, dto));
+		return ResponseEntity.ok(service.updatePurchaseOrder(id, dto));
 	}
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/{id}")
 	public ResponseEntity<PurchaseOrderResponseDTO> findPurchaseOrderById(@PathVariable UUID id) {
-		return ResponseEntity.ok(service.findById(id));
+		return ResponseEntity.ok(service.findPurchaseOrderById(id));
 	}
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/deleteCashMovement/{id}")
 	public ResponseEntity<Void> deletePurchaseOrder(@PathVariable UUID id) {
-		service.delete(id);
+		service.deletePurchaseOrder(id);
 		AuditLogger.log("PURCHASE_ORDER_DELETE", getCurrentUser(), "SUCCESS", "Order deleted: " + id);
 		return ResponseEntity.noContent().build();
 	}
@@ -63,7 +63,7 @@ public class PurchaseOrderController implements PurchaseOrderControllerDocs {
 		@RequestParam(defaultValue = "orderNumber,asc") String[] sort
 	) {
 		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.by(sort[0])));
-		Page<PurchaseOrderResponseDTO> response = service.list(pageable);
+		Page<PurchaseOrderResponseDTO> response = service.listPurchaseOrder(pageable);
 		return ResponseEntity.ok(response);
 	}
 }

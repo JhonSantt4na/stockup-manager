@@ -22,7 +22,7 @@ public class PaymentGatewayTransactionService implements IPaymentGatewayTransact
 	private final PaymentGatewayTransactionMapper mapper;
 	
 	@Override
-	public PaymentGatewayTransactionResponseDTO findByPayment(UUID paymentId) {
+	public PaymentGatewayTransactionResponseDTO findPaymentGatewayTransactionByPayment(UUID paymentId) {
 		PaymentGatewayTransaction t = repository.findByPaymentId(paymentId)
 			.orElseThrow(() -> new IllegalArgumentException("Transação de gateway não encontrada para paymentId: " + paymentId));
 		return mapper.toResponse(t);

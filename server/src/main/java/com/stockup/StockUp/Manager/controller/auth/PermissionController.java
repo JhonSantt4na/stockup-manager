@@ -30,7 +30,7 @@ public class PermissionController implements PermissionControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/create")
+	@PostMapping("/createCashMovement")
 	public ResponseEntity<Permission> createPermission(@Valid @RequestBody PermissionCreateDTO dto) {
 		try {
 			Permission permission = permissionService.createPermission(dto);
@@ -47,7 +47,7 @@ public class PermissionController implements PermissionControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/update")
+	@PutMapping("/updatePaymentMethod")
 	public ResponseEntity<Permission> updatePermission(@Valid @RequestBody PermissionUpdateDTO dto) {
 		try {
 			Permission permission = permissionService.updatePermission(dto);
@@ -73,7 +73,7 @@ public class PermissionController implements PermissionControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping("/delete/{description}")
+	@DeleteMapping("/deleteCashMovement/{description}")
 	public ResponseEntity<Void> deletePermission(@PathVariable String description) {
 		try {
 			permissionService.deletePermission(description);
@@ -87,7 +87,7 @@ public class PermissionController implements PermissionControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/list")
+	@GetMapping("/listPurchaseOrder")
 	public ResponseEntity<Page<PermissionWithRolesDTO>> listPermissions(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,
@@ -99,7 +99,7 @@ public class PermissionController implements PermissionControllerDocs {
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/listActive")
+	@GetMapping("/listProductActive")
 	public ResponseEntity<Page<PermissionWithRolesDTO>> getAllPermissionsIsActive(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,

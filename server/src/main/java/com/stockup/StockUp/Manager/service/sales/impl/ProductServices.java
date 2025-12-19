@@ -32,7 +32,7 @@ public class ProductServices implements IProductService {
 	private final ProductRepository repository;
 	private final ProductMapper mapper;
 	
-	public ProductResponseDTO create(ProductRequestDTO dto) {
+	public ProductResponseDTO createProduct(ProductRequestDTO dto) {
 		logger.debug("Creating new product with SKU: {}", dto.getSku());
 		
 		if (repository.existsBySku(dto.getSku())) {
@@ -47,7 +47,7 @@ public class ProductServices implements IProductService {
 		return mapper.toResponse(saved);
 	}
 	
-	public ProductResponseDTO update(UUID id, ProductUpdateDTO dto) {
+	public ProductResponseDTO updateProduct(UUID id, ProductUpdateDTO dto) {
 		logger.debug("Updating product with ID: {}", id);
 		
 		Product existing = repository.findById(id)
@@ -65,7 +65,7 @@ public class ProductServices implements IProductService {
 	}
 	
 	@Transactional(readOnly = true)
-	public ProductResponseDTO findByName(String name) {
+	public ProductResponseDTO findProductByName(String name) {
 		logger.debug("Searching product by name: {}", name);
 		
 		Product product = repository.findByNameIgnoreCase(name)
@@ -78,7 +78,7 @@ public class ProductServices implements IProductService {
 	}
 	
 	@Transactional(readOnly = true)
-	public ProductResponseDTO findBySku(String sku) {
+	public ProductResponseDTO findProductBySku(String sku) {
 		logger.debug("Searching product by SKU: {}", sku);
 		
 		Product product = repository.findBySku(sku)
@@ -90,7 +90,7 @@ public class ProductServices implements IProductService {
 		return mapper.toResponse(product);
 	}
 	
-	public void delete(UUID id) {
+	public void deleteProduct(UUID id) {
 		logger.debug("Soft deleting product with ID: {}", id);
 		
 		Product product = repository.findById(id)
@@ -106,13 +106,13 @@ public class ProductServices implements IProductService {
 	}
 	
 	@Transactional(readOnly = true)
-	public Page<ProductSummaryDTO> listAll(Pageable pageable) {
+	public Page<ProductSummaryDTO> listAllProduct(Pageable pageable) {
 		logger.debug("Listing all products with pagination");
 		return repository.findAll(pageable).map(mapper::toSummary);
 	}
 	
 	@Transactional(readOnly = true)
-	public Page<ProductSummaryDTO> listActive(Pageable pageable) {
+	public Page<ProductSummaryDTO> listProductActive(Pageable pageable) {
 		logger.debug("Listing all ACTIVE products with pagination");
 		return repository.findAllByEnabledTrue(pageable).map(mapper::toSummary);
 	}

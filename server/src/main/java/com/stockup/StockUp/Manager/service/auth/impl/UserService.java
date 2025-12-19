@@ -407,7 +407,7 @@ public class UserService implements UserDetailsService, IUserService {
 	
 	@Override
 	public void deleteUser(String username) {
-		logger.info("Attempting to delete user: [{}]", username);
+		logger.info("Attempting to deleteCashMovement user: [{}]", username);
 		
 		User user = userRepository.findByUsername(username)
 			.orElseThrow(() -> {
@@ -416,8 +416,8 @@ public class UserService implements UserDetailsService, IUserService {
 			});
 		
 		if (user.isEnabled()) {
-			logger.warn("Cannot delete active user: [{}]", username);
-			throw new CannotDeleteActiveUserException("Cannot delete active user: " + username + ". Deactivate first.");
+			logger.warn("Cannot deleteCashMovement active user: [{}]", username);
+			throw new CannotDeleteActiveUserException("Cannot deleteCashMovement active user: " + username + ". Deactivate first.");
 		}
 		
 		userRepository.delete(user);

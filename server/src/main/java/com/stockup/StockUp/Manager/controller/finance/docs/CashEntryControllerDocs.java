@@ -25,7 +25,7 @@ public interface CashEntryControllerDocs {
 				content = @Content(schema = @Schema(implementation = CashEntryResponseDTO.class)))
 		}
 	)
-	ResponseEntity<CashEntryResponseDTO> create(CashEntryRequestDTO dto);
+	ResponseEntity<CashEntryResponseDTO> createCashEntry(CashEntryRequestDTO dto);
 	
 	@Operation(summary = "Buscar por ID")
 	ResponseEntity<CashEntryResponseDTO> findById(UUID id);

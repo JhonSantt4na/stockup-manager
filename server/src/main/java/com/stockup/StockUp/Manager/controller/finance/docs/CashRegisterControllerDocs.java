@@ -16,11 +16,11 @@ public interface CashRegisterControllerDocs {
 		description = "Realiza a abertura de um caixa.",
 		responses = @ApiResponse(responseCode = "201")
 	)
-	ResponseEntity<CashRegisterResponseDTO> open(CashRegisterOpenRequestDTO dto);
+	ResponseEntity<CashRegisterResponseDTO> openCashRegister(CashRegisterOpenRequestDTO dto);
 	
 	@Operation(summary = "Fechar caixa")
-	ResponseEntity<CashRegisterResponseDTO> close(UUID id, CashRegisterCloseRequestDTO dto);
+	ResponseEntity<CashRegisterResponseDTO> closeCashRegister(UUID id, CashRegisterCloseRequestDTO dto);
 	
 	@Operation(summary = "Buscar caixa por ID")
-	ResponseEntity<CashRegisterResponseDTO> findById(UUID id);
+	ResponseEntity<CashRegisterResponseDTO> findCashRegisterById(UUID id);
 }

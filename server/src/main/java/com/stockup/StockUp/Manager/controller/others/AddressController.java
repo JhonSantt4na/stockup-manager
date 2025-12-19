@@ -27,7 +27,7 @@ public class AddressController implements AddressControllerDocs {
 	private final IAddressService service;
 	
 	@Override
-	@PostMapping("/create")
+	@PostMapping("/createCashMovement")
 	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
 	public ResponseEntity<AddressResponseDTO> createAddress(@Valid @RequestBody AddressRequestDTO dto) {
 		try {

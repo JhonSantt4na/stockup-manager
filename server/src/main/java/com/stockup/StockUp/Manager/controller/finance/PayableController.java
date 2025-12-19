@@ -26,10 +26,10 @@ public class PayableController implements PayableControllerDocs {
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<PayableResponseDTO> create(@RequestBody @Valid PayableRequestDTO dto) {
+	public ResponseEntity<PayableResponseDTO> createPayable(@RequestBody @Valid PayableRequestDTO dto) {
 		try {
 			AuditLogger.log("CREATE PAYABLE", getCurrentUser(), "CREATE", dto.toString());
-			return ResponseEntity.ok(service.create(dto));
+			return ResponseEntity.ok(service.createPayable(dto));
 		} catch (Exception e) {
 			AuditLogger.log("CREATE PAYABLE", getCurrentUser() ,"FAILED", "Error creating payable: " + e.getMessage());
 			throw new RuntimeException("Error creating PAYABLE",e);
@@ -38,27 +38,27 @@ public class PayableController implements PayableControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<PayableResponseDTO> findById(@PathVariable UUID id) {
+	public ResponseEntity<PayableResponseDTO> findPayableById(@PathVariable UUID id) {
 		AuditLogger.log("FIND PAYABLE WITH ID", getCurrentUser(), "FINDING", id.toString());
-		return ResponseEntity.ok(service.findById(id));
+		return ResponseEntity.ok(service.findPayableById(id));
 	}
 	
 	@Override
 	@GetMapping
-	public ResponseEntity<List<PayableResponseDTO>> findAll() {
+	public ResponseEntity<List<PayableResponseDTO>> findAllPayable() {
 		// Implements
 		return ResponseEntity.ok(List.of());
 	}
 	
 	@Override
-	public ResponseEntity<List<PayableResponseDTO>> findBySupplier(UUID supplierId) {
+	public ResponseEntity<List<PayableResponseDTO>> findPayableBySupplier(UUID supplierId) {
 		// Implements
 		return ResponseEntity.ok(List.of());
 	}
 
 //	@Override
 //	@GetMapping("/supplier/{supplierId}")
-//	public List<PayableResponseDTO> findBySupplier(@PathVariable UUID supplierId) {
-//		return service.findBySupplier(supplierId);
+//	public List<PayableResponseDTO> findPayableBySupplier(@PathVariable UUID supplierId) {
+//		return service.findPayableBySupplier(supplierId);
 //	}
 }

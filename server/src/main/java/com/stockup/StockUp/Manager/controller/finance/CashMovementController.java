@@ -24,9 +24,9 @@ public class CashMovementController implements CashMovementControllerDocs {
 	
 	@Override
 	@PostMapping
-	public ResponseEntity<CashMovementResponseDTO> create(@RequestBody @Valid CashMovementRequestDTO dto) {
+	public ResponseEntity<CashMovementResponseDTO> createCashMovement(@RequestBody @Valid CashMovementRequestDTO dto) {
 		try {
-			CashMovementResponseDTO response = service.create(dto);
+			CashMovementResponseDTO response = service.createCashMovement(dto);
 			AuditLogger.log("CASH_MOVEMENT", getCurrentUser(), "CREATE", response.id().toString());
 			return ResponseEntity.ok(response);
 		} catch (Exception e) {
@@ -37,22 +37,22 @@ public class CashMovementController implements CashMovementControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<CashMovementResponseDTO> findById(@PathVariable UUID id) {
-		CashMovementResponseDTO response = service.findById(id);
+	public ResponseEntity<CashMovementResponseDTO> findCashMovementById(@PathVariable UUID id) {
+		CashMovementResponseDTO response = service.findCashMovementById(id);
 		return ResponseEntity.ok(response);
 	}
 	
 	@Override
 	@GetMapping("/session/{sessionId}")
-	public ResponseEntity<List<CashMovementResponseDTO>> findBySession(@PathVariable UUID sessionId) {
-		List<CashMovementResponseDTO> list = service.findBySession(sessionId);
+	public ResponseEntity<List<CashMovementResponseDTO>> findCashMovementBySession(@PathVariable UUID sessionId) {
+		List<CashMovementResponseDTO> list = service.findCashMovementBySession(sessionId);
 		return ResponseEntity.ok(list);
 	}
 	
 	@Override
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> delete(@PathVariable UUID id) {
-		service.delete(id);
+	public ResponseEntity<Void> deleteCashMovement(@PathVariable UUID id) {
+		service.deleteCashMovement(id);
 		AuditLogger.log("CASH_MOVEMENT", getCurrentUser(), "DELETE", id.toString());
 		return ResponseEntity.noContent().build();
 	}

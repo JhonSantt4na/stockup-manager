@@ -11,17 +11,11 @@ import java.util.UUID;
 
 public interface IProductService {
 	
-	ProductResponseDTO create(ProductRequestDTO dto);
-	
-	ProductResponseDTO update(UUID id, ProductUpdateDTO dto);
-	
-	ProductResponseDTO findByName(String name);
-	
-	ProductResponseDTO findBySku(String sku);
-	
-	void delete(UUID id);
-	
-	Page<ProductSummaryDTO> listAll(Pageable pageable);
-	
-	Page<ProductSummaryDTO> listActive(Pageable pageable);
+	ProductResponseDTO createProduct(ProductRequestDTO dto);
+	ProductResponseDTO updateProduct(UUID id, ProductUpdateDTO dto);
+	ProductResponseDTO findProductByName(String name);
+	ProductResponseDTO findProductBySku(String sku);
+	void deleteProduct(UUID id);
+	Page<ProductSummaryDTO> listAllProduct(Pageable pageable);
+	Page<ProductSummaryDTO> listProductActive(Pageable pageable);
 }

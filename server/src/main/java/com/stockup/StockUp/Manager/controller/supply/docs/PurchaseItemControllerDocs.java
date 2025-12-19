@@ -14,11 +14,11 @@ import java.util.UUID;
 public interface PurchaseItemControllerDocs {
 	
 	@Operation(summary = "Criar item de pedido")
-	@PostMapping("/create")
+	@PostMapping("/createCashMovement")
 	ResponseEntity<PurchaseItemResponseDTO> createPurchaseItem(@RequestBody PurchaseItemRequestDTO dto);
 	
 	@Operation(summary = "Atualizar item de pedido")
-	@PutMapping("/update/{id}")
+	@PutMapping("/updatePaymentMethod/{id}")
 	ResponseEntity<PurchaseItemResponseDTO> updatePurchaseItem(@PathVariable UUID id, @RequestBody PurchaseItemRequestDTO dto);
 	
 	@Operation(summary = "Buscar item por ID")
@@ -30,6 +30,6 @@ public interface PurchaseItemControllerDocs {
 	ResponseEntity<List<PurchaseItemResponseDTO>> findItemsByOrder(@PathVariable UUID orderId);
 	
 	@Operation(summary = "Excluir item")
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/deleteCashMovement/{id}")
 	ResponseEntity<Void> deletePurchaseItem(@PathVariable UUID id);
 }

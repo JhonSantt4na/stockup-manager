@@ -26,7 +26,7 @@ public class StockService implements IStockService {
 	private final StockMapper mapper;
 	
 	@Override
-	public StockResponseDTO create(StockRequestDTO dto) {
+	public StockResponseDTO createStock(StockRequestDTO dto) {
 		log.info("Creating new stock item: {}", dto);
 		
 		UUID warehouseId = UUID.fromString(dto.warehouseId());
@@ -47,7 +47,7 @@ public class StockService implements IStockService {
 	}
 	
 	@Override
-	public StockResponseDTO update(UUID id, StockRequestDTO dto) {
+	public StockResponseDTO updateStock(UUID id, StockRequestDTO dto) {
 		log.info("Updating stock {} with data {}", id, dto);
 		
 		Stock stock = repository.findById(id)
@@ -76,7 +76,7 @@ public class StockService implements IStockService {
 	}
 	
 	@Override
-	public StockResponseDTO getById(UUID id) {
+	public StockResponseDTO getStockById(UUID id) {
 		Stock stock = repository.findById(id)
 			.orElseThrow(() -> {
 				log.warn("Stock not found for ID {}", id);
@@ -87,15 +87,15 @@ public class StockService implements IStockService {
 	}
 	
 	@Override
-	public List<StockResponseDTO> listAll() {
+	public List<StockResponseDTO> listAllStock() {
 		log.info("Listing all stock records");
 		return repository.findAll().stream().map(mapper::toDTO).toList();
 	}
 	
 	@Override
-	public void delete(UUID id) {
+	public void deleteStock(UUID id) {
 		if (!repository.existsById(id)) {
-			log.warn("Attempted to delete stock, but it does not exist: {}", id);
+			log.warn("Attempted to deleteCashMovement stock, but it does not exist: {}", id);
 			throw new EntityNotFoundException("Stock not found");
 		}
 		

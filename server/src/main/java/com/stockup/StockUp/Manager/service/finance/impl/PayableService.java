@@ -28,7 +28,7 @@ public class PayableService implements IPayableService {
 	
 	@Override
 	@Transactional
-	public PayableResponseDTO create(PayableRequestDTO dto) {
+	public PayableResponseDTO createPayable(PayableRequestDTO dto) {
 		logger.info("Criando payable para supplierId={}", dto.supplierId());
 		Payable entity = mapper.toEntity(dto);
 		// ajustar provider, payment, installments, status conforme regras
@@ -39,7 +39,7 @@ public class PayableService implements IPayableService {
 	
 	@Override
 	@Transactional
-	public PayableResponseDTO update(UUID id, PayableRequestDTO dto) {
+	public PayableResponseDTO updatePayable(UUID id, PayableRequestDTO dto) {
 		Payable existing = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Payable não encontrado: " + id));
 		mapper.updateEntityFromDTO(dto, existing);
 		Payable updated = repository.save(existing);
@@ -48,32 +48,32 @@ public class PayableService implements IPayableService {
 	}
 	
 	@Override
-	public PayableResponseDTO findById(UUID id) {
+	public PayableResponseDTO findPayableById(UUID id) {
 		Payable p = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Payable não encontrado: " + id));
 		return mapper.toResponse(p);
 	}
 	
 	@Override
-	public Page<PayableResponseDTO> findAll(Pageable pageable) {
+	public Page<PayableResponseDTO> findAllPayable(Pageable pageable) {
 		Page<Payable> page = repository.findAll(pageable);
 		return page.map(mapper::toResponse);
 	}
 	
 	@Override
 	@Transactional
-	public void delete(UUID id) {
+	public void deletePayable(UUID id) {
 		if (!repository.existsById(id)) throw new IllegalArgumentException("Payable não encontrado: " + id);
 		repository.deleteById(id);
 		AuditLogger.log("PAYABLE_DELETE", null, "SUCCESS", "Payable excluído: " + id);
 	}
 	
 	@Override
-	public List<PayableResponseDTO> findByPayment(UUID paymentId) {
+	public List<PayableResponseDTO> findPayableByPayment(UUID paymentId) {
 		return List.of();
 	}
 	
 	@Override
-	public List<PayableResponseDTO> findByStatus(String status) {
+	public List<PayableResponseDTO> findPayableByStatus(String status) {
 		return List.of();
 	}
 }

@@ -8,17 +8,11 @@ import java.util.UUID;
 
 public interface ICategoryService {
 	
-	CategoryResponseDTO create(CategoryRequestDTO dto);
-	
-	CategoryResponseDTO update(UUID id, CategoryRequestDTO dto);
-	
-	void delete(UUID id);
-	
-	Page<CategoryResponseDTO> getAllActive(Pageable pageable);
-	
-	Page<CategoryResponseDTO> getAll(Pageable pageable);
-	
-	CategoryResponseDTO findByName(String name);
-	
-	CategoryResponseDTO findById(UUID id);
+	CategoryResponseDTO createCategory(CategoryRequestDTO dto);
+	CategoryResponseDTO updateCategory(UUID id, CategoryRequestDTO dto);
+	void deleteCategory(UUID id);
+	Page<CategoryResponseDTO> getAllCategoryActive(Pageable pageable);
+	Page<CategoryResponseDTO> getAllCategory(Pageable pageable);
+	CategoryResponseDTO findCategoryByName(String name);
+	CategoryResponseDTO findCategoryById(UUID id);
 }

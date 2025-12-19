@@ -25,10 +25,10 @@ public class BrandController implements BrandControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/create")
+	@PostMapping("/createCashMovement")
 	public ResponseEntity<BrandResponseDTO> createBrand(@RequestBody BrandRequestDTO dto) {
 		try {
-			BrandResponseDTO response = brandService.create(dto);
+			BrandResponseDTO response = brandService.createBrand(dto);
 			AuditLogger.log("BRAND_CREATE", getCurrentUser(), "SUCCESS", "Brand created: " + dto.name());
 			return ResponseEntity.status(HttpStatus.CREATED).body(response);
 		} catch (DuplicateResourceException e) {
@@ -42,9 +42,9 @@ public class BrandController implements BrandControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/update/{id}")
+	@PutMapping("/updatePaymentMethod/{id}")
 	public ResponseEntity<BrandResponseDTO> updateBrand(@PathVariable UUID id, @RequestBody BrandRequestDTO dto) {
-		BrandResponseDTO updated = brandService.update(id, dto);
+		BrandResponseDTO updated = brandService.updateBrand(id, dto);
 		return ResponseEntity.ok(updated);
 	}
 	
@@ -52,14 +52,14 @@ public class BrandController implements BrandControllerDocs {
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/{id}")
 	public ResponseEntity<BrandResponseDTO> findBrandById(@PathVariable UUID id) {
-		return ResponseEntity.ok(brandService.findById(id));
+		return ResponseEntity.ok(brandService.findBrandById(id));
 	}
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/deleteCashMovement/{id}")
 	public ResponseEntity<Void> deleteBrand(@PathVariable UUID id) {
-		brandService.delete(id);
+		brandService.deleteBrand(id);
 		AuditLogger.log("BRAND_DELETE", getCurrentUser(), "SUCCESS", "Brand deleted: " + id);
 		return ResponseEntity.noContent().build();
 	}
@@ -73,7 +73,7 @@ public class BrandController implements BrandControllerDocs {
 		@RequestParam(defaultValue = "name,asc") String[] sort
 	) {
 		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.by(sort[0])));
-		Page<BrandResponseDTO> response = brandService.list(pageable);
+		Page<BrandResponseDTO> response = brandService.listBrand(pageable);
 		return ResponseEntity.ok(response);
 	}
 }

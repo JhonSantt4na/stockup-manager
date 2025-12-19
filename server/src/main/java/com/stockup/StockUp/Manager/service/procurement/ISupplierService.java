@@ -9,15 +9,10 @@ import java.util.UUID;
 
 public interface ISupplierService {
 	
-	SupplierResponseDTO create(SupplierRequestDTO dto);
-	
-	SupplierResponseDTO update(UUID id, SupplierRequestDTO dto);
-	
-	void delete(UUID id);
-	
-	SupplierResponseDTO findById(UUID id);
-	
-	List<SupplierResponseDTO> findAll();
-	
-	Page<SupplierResponseDTO> list(Pageable pageable);
+	SupplierResponseDTO createSupplier(SupplierRequestDTO dto);
+	SupplierResponseDTO updateSupplier(UUID id, SupplierRequestDTO dto);
+	void deleteSupplier(UUID id);
+	SupplierResponseDTO findSupplierById(UUID id);
+	List<SupplierResponseDTO> findAllSupplier();
+	Page<SupplierResponseDTO> listSupplier(Pageable pageable);
 }

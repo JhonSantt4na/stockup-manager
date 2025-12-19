@@ -9,16 +9,10 @@ import java.util.UUID;
 
 public interface IBrandService {
 	
-	BrandResponseDTO create(BrandRequestDTO dto);
-	
-	BrandResponseDTO update(UUID id, BrandRequestDTO dto);
-	
-	void delete(UUID id);
-	
-	BrandResponseDTO findById(UUID id);
-	
-	List<BrandResponseDTO> findAll();
-	
-	Page<BrandResponseDTO> list(Pageable pageable);
-	
+	BrandResponseDTO createBrand(BrandRequestDTO dto);
+	BrandResponseDTO updateBrand(UUID id, BrandRequestDTO dto);
+	void deleteBrand(UUID id);
+	BrandResponseDTO findBrandById(UUID id);
+	List<BrandResponseDTO> findAllBrand();
+	Page<BrandResponseDTO> listBrand(Pageable pageable);
 }

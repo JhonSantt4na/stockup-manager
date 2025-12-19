@@ -31,10 +31,10 @@ public class ProductController implements ProductControllerDocs {
 	private final IProductService productService;
 	
 	@Override
-	@PostMapping("/create")
+	@PostMapping("/createCashMovement")
 	public ResponseEntity<ProductResponseDTO> createProduct(ProductRequestDTO dto) {
 		try {
-			ProductResponseDTO product = productService.create(dto);
+			ProductResponseDTO product = productService.createProduct(dto);
 			AuditLogger.log("PRODUCT_CREATE", getCurrentUser(), "SUCCESS", "Produto criado: " + dto.getName());
 			return ResponseEntity.status(HttpStatus.CREATED).body(product);
 		} catch (DuplicateResourceException e) {
@@ -51,7 +51,7 @@ public class ProductController implements ProductControllerDocs {
 	@PutMapping("/{id}")
 	public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable UUID id,
 															@Valid @RequestBody ProductUpdateDTO dto) {
-		ProductResponseDTO updated = productService.update(id, dto);
+		ProductResponseDTO updated = productService.updateProduct(id, dto);
 		AuditLogger.log("PRODUCT_UPDATE", getCurrentUser(), "SUCCESS", "Product Updated: " + id);
 		return ResponseEntity.ok(updated);
 	}
@@ -59,14 +59,14 @@ public class ProductController implements ProductControllerDocs {
 	@Override
 	@GetMapping("/by-name/{name}")
 	public ResponseEntity<ProductResponseDTO> getProductByName(@PathVariable String name) {
-		ProductResponseDTO product = productService.findByName(name);
+		ProductResponseDTO product = productService.findProductByName(name);
 		return ResponseEntity.ok(product);
 	}
 
 	@Override
 	@GetMapping("/by-sku/{sku}")
 	public ResponseEntity<ProductResponseDTO> getProductBySku(@PathVariable String sku) {
-		ProductResponseDTO product = productService.findBySku(sku);
+		ProductResponseDTO product = productService.findProductBySku(sku);
 		return ResponseEntity.ok(product);
 	}
 	
@@ -74,7 +74,7 @@ public class ProductController implements ProductControllerDocs {
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
-		productService.delete(id);
+		productService.deleteProduct(id);
 		AuditLogger.log("PRODUCT_DELETE", getCurrentUser(), "SUCCESS", "Product Disable: " + id);
 		return ResponseEntity.noContent().build();
 	}
@@ -87,7 +87,7 @@ public class ProductController implements ProductControllerDocs {
 		@RequestParam(defaultValue = "createdAt,desc") String[] sort) {
 		
 		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sort[1]), sort[0]));
-		Page<ProductSummaryDTO> response = productService.listAll(pageable);
+		Page<ProductSummaryDTO> response = productService.listAllProduct(pageable);
 		return ResponseEntity.ok(response);
 	}
 	
@@ -99,7 +99,7 @@ public class ProductController implements ProductControllerDocs {
 		@RequestParam(defaultValue = "createdAt,desc") String[] sort) {
 		
 		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sort[1]), sort[0]));
-		Page<ProductSummaryDTO> response = productService.listActive(pageable);
+		Page<ProductSummaryDTO> response = productService.listProductActive(pageable);
 		return ResponseEntity.ok(response);
 	}
 }

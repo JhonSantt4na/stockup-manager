@@ -29,10 +29,10 @@ public class TaxProfileController implements TaxProfileControllerDocs {
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/create")
+	@PostMapping("/createCashMovement")
 	public ResponseEntity<TaxProfileResponseDTO> createTaxProfile(@Valid @RequestBody TaxProfileRequestDTO dto) {
 		try {
-			TaxProfileResponseDTO created = taxProfileService.create(dto);
+			TaxProfileResponseDTO created = taxProfileService.createTaxProfile(dto);
 			AuditLogger.log("TAX_PROFILE_CREATE", getCurrentUser(), "SUCCESS",
 				"Tax profile created: " + dto.getName());
 			return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -52,7 +52,7 @@ public class TaxProfileController implements TaxProfileControllerDocs {
 	public ResponseEntity<TaxProfileResponseDTO> updateTaxProfile(@PathVariable UUID id,
 																  @Valid @RequestBody TaxProfileUpdateDTO dto) {
 		try {
-			TaxProfileResponseDTO updated = taxProfileService.update(id, dto);
+			TaxProfileResponseDTO updated = taxProfileService.updateTaxProfile(id, dto);
 			AuditLogger.log("TAX_PROFILE_UPDATE", getCurrentUser(), "SUCCESS",
 				"Tax profile updated: " + id);
 			return ResponseEntity.ok(updated);
@@ -69,14 +69,14 @@ public class TaxProfileController implements TaxProfileControllerDocs {
 	@Override
 	@GetMapping("/{id}")
 	public ResponseEntity<TaxProfileResponseDTO> getTaxProfileById(@PathVariable UUID id) {
-		TaxProfileResponseDTO profile = taxProfileService.findById(id);
+		TaxProfileResponseDTO profile = taxProfileService.findTaxProfileById(id);
 		return ResponseEntity.ok(profile);
 	}
 	
 	@Override
 	@GetMapping
 	public ResponseEntity<List<TaxProfileResponseDTO>> listTaxProfiles() {
-		List<TaxProfileResponseDTO> profiles = taxProfileService.findAll();
+		List<TaxProfileResponseDTO> profiles = taxProfileService.findAllTaxProfile();
 		return ResponseEntity.ok(profiles);
 	}
 	
@@ -85,7 +85,7 @@ public class TaxProfileController implements TaxProfileControllerDocs {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteTaxProfile(@PathVariable UUID id) {
 		try {
-			taxProfileService.delete(id);
+			taxProfileService.deleteTaxProfile(id);
 			AuditLogger.log("TAX_PROFILE_DELETE", getCurrentUser(), "SUCCESS",
 				"Tax profile deleted: " + id);
 			return ResponseEntity.noContent().build();

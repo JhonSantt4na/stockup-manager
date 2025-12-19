@@ -32,7 +32,7 @@ public class CategoryServices implements ICategoryService {
 	
 	
 	@Override
-	public CategoryResponseDTO create(CategoryRequestDTO dto) {
+	public CategoryResponseDTO createCategory(CategoryRequestDTO dto) {
 		logger.info("Request to createAddress category with name [{}]", dto.name());
 		
 		if (repository.existsByNameIgnoreCase(dto.name())) {
@@ -49,7 +49,7 @@ public class CategoryServices implements ICategoryService {
 	
 	
 	@Override
-	public CategoryResponseDTO update(UUID id, CategoryRequestDTO dto) {
+	public CategoryResponseDTO updateCategory(UUID id, CategoryRequestDTO dto) {
 		logger.info("Request to updateAddress category [{}]", id);
 		
 		Category existing = repository.findById(id)
@@ -76,12 +76,12 @@ public class CategoryServices implements ICategoryService {
 	
 	
 	@Override
-	public void delete(UUID id) {
-		logger.info("Request to soft-delete category [{}]", id);
+	public void deleteCategory(UUID id) {
+		logger.info("Request to soft-deleteCashMovement category [{}]", id);
 		
 		Category category = repository.findById(id)
 			.orElseThrow(() -> {
-				logger.warn("Category delete failed — ID [{}] not found", id);
+				logger.warn("Category deleteCashMovement failed — ID [{}] not found", id);
 				return new EntityNotFoundException("Category not found: " + id);
 			});
 		
@@ -96,7 +96,7 @@ public class CategoryServices implements ICategoryService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Page<CategoryResponseDTO> getAllActive(Pageable pageable) {
+	public Page<CategoryResponseDTO> getAllCategoryActive(Pageable pageable) {
 		logger.info("Request to fetch all active categories");
 		return repository.findAllByEnabledTrue(pageable)
 			.map(mapper::toResponse);
@@ -105,7 +105,7 @@ public class CategoryServices implements ICategoryService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Page<CategoryResponseDTO> getAll(Pageable pageable) {
+	public Page<CategoryResponseDTO> getAllCategory(Pageable pageable) {
 		logger.info("Request to fetch all categories (active + inactive)");
 		return repository.findAll(pageable)
 			.map(mapper::toResponse);
@@ -114,7 +114,7 @@ public class CategoryServices implements ICategoryService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public CategoryResponseDTO findByName(String name) {
+	public CategoryResponseDTO findCategoryByName(String name) {
 		logger.info("Request to fetch category by name [{}]", name);
 		
 		Category category = repository.findByNameIgnoreCase(name)
@@ -130,7 +130,7 @@ public class CategoryServices implements ICategoryService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public CategoryResponseDTO findById(UUID id) {
+	public CategoryResponseDTO findCategoryById(UUID id) {
 		logger.info("Request to fetch category by ID [{}]", id);
 		
 		Category category = repository.findById(id)

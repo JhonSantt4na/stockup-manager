@@ -22,7 +22,7 @@ public class PurchaseOrderService implements IPurchaseOrderService {
 	private final PurchaseOrderMapper mapper;
 	
 	@Override
-	public PurchaseOrderResponseDTO create(PurchaseOrderRequestDTO dto) {
+	public PurchaseOrderResponseDTO createPurchaseOrder(PurchaseOrderRequestDTO dto) {
 		
 		if (repository.existsByOrderNumber(dto.orderNumber())) {
 			throw new IllegalArgumentException("Já existe um pedido de compra com este número.");
@@ -33,7 +33,7 @@ public class PurchaseOrderService implements IPurchaseOrderService {
 	}
 	
 	@Override
-	public PurchaseOrderResponseDTO update(UUID id, PurchaseOrderRequestDTO dto) {
+	public PurchaseOrderResponseDTO updatePurchaseOrder(UUID id, PurchaseOrderRequestDTO dto) {
 		
 		PurchaseOrder order = repository.findById(id)
 			.orElseThrow(() -> new EntityNotFoundException("Pedido de compra não encontrado."));
@@ -43,24 +43,24 @@ public class PurchaseOrderService implements IPurchaseOrderService {
 	}
 	
 	@Override
-	public void delete(UUID id) {
+	public void deletePurchaseOrder(UUID id) {
 		repository.deleteById(id);
 	}
 	
 	@Override
-	public PurchaseOrderResponseDTO findById(UUID id) {
+	public PurchaseOrderResponseDTO findPurchaseOrderById(UUID id) {
 		return repository.findById(id)
 			.map(mapper::toResponse)
 			.orElseThrow(() -> new EntityNotFoundException("Pedido de compra não encontrado."));
 	}
 	
 	@Override
-	public List<PurchaseOrderResponseDTO> findAll() {
+	public List<PurchaseOrderResponseDTO> findAllPurchaseOrder() {
 		return repository.findAll().stream().map(mapper::toResponse).toList();
 	}
 	
 	@Override
-	public Page<PurchaseOrderResponseDTO> list(Pageable pageable) {
+	public Page<PurchaseOrderResponseDTO> listPurchaseOrder(Pageable pageable) {
 		return repository.findAll(pageable).map(mapper::toResponse);
 	}
 }
