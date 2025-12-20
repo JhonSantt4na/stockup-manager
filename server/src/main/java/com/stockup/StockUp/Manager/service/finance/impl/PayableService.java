@@ -76,4 +76,15 @@ public class PayableService implements IPayableService {
 	public List<PayableResponseDTO> findPayableByStatus(String status) {
 		return List.of();
 	}
+	
+	@Override
+	public List<PayableResponseDTO> findPayableBySupplier(UUID supplierId) {
+		
+		List<Payable> payables =
+			repository.findBySupplierId(supplierId);
+		
+		return payables.stream()
+			.map(mapper::toResponse)
+			.toList();
+	}
 }

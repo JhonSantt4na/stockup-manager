@@ -10,6 +10,6 @@ import java.util.UUID;
 public interface PayableRepository extends JpaRepository<Payable, UUID> {
 	
 	List<Payable> findByPaymentId(UUID paymentId);
-	
+	List<Payable> findBySupplierId(UUID supplierId);
 	List<Payable> findByStatus(PayableStatus status);
 }
