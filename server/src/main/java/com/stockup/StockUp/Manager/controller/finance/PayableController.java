@@ -4,9 +4,12 @@ import com.stockup.StockUp.Manager.audit.AuditLogger;
 import com.stockup.StockUp.Manager.controller.finance.docs.PayableControllerDocs;
 import com.stockup.StockUp.Manager.dto.finance.payable.PayableRequestDTO;
 import com.stockup.StockUp.Manager.dto.finance.payable.PayableResponseDTO;
+import com.stockup.StockUp.Manager.mapper.finance.PayableMapper;
+import com.stockup.StockUp.Manager.model.finance.payable.Payable;
 import com.stockup.StockUp.Manager.service.finance.IPayableService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +24,8 @@ import static com.stockup.StockUp.Manager.util.WebClient.getCurrentUser;
 @RequiredArgsConstructor
 public class PayableController implements PayableControllerDocs {
 	
-	private final IPayableService service;
+	private final IPayableService payableService;
+	private final PayableMapper payableMapper;
 	
 	@Override
 	@PostMapping
@@ -29,7 +33,7 @@ public class PayableController implements PayableControllerDocs {
 	public ResponseEntity<PayableResponseDTO> createPayable(@RequestBody @Valid PayableRequestDTO dto) {
 		try {
 			AuditLogger.log("CREATE PAYABLE", getCurrentUser(), "CREATE", dto.toString());
-			return ResponseEntity.ok(service.createPayable(dto));
+			return ResponseEntity.ok(payableService.createPayable(dto));
 		} catch (Exception e) {
 			AuditLogger.log("CREATE PAYABLE", getCurrentUser() ,"FAILED", "Error creating payable: " + e.getMessage());
 			throw new RuntimeException("Error creating PAYABLE",e);
@@ -40,25 +44,42 @@ public class PayableController implements PayableControllerDocs {
 	@GetMapping("/{id}")
 	public ResponseEntity<PayableResponseDTO> findPayableById(@PathVariable UUID id) {
 		AuditLogger.log("FIND PAYABLE WITH ID", getCurrentUser(), "FINDING", id.toString());
-		return ResponseEntity.ok(service.findPayableById(id));
+		return ResponseEntity.ok(payableService.findPayableById(id));
 	}
+	
+//	@Override
+//	@GetMapping("/supplier/{supplierId}")
+//	public List<PayableResponseDTO> findPayableBySupplier(@PathVariable UUID supplierId) {
+//		return payableService.findPayableBySupplier(supplierId);
+//	}
 	
 	@Override
 	@GetMapping
 	public ResponseEntity<List<PayableResponseDTO>> findAllPayable() {
-		// Implements
-		return ResponseEntity.ok(List.of());
+		
+		Page<Payable> payables = payableService.findAllPayable();
+		
+		List<PayableResponseDTO> response = payables
+			.stream()
+			.map(payableMapper::toResponse)
+			.toList();
+		
+		return ResponseEntity.ok(response);
 	}
 	
 	@Override
-	public ResponseEntity<List<PayableResponseDTO>> findPayableBySupplier(UUID supplierId) {
-		// Implements
-		return ResponseEntity.ok(List.of());
+	@GetMapping("/supplier/{supplierId}")
+	public ResponseEntity<List<PayableResponseDTO>> findPayableBySupplier(
+		@PathVariable UUID supplierId) {
+		
+		List<Payable> payables = payableService.findPayableBySupplier(supplierId);
+		
+		List<PayableResponseDTO> response = payables
+			.stream()
+			.map(payableMapper::toResponse)
+			.toList();
+		
+		return ResponseEntity.ok(response);
 	}
-
-//	@Override
-//	@GetMapping("/supplier/{supplierId}")
-//	public List<PayableResponseDTO> findPayableBySupplier(@PathVariable UUID supplierId) {
-//		return service.findPayableBySupplier(supplierId);
-//	}
+	
 }
