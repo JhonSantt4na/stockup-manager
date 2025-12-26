@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface IPaymentService {
-	
 	PaymentResponseDTO createPayment(PaymentRequestDTO dto);
 	PaymentResponseDTO updatePayment(UUID id, PaymentRequestDTO dto);
 	PaymentResponseDTO findPaymentById(UUID id);

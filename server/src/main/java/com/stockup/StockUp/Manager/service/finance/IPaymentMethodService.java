@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 public interface IPaymentMethodService {
-	
 	PaymentMethodResponseDTO createPaymentMethod(PaymentMethodRequestDTO dto);
 	PaymentMethodResponseDTO updatePaymentMethod(UUID id, PaymentMethodRequestDTO dto);
 	PaymentMethodResponseDTO findPaymentMethodById(UUID id);

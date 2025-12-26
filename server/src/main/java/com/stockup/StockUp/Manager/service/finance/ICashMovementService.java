@@ -7,12 +7,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ICashMovementService {
-	
 	CashMovementResponseDTO createCashMovement(CashMovementRequestDTO dto);
-	
 	CashMovementResponseDTO findCashMovementById(UUID id);
-	
 	List<CashMovementResponseDTO> findCashMovementBySession(UUID sessionId);
-	
 	void deleteCashMovement(UUID id);
 }

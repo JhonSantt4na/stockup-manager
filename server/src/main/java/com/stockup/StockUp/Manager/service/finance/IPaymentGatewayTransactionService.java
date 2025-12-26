@@ -5,6 +5,5 @@ import com.stockup.StockUp.Manager.dto.finance.payment.PaymentGatewayTransaction
 import java.util.UUID;
 
 public interface IPaymentGatewayTransactionService {
-	
 	PaymentGatewayTransactionResponseDTO findPaymentGatewayTransactionByPayment(UUID paymentId);
 }

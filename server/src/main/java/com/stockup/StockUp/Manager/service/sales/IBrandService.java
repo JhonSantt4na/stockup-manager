@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface IBrandService {
-	
 	BrandResponseDTO createBrand(BrandRequestDTO dto);
 	BrandResponseDTO updateBrand(UUID id, BrandRequestDTO dto);
 	void deleteBrand(UUID id);

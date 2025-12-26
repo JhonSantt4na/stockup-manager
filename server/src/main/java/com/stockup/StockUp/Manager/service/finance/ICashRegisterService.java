@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ICashRegisterService {
-	
 	CashRegisterResponseDTO openCashRegister(CashRegisterOpenRequestDTO dto);
 	CashRegisterResponseDTO closeCashRegister(UUID registerId, CashRegisterCloseRequestDTO dto);
 	CashRegisterResponseDTO findCashRegisterById(UUID id);

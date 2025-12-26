@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 public interface ICashEntryService {
-	
 	CashEntryResponseDTO createCashEntry(CashEntryRequestDTO dto);
 	CashEntryResponseDTO updateCashEntry(UUID id, CashEntryRequestDTO dto);
 	CashEntryResponseDTO findCashEntryById(UUID id);

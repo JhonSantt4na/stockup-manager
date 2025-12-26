@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import java.util.UUID;
 
 public interface IWarehouseService {
-	
 	WarehouseResponseDTO createWarehouse(WarehouseRequestDTO dto);
 	WarehouseResponseDTO updateWarehouse(UUID id, WarehouseRequestDTO dto);
 	WarehouseResponseDTO getWarehouseById(UUID id);

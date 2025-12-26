@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 public interface IProductService {
-	
 	ProductResponseDTO createProduct(ProductRequestDTO dto);
 	ProductResponseDTO updateProduct(UUID id, ProductUpdateDTO dto);
 	ProductResponseDTO findProductByName(String name);

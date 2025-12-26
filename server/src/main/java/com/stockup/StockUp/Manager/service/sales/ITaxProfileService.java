@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ITaxProfileService {
-	
 	TaxProfileResponseDTO createTaxProfile(TaxProfileRequestDTO dto);
 	TaxProfileResponseDTO updateTaxProfile(UUID id, TaxProfileUpdateDTO dto);
 	TaxProfileResponseDTO findTaxProfileById(UUID id);

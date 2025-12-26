@@ -9,18 +9,11 @@ import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 public interface ICustomerService {
-	
 	CustomerResponseDTO createCustomer(CustomerRequestDTO dto);
-	
 	CustomerResponseDTO updateCustomer(UUID id, CustomerRequestDTO dto);
-	
 	CustomerResponseDTO findCustomerById(UUID id);
-	
 	Page<CustomerSummaryDTO> findAllCustomer(Pageable pageable);
-	
 	Page<CustomerSummaryDTO> findAllCustomerCustom(int page, int size, String[] sort);
-	
 	void softDeleteCustomer(UUID id);
-	
 	void enableCustomer(UUID id);
 }

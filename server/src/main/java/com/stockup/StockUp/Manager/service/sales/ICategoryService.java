@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 public interface ICategoryService {
-	
 	CategoryResponseDTO createCategory(CategoryRequestDTO dto);
 	CategoryResponseDTO updateCategory(UUID id, CategoryRequestDTO dto);
 	void deleteCategory(UUID id);

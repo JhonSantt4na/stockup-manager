@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface IStockService {
-	
 	StockResponseDTO createStock(StockRequestDTO dto);
 	StockResponseDTO updateStock(UUID id, StockRequestDTO dto);
 	StockResponseDTO getStockById(UUID id);

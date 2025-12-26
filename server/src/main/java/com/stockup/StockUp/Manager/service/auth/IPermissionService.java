@@ -8,16 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface IPermissionService {
-	
 	Permission createPermission(PermissionCreateDTO dto);
-	
 	Permission updatePermission(PermissionUpdateDTO dto);
-	
 	void deletePermission(String description);
-	
 	Page<PermissionWithRolesDTO> getAllActivePermissions(Pageable pageable);
-	
 	Page<PermissionWithRolesDTO> getAllPermissions(Pageable pageable);
-	
 	Permission getPermissionByDescription(String description);
 }

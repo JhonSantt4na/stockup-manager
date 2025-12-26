@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface IStockMovementService {
-	
 	StockMovementResponseDTO registerStockMovement(StockMovementRequestDTO dto);
 	StockMovementResponseDTO getStockMovementById(UUID id);
 	List<StockMovementResponseDTO> listAllStockMovement();

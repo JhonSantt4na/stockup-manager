@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface IPayableService {
-	
 	PayableResponseDTO createPayable(PayableRequestDTO dto);
 	PayableResponseDTO updatePayable(UUID id, PayableRequestDTO dto);
 	PayableResponseDTO findPayableById(UUID id);
