@@ -33,7 +33,7 @@ public class PayableService implements IPayableService {
 		Payable entity = mapper.toEntity(dto);
 		// ajustar provider, payment, installments, status conforme regras
 		Payable saved = repository.save(entity);
-		AuditLogger.log("PAYABLE_CREATE", null, "SUCCESS", "Payable criado: " + saved.getId());
+		AuditLogger.log("PAYABLE_CREATE", null, "SUCCESS", "Payable criado: " + dto.supplierId());
 		return mapper.toResponse(saved);
 	}
 	

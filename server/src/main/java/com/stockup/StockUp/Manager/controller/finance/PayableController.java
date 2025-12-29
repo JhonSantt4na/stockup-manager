@@ -5,11 +5,11 @@ import com.stockup.StockUp.Manager.controller.finance.docs.PayableControllerDocs
 import com.stockup.StockUp.Manager.dto.finance.payable.PayableRequestDTO;
 import com.stockup.StockUp.Manager.dto.finance.payable.PayableResponseDTO;
 import com.stockup.StockUp.Manager.mapper.finance.PayableMapper;
-import com.stockup.StockUp.Manager.model.finance.payable.Payable;
 import com.stockup.StockUp.Manager.service.finance.IPayableService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,36 +47,27 @@ public class PayableController implements PayableControllerDocs {
 		return ResponseEntity.ok(payableService.findPayableById(id));
 	}
 	
+	@Override
+	public ResponseEntity<Page<PayableResponseDTO>> findAllPayable(Pageable pageable) {
+		Page<PayableResponseDTO> payables = payableService.findAllPayable(pageable);
+		return ResponseEntity.ok(payables);
+	}
+
 //	@Override
 //	@GetMapping("/supplier/{supplierId}")
 //	public List<PayableResponseDTO> findPayableBySupplier(@PathVariable UUID supplierId) {
 //		return payableService.findPayableBySupplier(supplierId);
 //	}
 	
-	@Override
-	@GetMapping
-	public ResponseEntity<List<PayableResponseDTO>> findAllPayable() {
-		
-		Page<Payable> payables = payableService.findAllPayable();
-		
-		List<PayableResponseDTO> response = payables
-			.stream()
-			.map(payableMapper::toResponse)
-			.toList();
-		
-		return ResponseEntity.ok(response);
-	}
 	
 	@Override
 	@GetMapping("/supplier/{supplierId}")
 	public ResponseEntity<List<PayableResponseDTO>> findPayableBySupplier(
 		@PathVariable UUID supplierId) {
 		
-		List<Payable> payables = payableService.findPayableBySupplier(supplierId);
-		
+		List<PayableResponseDTO> payables = payableService.findPayableBySupplier(supplierId);
 		List<PayableResponseDTO> response = payables
 			.stream()
-			.map(payableMapper::toResponse)
 			.toList();
 		
 		return ResponseEntity.ok(response);

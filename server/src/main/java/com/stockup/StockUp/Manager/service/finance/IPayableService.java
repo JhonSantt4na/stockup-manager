@@ -3,7 +3,6 @@ package com.stockup.StockUp.Manager.service.finance;
 
 import com.stockup.StockUp.Manager.dto.finance.payable.PayableRequestDTO;
 import com.stockup.StockUp.Manager.dto.finance.payable.PayableResponseDTO;
-import com.stockup.StockUp.Manager.model.finance.payable.Payable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
