@@ -46,14 +46,19 @@ public class PaymentController implements PaymentControllerDocs {
 	@Override
 	@GetMapping
 	public ResponseEntity<List<PaymentResponseDTO>> findAllPayment() {
-		// Implements
-		return ResponseEntity.ok(List.of());
+		List<PaymentResponseDTO> payments = paymentService.findAll();
+		return ResponseEntity.ok(payments);
 	}
 	
 	@Override
-	public ResponseEntity<List<PaymentResponseDTO>> findPaymentByReference(UUID referenceId) {
-		// Implements
-		return ResponseEntity.ok(List.of());
+	@GetMapping("/reference/{referenceId}")
+	public ResponseEntity<List<PaymentResponseDTO>> findPaymentByReference(
+		@PathVariable UUID referenceId) {
+		List<PaymentResponseDTO> payments = paymentService.findByReference(referenceId);
+		if (payments.isEmpty()) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.ok(payments);
 	}
 	
 }
