@@ -12,15 +12,47 @@ import java.util.UUID;
 @Tag(name = "Cash Movements", description = "Movimentações de Caixa")
 public interface CashMovementControllerDocs {
 	
-	@Operation(summary = "Registrar movimentação", description = "Cria uma nova movimentação no caixa.")
+	@Operation(
+		summary = "Registrar movimentação",
+		description = "Cria uma nova movimentação no caixa.",
+		responses = {
+			@ApiResponse(responseCode = "201",
+				description = "Movimentaçao no caixa criada",
+				content = @Content(schema = @Schema(implementation = CashEntryResponseDTO.class)))
+		}
+	)
 	ResponseEntity<CashMovementResponseDTO> createCashMovement(CashMovementRequestDTO dto);
 	
-	@Operation(summary = "Buscar por ID")
+	@Operation(
+		summary = "Buscar movimentação por ID",
+		description = "Buscar movimentação no caixa por ID.",
+		responses = {
+			@ApiResponse(responseCode = "201",
+				description = "Movimentaçao Econtrada",
+				content = @Content(schema = @Schema(implementation = CashEntryResponseDTO.class)))
+		}
+	)
 	ResponseEntity<CashMovementResponseDTO> findCashMovementById(UUID id);
 	
-	@Operation(summary = "Listar movimentações da sessão")
+	@Operation(
+		summary = "Listar movimentação da Sessão",
+		description = "Busca todas as movimentação na Sessao atual do caixa.",
+		responses = {
+			@ApiResponse(responseCode = "201",
+				description = "Listagem de Movimentação Encontrada",
+				content = @Content(schema = @Schema(implementation = CashEntryResponseDTO.class)))
+		}
+	)
 	ResponseEntity<List<CashMovementResponseDTO>> findCashMovementBySession(UUID sessionId);
 	
-	@Operation(summary = "Excluir movimentação")
+	@Operation(
+		summary = "Excluir movimentação",
+		description = "Excluir uma nova movimentação no caixa.",
+		responses = {
+			@ApiResponse(responseCode = "201",
+				description = "Excluir no caixa criada",
+				content = @Content(schema = @Schema(implementation = CashEntryResponseDTO.class)))
+		}
+	)
 	ResponseEntity<Void> deleteCashMovement(UUID id);
 }

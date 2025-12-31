@@ -27,9 +27,26 @@ public interface CashEntryControllerDocs {
 	)
 	ResponseEntity<CashEntryResponseDTO> createCashEntry(CashEntryRequestDTO dto);
 	
-	@Operation(summary = "Buscar por ID")
+	@Operation(
+		summary = "Buscar por Id",
+		description = "Buscar por id um caixa.",
+		responses = {
+			@ApiResponse(responseCode = "201",
+				description = "Busca encontrada",
+				content = @Content(schema = @Schema(implementation = CashEntryResponseDTO.class)))
+		}
+	)
 	ResponseEntity<CashEntryResponseDTO> findById(UUID id);
 	
-	@Operation(summary = "Listar todos os lançamentos do caixa")
+	@Operation(summary = "")
+	@Operation(
+		summary = "Listar Registros Caixa",
+		description = "Listar todos os lançamentos do caixa",
+		responses = {
+			@ApiResponse(responseCode = "201",
+				description = "Busca Encontrada",
+				content = @Content(schema = @Schema(implementation = CashEntryResponseDTO.class)))
+		}
+	)
 	ResponseEntity<Page<CashEntryResponseDTO>> listByCashRegister(Pageable pageable);
 }

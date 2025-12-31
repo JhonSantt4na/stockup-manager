@@ -12,15 +12,35 @@ import java.util.UUID;
 public interface CashRegisterControllerDocs {
 	
 	@Operation(
-		summary = "Abrir caixa",
-		description = "Realiza a abertura de um caixa.",
-		responses = @ApiResponse(responseCode = "201")
+		summary = "Abertura de Caixa",
+		description = "Abrir o Fluxo do Caixa.",
+		responses = {
+			@ApiResponse(responseCode = "201",
+				description = "Abertura do caixa concluido",
+				content = @Content(schema = @Schema(implementation = CashRegisterResponseDTO.class)))
+		}
 	)
 	ResponseEntity<CashRegisterResponseDTO> openCashRegister(CashRegisterOpenRequestDTO dto);
 	
-	@Operation(summary = "Fechar caixa")
+	@Operation(
+		summary = "Fechamento de Caixa",
+		description = "Fechar o Fluxo do Caixa.",
+		responses = {
+			@ApiResponse(responseCode = "201",
+				description = "Fechamento do caixa concluido",
+				content = @Content(schema = @Schema(implementation = CashRegisterResponseDTO.class)))
+		}
+	)
 	ResponseEntity<CashRegisterResponseDTO> closeCashRegister(UUID id, CashRegisterCloseRequestDTO dto);
 	
-	@Operation(summary = "Buscar caixa por ID")
+	@Operation(
+		summary = "Bucar caixa por ID",
+		description = "Buscar Caixa por ID.",
+		responses = {
+			@ApiResponse(responseCode = "201",
+				description = "Caixas encontrado por Id",
+				content = @Content(schema = @Schema(implementation = CashRegisterResponseDTO.class)))
+		}
+	)
 	ResponseEntity<CashRegisterResponseDTO> findCashRegisterById(UUID id);
 }
