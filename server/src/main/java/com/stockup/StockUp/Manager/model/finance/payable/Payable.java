@@ -3,6 +3,7 @@ package com.stockup.StockUp.Manager.model.finance.payable;
 import com.stockup.StockUp.Manager.Enums.finance.PayableStatus;
 import com.stockup.StockUp.Manager.model.BaseEntity;
 import com.stockup.StockUp.Manager.model.finance.payments.Payment;
+import com.stockup.StockUp.Manager.model.procurement.Supplier;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
@@ -19,7 +20,11 @@ public class Payable extends BaseEntity {
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "payment_id")
 	private Payment payment;
-	
+
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "supplier_id", nullable = false)
+	private Supplier supplier;
+
 	@Column(nullable = false)
 	private BigDecimal amount;
 	
