@@ -37,8 +37,7 @@ public interface CashEntryControllerDocs {
 		}
 	)
 	ResponseEntity<CashEntryResponseDTO> findById(UUID id);
-	
-	@Operation(summary = "")
+
 	@Operation(
 		summary = "Listar Registros Caixa",
 		description = "Listar todos os lançamentos do caixa",

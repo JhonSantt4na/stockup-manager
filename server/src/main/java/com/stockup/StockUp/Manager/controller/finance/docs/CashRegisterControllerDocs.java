@@ -2,6 +2,8 @@ package com.stockup.StockUp.Manager.controller.finance.docs;
 
 import com.stockup.StockUp.Manager.dto.finance.cash.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;

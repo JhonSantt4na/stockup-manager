@@ -6,11 +6,15 @@ import com.stockup.StockUp.Manager.dto.finance.payment.PaymentRequestDTO;
 import com.stockup.StockUp.Manager.dto.finance.payment.PaymentResponseDTO;
 import com.stockup.StockUp.Manager.service.finance.IPaymentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,20 +49,17 @@ public class PaymentController implements PaymentControllerDocs {
 	
 	@Override
 	@GetMapping
-	public ResponseEntity<List<PaymentResponseDTO>> findAllPayment() {
-		List<PaymentResponseDTO> payments = paymentService.findAll();
-		return ResponseEntity.ok(payments);
+	public ResponseEntity<List<PaymentResponseDTO>> findAllPayment(Pageable pageable) {
+		Page<PaymentResponseDTO> payments = service.findAllPayment(pageable);
+		return ResponseEntity.ok(payments.stream().toList());
 	}
 	
 	@Override
 	@GetMapping("/reference/{referenceId}")
 	public ResponseEntity<List<PaymentResponseDTO>> findPaymentByReference(
 		@PathVariable UUID referenceId) {
-		List<PaymentResponseDTO> payments = paymentService.findByReference(referenceId);
-		if (payments.isEmpty()) {
-			return ResponseEntity.noContent().build();
-		}
-		return ResponseEntity.ok(payments);
+		List<PaymentResponseDTO> payments = Collections.singletonList(service.findPaymentById(referenceId));
+        return ResponseEntity.ok(payments);
 	}
 	
 }

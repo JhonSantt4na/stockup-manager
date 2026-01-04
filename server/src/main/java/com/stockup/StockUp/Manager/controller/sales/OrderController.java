@@ -72,7 +72,7 @@ public class OrderController implements OrderControllerDocs {
 	@GetMapping
 	public ResponseEntity<Page<OrderResponseDTO>> findAllOrder(Pageable pageable) {
 		AuditLogger.log("ORDER_LIST", "system", "ATTEMPT", "Listing all orders");
-		Page<OrderResponseDTO> response = service.findAll(pageable);
+		Page<OrderResponseDTO> response = service.findAllOrder(pageable);
 		AuditLogger.log("ORDER_LIST", "system", "SUCCESS", "Orders listed successfully");
 		return ResponseEntity.ok(response);
 	}

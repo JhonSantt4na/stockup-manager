@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public interface PaymentControllerDocs {
 		summary = "Listar todos os pagamentos",
 		responses = @ApiResponse(responseCode = "200")
 	)
-	ResponseEntity<List<PaymentResponseDTO>> findAllPayment();
+	ResponseEntity<List<PaymentResponseDTO>> findAllPayment(Pageable pageable);
 	
 	@Operation(
 		summary = "Listar pagamentos por referência",

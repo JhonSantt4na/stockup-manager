@@ -3,6 +3,9 @@ package com.stockup.StockUp.Manager.controller.finance.docs;
 import com.stockup.StockUp.Manager.dto.finance.cash.CashMovementRequestDTO;
 import com.stockup.StockUp.Manager.dto.finance.cash.CashMovementResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
@@ -18,7 +21,7 @@ public interface CashMovementControllerDocs {
 		responses = {
 			@ApiResponse(responseCode = "201",
 				description = "Movimentaçao no caixa criada",
-				content = @Content(schema = @Schema(implementation = CashEntryResponseDTO.class)))
+				content = @Content(schema = @Schema(implementation = CashMovementControllerDocs.class)))
 		}
 	)
 	ResponseEntity<CashMovementResponseDTO> createCashMovement(CashMovementRequestDTO dto);
@@ -29,7 +32,7 @@ public interface CashMovementControllerDocs {
 		responses = {
 			@ApiResponse(responseCode = "201",
 				description = "Movimentaçao Econtrada",
-				content = @Content(schema = @Schema(implementation = CashEntryResponseDTO.class)))
+				content = @Content(schema = @Schema(implementation = CashMovementControllerDocs.class)))
 		}
 	)
 	ResponseEntity<CashMovementResponseDTO> findCashMovementById(UUID id);
@@ -40,7 +43,7 @@ public interface CashMovementControllerDocs {
 		responses = {
 			@ApiResponse(responseCode = "201",
 				description = "Listagem de Movimentação Encontrada",
-				content = @Content(schema = @Schema(implementation = CashEntryResponseDTO.class)))
+				content = @Content(schema = @Schema(implementation = CashMovementControllerDocs.class)))
 		}
 	)
 	ResponseEntity<List<CashMovementResponseDTO>> findCashMovementBySession(UUID sessionId);
@@ -51,7 +54,7 @@ public interface CashMovementControllerDocs {
 		responses = {
 			@ApiResponse(responseCode = "201",
 				description = "Excluir no caixa criada",
-				content = @Content(schema = @Schema(implementation = CashEntryResponseDTO.class)))
+				content = @Content(schema = @Schema(implementation = CashMovementControllerDocs.class)))
 		}
 	)
 	ResponseEntity<Void> deleteCashMovement(UUID id);
