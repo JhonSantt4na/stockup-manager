@@ -8,6 +8,7 @@ import com.stockup.StockUp.Manager.dto.Others.Address.AddressSummaryDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.service.Others.IAddressService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
@@ -50,7 +51,7 @@ public class AddressController implements AddressControllerDocs {
 	@PutMapping("/{id}")
 	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
 	public ResponseEntity<AddressResponseDTO> updateAddress(
-		@PathVariable UUID id,
+		@PathVariable @NotNull UUID id,
 		@Valid @RequestBody AddressRequestDTO dto) {
 		
 		AddressResponseDTO updated = service.updateAddress(id, dto);
@@ -62,7 +63,7 @@ public class AddressController implements AddressControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<AddressResponseDTO> findAddressById(@PathVariable UUID id) {
+	public ResponseEntity<AddressResponseDTO> findAddressById(@PathVariable @NotNull UUID id) {
 		AddressResponseDTO response = service.findAddressById(id);
 		return ResponseEntity.ok(response);
 	}

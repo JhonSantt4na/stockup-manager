@@ -8,6 +8,7 @@ import com.stockup.StockUp.Manager.mapper.finance.CashEntryMapper;
 import com.stockup.StockUp.Manager.model.finance.cash.CashEntry;
 import com.stockup.StockUp.Manager.service.finance.ICashEntryService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +31,7 @@ public class CashEntryController implements CashEntryControllerDocs {
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<CashEntryResponseDTO> createCashEntry(CashEntryRequestDTO dto) {
+	public ResponseEntity<CashEntryResponseDTO> createCashEntry(@RequestBody @Valid CashEntryRequestDTO dto) {
 		try {
 			AuditLogger.log("CREATE CASH_ENTRY", getCurrentUser() ,"SUCCESS", "Created with successfully");
 			return ResponseEntity.ok(service.createCashEntry(dto));
@@ -42,12 +43,12 @@ public class CashEntryController implements CashEntryControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<CashEntryResponseDTO> findById(@PathVariable UUID id) {
+	public ResponseEntity<CashEntryResponseDTO> findById(@PathVariable @NotNull UUID id) {
 		AuditLogger.log("FIND CASH_ENTRY", getCurrentUser() ,"SUCCESS", "Find Cash_Entry successfully with id = " + id);
 		return ResponseEntity.ok(service.findCashEntryById(id));
 	}
 	
-	public ResponseEntity<Page<CashEntryResponseDTO>> listByCashRegister(Pageable pageable) {
+	public ResponseEntity<Page<CashEntryResponseDTO>> listByCashRegister(@RequestBody @NotNull Pageable pageable) {
 		AuditLogger.log("Listing All CASH_ENTRY", getCurrentUser() ,"SUCCESS", "List all Cash_Entry successfully");
 		Page<CashEntry> entries = service.findAllCashEntry(pageable);
 		if (entries.isEmpty()) {

@@ -5,6 +5,7 @@ import com.stockup.StockUp.Manager.controller.finance.docs.PaymentMethodControll
 import com.stockup.StockUp.Manager.dto.finance.payment.PaymentMethodRequestDTO;
 import com.stockup.StockUp.Manager.dto.finance.payment.PaymentMethodResponseDTO;
 import com.stockup.StockUp.Manager.service.finance.IPaymentMethodService;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class PaymentMethodController implements PaymentMethodControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<PaymentMethodResponseDTO> findPaymentMethodById(@PathVariable UUID id) {
+	public ResponseEntity<PaymentMethodResponseDTO> findPaymentMethodById(@PathVariable @NotNull UUID id) {
 		AuditLogger.log("FIND PAYMENT METHOD WITH ID", getCurrentUser(), "FINDING", id.toString());
 		return ResponseEntity.ok(service.findPaymentMethodById(id));
 	}
@@ -51,7 +52,7 @@ public class PaymentMethodController implements PaymentMethodControllerDocs {
 	@Override
 	@PutMapping("/{id}")
 	public ResponseEntity<PaymentMethodResponseDTO> updatePaymentMethod(
-		@PathVariable UUID id,
+		@PathVariable @NotNull UUID id,
 		@RequestBody @Valid PaymentMethodRequestDTO dto
 	) {
 		try {
@@ -66,7 +67,7 @@ public class PaymentMethodController implements PaymentMethodControllerDocs {
 	@Override
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void deletePaymentMethod(@PathVariable UUID id) {
+	public void deletePaymentMethod(@PathVariable @NotNull UUID id) {
 		try {
 			AuditLogger.log("REMOVE PAYMENT_METHOD WITH ID", getCurrentUser(), "REMOVE", id.toString());
 			service.deletePaymentMethod(id);

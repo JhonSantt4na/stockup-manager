@@ -5,6 +5,7 @@ import com.stockup.StockUp.Manager.controller.finance.docs.CashRegisterControlle
 import com.stockup.StockUp.Manager.dto.finance.cash.*;
 import com.stockup.StockUp.Manager.service.finance.ICashRegisterService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class CashRegisterController implements CashRegisterControllerDocs {
 	@Override
 	@PostMapping("/{id}/close")
 	public ResponseEntity<CashRegisterResponseDTO> closeCashRegister(
-		@PathVariable UUID id,
+		@PathVariable @NotNull UUID id,
 		@RequestBody @Valid CashRegisterCloseRequestDTO dto
 	) {
 		try {
@@ -51,7 +52,7 @@ public class CashRegisterController implements CashRegisterControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<CashRegisterResponseDTO> findCashRegisterById(@PathVariable UUID id) {
+	public ResponseEntity<CashRegisterResponseDTO> findCashRegisterById(@PathVariable @NotNull UUID id) {
 		return ResponseEntity.ok(service.findCashRegisterById(id));
 	}
 }

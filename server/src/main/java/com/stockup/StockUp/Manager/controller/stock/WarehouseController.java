@@ -9,6 +9,7 @@ import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.service.stock.IWarehouseService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
@@ -68,7 +69,7 @@ public class WarehouseController implements WarehouseControllerDocs {
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}")
 	public ResponseEntity<WarehouseResponseDTO> updateWarehouse(
-		@PathVariable UUID id,
+		@PathVariable @NotNull UUID id,
 		@Valid @RequestBody WarehouseRequestDTO dto) {
 		
 		try {
@@ -98,7 +99,7 @@ public class WarehouseController implements WarehouseControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<WarehouseResponseDTO> getWarehouseById(@PathVariable UUID id) {
+	public ResponseEntity<WarehouseResponseDTO> getWarehouseById(@PathVariable @NotNull UUID id) {
 		return ResponseEntity.ok(warehouseService.getWarehouseById(id));
 	}
 	
@@ -117,7 +118,7 @@ public class WarehouseController implements WarehouseControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteWarehouse(@PathVariable UUID id) {
+	public ResponseEntity<Void> deleteWarehouse(@PathVariable @NotNull UUID id) {
 		try {
 			warehouseService.deleteWarehouse(id);
 			AuditLogger.log(

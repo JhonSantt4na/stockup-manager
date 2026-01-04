@@ -7,6 +7,7 @@ import com.stockup.StockUp.Manager.dto.Sales.category.CategoryResponseDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.service.sales.ICategoryService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -53,7 +54,7 @@ public class CategoryController implements CategoryControllerDocs {
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}")
 	public ResponseEntity<CategoryResponseDTO> updateCategory(
-		@PathVariable UUID id,
+		@PathVariable @NotNull UUID id,
 		@Valid @RequestBody CategoryRequestDTO dto) {
 		
 		CategoryResponseDTO updated = categoryService.updateCategory(id, dto);
@@ -65,7 +66,7 @@ public class CategoryController implements CategoryControllerDocs {
 	
 	@Override
 	@GetMapping("/by-name/{name}")
-	public ResponseEntity<CategoryResponseDTO> getCategoryByName(@PathVariable String name) {
+	public ResponseEntity<CategoryResponseDTO> getCategoryByName(@PathVariable @NotNull String name) {
 		CategoryResponseDTO response = categoryService.findCategoryByName(name);
 		return ResponseEntity.ok(response);
 	}
@@ -73,7 +74,7 @@ public class CategoryController implements CategoryControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteCategory(@PathVariable UUID id) {
+	public ResponseEntity<Void> deleteCategory(@PathVariable @NotNull UUID id) {
 		categoryService.deleteCategory(id);
 		AuditLogger.log("CATEGORY_DELETE", getCurrentUser(), "SUCCESS",
 			"Category Disabled: " + id);

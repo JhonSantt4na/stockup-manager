@@ -9,6 +9,7 @@ import com.stockup.StockUp.Manager.dto.Sales.Product.ProductUpdateDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.service.sales.IProductService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,7 +33,7 @@ public class ProductController implements ProductControllerDocs {
 	
 	@Override
 	@PostMapping("/createCashMovement")
-	public ResponseEntity<ProductResponseDTO> createProduct(ProductRequestDTO dto) {
+	public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody @Valid ProductRequestDTO dto) {
 		try {
 			ProductResponseDTO product = productService.createProduct(dto);
 			AuditLogger.log("PRODUCT_CREATE", getCurrentUser(), "SUCCESS", "Produto criado: " + dto.getName());
@@ -49,7 +50,7 @@ public class ProductController implements ProductControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}")
-	public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable UUID id,
+	public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable @NotNull UUID id,
 															@Valid @RequestBody ProductUpdateDTO dto) {
 		ProductResponseDTO updated = productService.updateProduct(id, dto);
 		AuditLogger.log("PRODUCT_UPDATE", getCurrentUser(), "SUCCESS", "Product Updated: " + id);
@@ -58,14 +59,14 @@ public class ProductController implements ProductControllerDocs {
 	
 	@Override
 	@GetMapping("/by-name/{name}")
-	public ResponseEntity<ProductResponseDTO> getProductByName(@PathVariable String name) {
+	public ResponseEntity<ProductResponseDTO> getProductByName(@PathVariable @NotNull String name) {
 		ProductResponseDTO product = productService.findProductByName(name);
 		return ResponseEntity.ok(product);
 	}
 
 	@Override
 	@GetMapping("/by-sku/{sku}")
-	public ResponseEntity<ProductResponseDTO> getProductBySku(@PathVariable String sku) {
+	public ResponseEntity<ProductResponseDTO> getProductBySku(@PathVariable @NotNull String sku) {
 		ProductResponseDTO product = productService.findProductBySku(sku);
 		return ResponseEntity.ok(product);
 	}
@@ -73,7 +74,7 @@ public class ProductController implements ProductControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
+	public ResponseEntity<Void> deleteProduct(@PathVariable @NotNull UUID id) {
 		productService.deleteProduct(id);
 		AuditLogger.log("PRODUCT_DELETE", getCurrentUser(), "SUCCESS", "Product Disable: " + id);
 		return ResponseEntity.noContent().build();

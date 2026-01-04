@@ -5,6 +5,8 @@ import com.stockup.StockUp.Manager.controller.supply.docs.SupplierControllerDocs
 import com.stockup.StockUp.Manager.dto.supply.Supplier.SupplierRequestDTO;
 import com.stockup.StockUp.Manager.dto.supply.Supplier.SupplierResponseDTO;
 import com.stockup.StockUp.Manager.service.procurement.ISupplierService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.*;
@@ -23,7 +25,7 @@ public class SupplierController implements SupplierControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/createCashMovement")
-	public ResponseEntity<SupplierResponseDTO> createSupplier(@RequestBody SupplierRequestDTO dto) {
+	public ResponseEntity<SupplierResponseDTO> createSupplier(@RequestBody @Valid SupplierRequestDTO dto) {
 		SupplierResponseDTO response = service.createSupplier(dto);
 		AuditLogger.log("SUPPLIER_CREATE", getCurrentUser(), "SUCCESS", "Supplier created: " + dto.name());
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -32,7 +34,7 @@ public class SupplierController implements SupplierControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/updatePaymentMethod/{id}")
-	public ResponseEntity<SupplierResponseDTO> updateSupplier(@PathVariable UUID id, @RequestBody SupplierRequestDTO dto) {
+	public ResponseEntity<SupplierResponseDTO> updateSupplier(@PathVariable @NotNull UUID id, @RequestBody SupplierRequestDTO dto) {
 		SupplierResponseDTO updated = service.updateSupplier(id, dto);
 		return ResponseEntity.ok(updated);
 	}
@@ -40,14 +42,14 @@ public class SupplierController implements SupplierControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/{id}")
-	public ResponseEntity<SupplierResponseDTO> findSupplierById(@PathVariable UUID id) {
+	public ResponseEntity<SupplierResponseDTO> findSupplierById(@PathVariable @NotNull UUID id) {
 		return ResponseEntity.ok(service.findSupplierById(id));
 	}
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/deleteCashMovement/{id}")
-	public ResponseEntity<Void> deleteSupplier(@PathVariable UUID id) {
+	public ResponseEntity<Void> deleteSupplier(@PathVariable @NotNull UUID id) {
 		service.deleteSupplier(id);
 		AuditLogger.log("SUPPLIER_DELETE", getCurrentUser(), "SUCCESS", "Supplier deleted: " + id);
 		return ResponseEntity.noContent().build();

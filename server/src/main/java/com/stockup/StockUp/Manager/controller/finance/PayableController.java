@@ -7,9 +7,11 @@ import com.stockup.StockUp.Manager.dto.finance.payable.PayableResponseDTO;
 import com.stockup.StockUp.Manager.mapper.finance.PayableMapper;
 import com.stockup.StockUp.Manager.service.finance.IPayableService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,13 +44,13 @@ public class PayableController implements PayableControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<PayableResponseDTO> findPayableById(@PathVariable UUID id) {
+	public ResponseEntity<PayableResponseDTO> findPayableById(@PathVariable @NotNull UUID id) {
 		AuditLogger.log("FIND PAYABLE WITH ID", getCurrentUser(), "FINDING", id.toString());
 		return ResponseEntity.ok(payableService.findPayableById(id));
 	}
 	
 	@Override
-	public ResponseEntity<Page<PayableResponseDTO>> findAllPayable(Pageable pageable) {
+	public ResponseEntity<Page<PayableResponseDTO>> findAllPayable(@PageableDefault(size = 10) Pageable pageable) {
 		Page<PayableResponseDTO> payables = payableService.findAllPayable(pageable);
 		return ResponseEntity.ok(payables);
 	}

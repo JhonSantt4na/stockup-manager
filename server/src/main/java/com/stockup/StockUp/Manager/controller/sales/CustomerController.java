@@ -8,8 +8,10 @@ import com.stockup.StockUp.Manager.dto.Sales.Customer.CustomerSummaryDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.service.sales.ICustomerService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -59,7 +61,7 @@ public class CustomerController implements CustomerControllerDocs {
 	@PutMapping("/{id}")
 	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
 	public ResponseEntity<CustomerResponseDTO> updateCustomer(
-		@PathVariable UUID id,
+		@PathVariable @NotNull UUID id,
 		@Valid @RequestBody CustomerRequestDTO dto) {
 		
 		CustomerResponseDTO updated = service.updateCustomer(id, dto);
@@ -72,13 +74,13 @@ public class CustomerController implements CustomerControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<CustomerResponseDTO> getCustomerById(@PathVariable UUID id) {
+	public ResponseEntity<CustomerResponseDTO> getCustomerById(@PathVariable @NotNull UUID id) {
 		CustomerResponseDTO response = service.findCustomerById(id);
 		return ResponseEntity.ok(response);
 	}
 	
 	@Override
-	public ResponseEntity<Page<CustomerSummaryDTO>> listCustomer(Pageable pageable) {
+	public ResponseEntity<Page<CustomerSummaryDTO>> listCustomer(@PageableDefault(size = 10) Pageable pageable) {
 		Page<CustomerSummaryDTO> result = service.findAllCustomer(pageable);
 		return ResponseEntity.ok(result);
 	}
@@ -98,8 +100,8 @@ public class CustomerController implements CustomerControllerDocs {
 	@Override
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) {
-		
+	public ResponseEntity<Void> deleteCustomer(@PathVariable @NotNull UUID id) {
+
 		service.softDeleteCustomer(id);
 		
 		AuditLogger.log("CUSTOMER_DELETE", getCurrentUser(), "SUCCESS",
@@ -111,7 +113,7 @@ public class CustomerController implements CustomerControllerDocs {
 	@Override
 	@PostMapping("/{id}/enableCustomer")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Void> enableCustomer(@PathVariable UUID id) {
+	public ResponseEntity<Void> enableCustomer(@PathVariable @NotNull UUID id) {
 		
 		service.enableCustomer(id);
 		

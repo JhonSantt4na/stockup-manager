@@ -5,6 +5,8 @@ import com.stockup.StockUp.Manager.controller.supply.docs.PurchaseOrderControlle
 import com.stockup.StockUp.Manager.dto.supply.PurchaseOrder.PurchaseOrderRequestDTO;
 import com.stockup.StockUp.Manager.dto.supply.PurchaseOrder.PurchaseOrderResponseDTO;
 import com.stockup.StockUp.Manager.service.procurement.IPurchaseOrderService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.*;
@@ -25,7 +27,7 @@ public class PurchaseOrderController implements PurchaseOrderControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/createCashMovement")
-	public ResponseEntity<PurchaseOrderResponseDTO> createPurchaseOrder(@RequestBody PurchaseOrderRequestDTO dto) {
+	public ResponseEntity<PurchaseOrderResponseDTO> createPurchaseOrder(@RequestBody @Valid PurchaseOrderRequestDTO dto) {
 		PurchaseOrderResponseDTO response = service.createPurchaseOrder(dto);
 		AuditLogger.log("PURCHASE_ORDER_CREATE", getCurrentUser(), "SUCCESS", "Order created: " + dto.orderNumber());
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -34,21 +36,21 @@ public class PurchaseOrderController implements PurchaseOrderControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/updatePaymentMethod/{id}")
-	public ResponseEntity<PurchaseOrderResponseDTO> updatePurchaseOrder(@PathVariable UUID id, @RequestBody PurchaseOrderRequestDTO dto) {
+	public ResponseEntity<PurchaseOrderResponseDTO> updatePurchaseOrder(@PathVariable @NotNull UUID id, @RequestBody @Valid PurchaseOrderRequestDTO dto) {
 		return ResponseEntity.ok(service.updatePurchaseOrder(id, dto));
 	}
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/{id}")
-	public ResponseEntity<PurchaseOrderResponseDTO> findPurchaseOrderById(@PathVariable UUID id) {
+	public ResponseEntity<PurchaseOrderResponseDTO> findPurchaseOrderById(@PathVariable @NotNull UUID id) {
 		return ResponseEntity.ok(service.findPurchaseOrderById(id));
 	}
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/deleteCashMovement/{id}")
-	public ResponseEntity<Void> deletePurchaseOrder(@PathVariable UUID id) {
+	public ResponseEntity<Void> deletePurchaseOrder(@PathVariable @NotNull UUID id) {
 		service.deletePurchaseOrder(id);
 		AuditLogger.log("PURCHASE_ORDER_DELETE", getCurrentUser(), "SUCCESS", "Order deleted: " + id);
 		return ResponseEntity.noContent().build();

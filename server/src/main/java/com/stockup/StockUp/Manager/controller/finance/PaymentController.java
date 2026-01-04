@@ -5,9 +5,11 @@ import com.stockup.StockUp.Manager.controller.finance.docs.PaymentControllerDocs
 import com.stockup.StockUp.Manager.dto.finance.payment.PaymentRequestDTO;
 import com.stockup.StockUp.Manager.dto.finance.payment.PaymentResponseDTO;
 import com.stockup.StockUp.Manager.service.finance.IPaymentService;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,14 +44,14 @@ public class PaymentController implements PaymentControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<PaymentResponseDTO> findPaymentById(@PathVariable UUID id) {
+	public ResponseEntity<PaymentResponseDTO> findPaymentById(@PathVariable @NotNull UUID id) {
 		AuditLogger.log("FIND PAYABLE WITH ID", getCurrentUser(), "FINDING", id.toString());
 		return ResponseEntity.ok(service.findPaymentById(id));
 	}
 	
 	@Override
 	@GetMapping
-	public ResponseEntity<List<PaymentResponseDTO>> findAllPayment(Pageable pageable) {
+	public ResponseEntity<List<PaymentResponseDTO>> findAllPayment(@PageableDefault(size = 10) Pageable pageable) {
 		Page<PaymentResponseDTO> payments = service.findAllPayment(pageable);
 		return ResponseEntity.ok(payments.stream().toList());
 	}

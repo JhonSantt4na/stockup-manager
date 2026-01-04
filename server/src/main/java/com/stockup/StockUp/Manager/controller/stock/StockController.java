@@ -6,6 +6,7 @@ import com.stockup.StockUp.Manager.dto.Stock.stock.StockRequestDTO;
 import com.stockup.StockUp.Manager.dto.Stock.stock.StockResponseDTO;
 import com.stockup.StockUp.Manager.service.stock.IStockService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public class StockController implements StockControllerDocs {
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}")
 	public ResponseEntity<StockResponseDTO> updateStock(
-		@PathVariable UUID id,
+		@PathVariable @NotNull UUID id,
 		@Valid @RequestBody StockRequestDTO dto) {
 		
 		try {
@@ -61,7 +62,7 @@ public class StockController implements StockControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<StockResponseDTO> getStockById(@PathVariable UUID id) {
+	public ResponseEntity<StockResponseDTO> getStockById(@PathVariable @NotNull UUID id) {
 		return ResponseEntity.ok(stockService.getStockById(id));
 	}
 	
@@ -74,7 +75,7 @@ public class StockController implements StockControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteStock(@PathVariable UUID id) {
+	public ResponseEntity<Void> deleteStock(@PathVariable @NotNull UUID id) {
 		try {
 			stockService.deleteStock(id);
 			AuditLogger.log("STOCK_DELETE", getCurrentUser(), "SUCCESS",

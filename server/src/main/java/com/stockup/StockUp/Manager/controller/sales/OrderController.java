@@ -7,9 +7,11 @@ import com.stockup.StockUp.Manager.dto.Sales.order.OrderRequestDTO;
 import com.stockup.StockUp.Manager.dto.Sales.order.OrderResponseDTO;
 import com.stockup.StockUp.Manager.service.sales.IOrderService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +42,7 @@ public class OrderController implements OrderControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<OrderResponseDTO> findOrderById(@PathVariable UUID id) {
+	public ResponseEntity<OrderResponseDTO> findOrderById(@PathVariable @NotNull UUID id) {
 		try {
 			AuditLogger.log("ORDER_FIND_BY_ID", id.toString(), "ATTEMPT", "Fetching order by ID");
 			OrderResponseDTO response = service.findOrderById(id);
@@ -55,7 +57,7 @@ public class OrderController implements OrderControllerDocs {
 	
 	@Override
 	@GetMapping("/number/{orderNumber}")
-	public ResponseEntity<OrderResponseDTO> findOrderByNumber(@PathVariable String orderNumber) {
+	public ResponseEntity<OrderResponseDTO> findOrderByNumber(@PathVariable @NotNull String orderNumber) {
 		try {
 			AuditLogger.log("ORDER_FIND_BY_NUMBER", orderNumber, "ATTEMPT", "Fetching order by order number");
 			OrderResponseDTO response = service.findByOrderNumber(orderNumber);
@@ -70,7 +72,7 @@ public class OrderController implements OrderControllerDocs {
 	
 	@Override
 	@GetMapping
-	public ResponseEntity<Page<OrderResponseDTO>> findAllOrder(Pageable pageable) {
+	public ResponseEntity<Page<OrderResponseDTO>> findAllOrder(@PageableDefault(size = 10) Pageable pageable) {
 		AuditLogger.log("ORDER_LIST", "system", "ATTEMPT", "Listing all orders");
 		Page<OrderResponseDTO> response = service.findAllOrder(pageable);
 		AuditLogger.log("ORDER_LIST", "system", "SUCCESS", "Orders listed successfully");
@@ -80,8 +82,8 @@ public class OrderController implements OrderControllerDocs {
 	@Override
 	@PatchMapping("/{id}/status")
 	public ResponseEntity<OrderResponseDTO> updateStatusOrder(
-		@PathVariable UUID id,
-		@RequestParam OrderStatus status
+		@PathVariable @NotNull UUID id,
+		@RequestParam @Valid OrderStatus status
 	) {
 		try {
 			AuditLogger.log("ORDER_UPDATE_STATUS", id.toString(), "ATTEMPT",
@@ -100,7 +102,7 @@ public class OrderController implements OrderControllerDocs {
 	
 	@Override
 	@PatchMapping("/{id}/cancelOrder")
-	public ResponseEntity<OrderResponseDTO> cancelOrder(@PathVariable UUID id) {
+	public ResponseEntity<OrderResponseDTO> cancelOrder(@PathVariable @NotNull UUID id) {
 		try {
 			AuditLogger.log("ORDER_CANCEL", id.toString(), "ATTEMPT", "Cancelling order");
 			OrderResponseDTO canceled = service.cancelOrder(id);
@@ -115,7 +117,7 @@ public class OrderController implements OrderControllerDocs {
 	
 	@Override
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteOrder(@PathVariable UUID id) {
+	public ResponseEntity<Void> deleteOrder(@PathVariable @NotNull UUID id) {
 		try {
 			AuditLogger.log("ORDER_DELETE", id.toString(), "ATTEMPT", "Deleting order permanently");
 			service.deleteOrder(id);

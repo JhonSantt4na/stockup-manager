@@ -9,6 +9,7 @@ import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.service.sales.impl.TaxProfileService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,7 @@ public class TaxProfileController implements TaxProfileControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}")
-	public ResponseEntity<TaxProfileResponseDTO> updateTaxProfile(@PathVariable UUID id,
+	public ResponseEntity<TaxProfileResponseDTO> updateTaxProfile(@PathVariable @NotNull UUID id,
 																  @Valid @RequestBody TaxProfileUpdateDTO dto) {
 		try {
 			TaxProfileResponseDTO updated = taxProfileService.updateTaxProfile(id, dto);
@@ -68,7 +69,7 @@ public class TaxProfileController implements TaxProfileControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<TaxProfileResponseDTO> getTaxProfileById(@PathVariable UUID id) {
+	public ResponseEntity<TaxProfileResponseDTO> getTaxProfileById(@PathVariable @NotNull UUID id) {
 		TaxProfileResponseDTO profile = taxProfileService.findTaxProfileById(id);
 		return ResponseEntity.ok(profile);
 	}
@@ -83,7 +84,7 @@ public class TaxProfileController implements TaxProfileControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteTaxProfile(@PathVariable UUID id) {
+	public ResponseEntity<Void> deleteTaxProfile(@PathVariable @NotNull UUID id) {
 		try {
 			taxProfileService.deleteTaxProfile(id);
 			AuditLogger.log("TAX_PROFILE_DELETE", getCurrentUser(), "SUCCESS",

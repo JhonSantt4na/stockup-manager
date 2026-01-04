@@ -6,6 +6,7 @@ import com.stockup.StockUp.Manager.dto.Stock.stock.StockMovementRequestDTO;
 import com.stockup.StockUp.Manager.dto.Stock.stock.StockMovementResponseDTO;
 import com.stockup.StockUp.Manager.service.stock.IStockMovementService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class StockMovementController implements StockMovementControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<StockMovementResponseDTO> getStockMovementsById(@PathVariable UUID id) {
+	public ResponseEntity<StockMovementResponseDTO> getStockMovementsById(@PathVariable @NotNull UUID id) {
 		return ResponseEntity.ok(movementService.getStockMovementById(id));
 	}
 	
@@ -56,7 +57,7 @@ public class StockMovementController implements StockMovementControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteStockMovements(@PathVariable UUID id) {
+	public ResponseEntity<Void> deleteStockMovements(@PathVariable @NotNull UUID id) {
 		try {
 			movementService.deleteStockMovement(id);
 			AuditLogger.log("STOCK_MOVEMENT_DELETE", getCurrentUser(), "SUCCESS",

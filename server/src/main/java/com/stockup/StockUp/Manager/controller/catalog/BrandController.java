@@ -6,6 +6,8 @@ import com.stockup.StockUp.Manager.dto.Sales.Brand.BrandRequestDTO;
 import com.stockup.StockUp.Manager.dto.Sales.Brand.BrandResponseDTO;
 import com.stockup.StockUp.Manager.exception.DuplicateResourceException;
 import com.stockup.StockUp.Manager.service.sales.IBrandService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.*;
@@ -26,7 +28,7 @@ public class BrandController implements BrandControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/createCashMovement")
-	public ResponseEntity<BrandResponseDTO> createBrand(@RequestBody BrandRequestDTO dto) {
+	public ResponseEntity<BrandResponseDTO> createBrand(@RequestBody @Valid BrandRequestDTO dto) {
 		try {
 			BrandResponseDTO response = brandService.createBrand(dto);
 			AuditLogger.log("BRAND_CREATE", getCurrentUser(), "SUCCESS", "Brand created: " + dto.name());
@@ -43,7 +45,7 @@ public class BrandController implements BrandControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/updatePaymentMethod/{id}")
-	public ResponseEntity<BrandResponseDTO> updateBrand(@PathVariable UUID id, @RequestBody BrandRequestDTO dto) {
+	public ResponseEntity<BrandResponseDTO> updateBrand(@PathVariable UUID id, @RequestBody @Valid BrandRequestDTO dto) {
 		BrandResponseDTO updated = brandService.updateBrand(id, dto);
 		return ResponseEntity.ok(updated);
 	}
@@ -51,14 +53,14 @@ public class BrandController implements BrandControllerDocs {
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/{id}")
-	public ResponseEntity<BrandResponseDTO> findBrandById(@PathVariable UUID id) {
+	public ResponseEntity<BrandResponseDTO> findBrandById(@PathVariable @NotNull UUID id) {
 		return ResponseEntity.ok(brandService.findBrandById(id));
 	}
 	
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/deleteCashMovement/{id}")
-	public ResponseEntity<Void> deleteBrand(@PathVariable UUID id) {
+	public ResponseEntity<Void> deleteBrand(@PathVariable @NotNull UUID id) {
 		brandService.deleteBrand(id);
 		AuditLogger.log("BRAND_DELETE", getCurrentUser(), "SUCCESS", "Brand deleted: " + id);
 		return ResponseEntity.noContent().build();

@@ -6,6 +6,7 @@ import com.stockup.StockUp.Manager.dto.finance.cash.CashMovementRequestDTO;
 import com.stockup.StockUp.Manager.dto.finance.cash.CashMovementResponseDTO;
 import com.stockup.StockUp.Manager.service.finance.ICashMovementService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,21 +38,21 @@ public class CashMovementController implements CashMovementControllerDocs {
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<CashMovementResponseDTO> findCashMovementById(@PathVariable UUID id) {
+	public ResponseEntity<CashMovementResponseDTO> findCashMovementById(@PathVariable @NotNull UUID id) {
 		CashMovementResponseDTO response = service.findCashMovementById(id);
 		return ResponseEntity.ok(response);
 	}
 	
 	@Override
 	@GetMapping("/session/{sessionId}")
-	public ResponseEntity<List<CashMovementResponseDTO>> findCashMovementBySession(@PathVariable UUID sessionId) {
+	public ResponseEntity<List<CashMovementResponseDTO>> findCashMovementBySession(@PathVariable @NotNull UUID sessionId) {
 		List<CashMovementResponseDTO> list = service.findCashMovementBySession(sessionId);
 		return ResponseEntity.ok(list);
 	}
 	
 	@Override
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteCashMovement(@PathVariable UUID id) {
+	public ResponseEntity<Void> deleteCashMovement(@PathVariable @NotNull UUID id) {
 		service.deleteCashMovement(id);
 		AuditLogger.log("CASH_MOVEMENT", getCurrentUser(), "DELETE", id.toString());
 		return ResponseEntity.noContent().build();
